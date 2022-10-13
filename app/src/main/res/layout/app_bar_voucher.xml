@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+xmlns:app="http://schemas.android.com/apk/res-auto"
+xmlns:tools="http://schemas.android.com/tools">
+
+<androidx.core.widget.NestedScrollView
+    android:id="@+id/scroll"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/lightGray">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/constraintLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        tools:context=".view.ProductActivity">
+
+        <ViewFlipper
+            android:id="@+id/imageSlider"
+            android:layout_width="0dp"
+            android:layout_height="150dp"
+            android:layout_marginTop="110dp"
+            android:gravity="center"
+            android:scaleType="fitXY"
+            android:src="@drawable/slide1"
+            android:textSize="@dimen/dimen16sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:background="@drawable/slide1" />
+
+        <TextView
+            android:id="@+id/textViewMobiles"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="25dp"
+            android:layout_marginTop="25dp"
+            android:text="@string/trending"
+            android:textSize="@dimen/dimen20sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/imageSlider" />
+
+        <TextView
+            android:id="@+id/txtSeeAllTop"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="25dp"
+            android:layout_marginEnd="25dp"
+            android:text="@string/see_all"
+            android:textColor="@color/colorPrimary"
+            android:textSize="@dimen/dimen20sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/imageSlider" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/listOfTrending"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            android:layout_marginEnd="5dp"
+            android:minHeight="270dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/txtSeeAllTop" />
+
+        <TextView
+            android:id="@+id/textViewLaptops"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="25dp"
+            android:layout_marginTop="25dp"
+            android:text="Voucher"
+            android:textSize="@dimen/dimen20sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/listOfTrending" />
+
+<!--        <TextView-->
+<!--            android:id="@+id/txtSeeAllTrending"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_marginTop="25dp"-->
+<!--            android:layout_marginEnd="25dp"-->
+<!--            android:text="Voucher"-->
+<!--            android:textColor="@color/colorPrimary"-->
+<!--            android:textSize="@dimen/dimen20sp"-->
+<!--            app:layout_constraintEnd_toEndOf="parent"-->
+<!--            app:layout_constraintTop_toBottomOf="@+id/listOfTrending" />-->
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/listOfTop"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            android:layout_marginEnd="5dp"
+            android:minHeight="270dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textViewLaptops" />
+
+<!--        <TextView-->
+<!--            android:id="@+id/textViewHistory"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_marginStart="25dp"-->
+<!--            android:layout_marginTop="25dp"-->
+<!--            android:text="@string/recently_viewed_items"-->
+<!--            android:textSize="@dimen/dimen20sp"-->
+<!--            android:visibility="gone"-->
+<!--            app:layout_constraintStart_toStartOf="parent"-->
+<!--            app:layout_constraintTop_toBottomOf="@+id/listOfTop" />-->
+
+
+<!--        <TextView-->
+<!--            android:id="@+id/txtReturn"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_marginTop="5dp"-->
+<!--            android:layout_marginEnd="25dp"-->
+<!--            android:layout_marginBottom="10dp"-->
+
+<!--            android:drawablePadding="@dimen/dimen5dp"-->
+<!--            android:text="@string/easy_use"-->
+<!--            android:textColor="@color/vDarkGray"-->
+<!--            android:textSize="@dimen/dimen14sp"-->
+<!--            app:layout_constraintEnd_toEndOf="parent"-->
+<!--            app:layout_constraintTop_toBottomOf="@+id/historyList" />-->
+
+<!--        <TextView-->
+<!--            android:id="@+id/txtCash"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="match_parent"-->
+<!--            android:layout_marginStart="15dp"-->
+<!--            android:layout_marginTop="5dp"-->
+<!--            android:layout_marginBottom="10dp"-->
+
+<!--            android:drawablePadding="@dimen/dimen5dp"-->
+<!--            android:text="@string/payment"-->
+<!--            android:textColor="@color/vDarkGray"-->
+<!--            android:textSize="@dimen/dimen14sp"-->
+<!--            app:layout_constraintStart_toStartOf="parent"-->
+<!--            app:layout_constraintTop_toBottomOf="@+id/historyList" />-->
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.core.widget.NestedScrollView>
+</layout>

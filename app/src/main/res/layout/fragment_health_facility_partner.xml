@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".ui.partner.healthfacility.HealthFacilityPartnerFragment">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white">
+
+        <androidx.appcompat.widget.AppCompatImageButton
+            android:id="@+id/btnBack"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="24dp"
+            android:background="@color/transparent"
+            android:src="@drawable/ic_arrow_back_black_24dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/border0"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/gray"
+            app:layout_constraintTop_toBottomOf="@+id/btnBack"/>
+
+        <TextView
+            android:id="@+id/tvRegisterHealthFacility"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/transparent_btn_bg"
+            android:clickable="true"
+            android:drawablePadding="10dp"
+            android:gravity="left|center_vertical"
+            android:padding="15dp"
+            android:text="Đăng ký cơ sở y tế"
+            android:textSize="16dp"
+            app:layout_constraintTop_toBottomOf="@+id/border0"
+            tools:layout_editor_absoluteX="0dp" />
+
+        <TextView
+            android:id="@+id/border1"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/gray"
+            app:layout_constraintTop_toBottomOf="@+id/tvRegisterHealthFacility"/>
+
+        <TextView
+            android:id="@+id/tvMyHealthFacilities"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/transparent_btn_bg"
+            android:clickable="true"
+            android:drawablePadding="10dp"
+            android:gravity="left|center_vertical"
+            android:padding="15dp"
+            android:text="Cơ sở y tế của tôi"
+            android:textSize="16dp"
+            app:layout_constraintTop_toBottomOf="@+id/border1"
+            tools:layout_editor_absoluteX="0dp" />
+
+        <TextView
+            android:id="@+id/border2"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/gray"
+            app:layout_constraintTop_toBottomOf="@+id/tvMyHealthFacilities"/>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</FrameLayout>

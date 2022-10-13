@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/report_tab_graph"
+    app:startDestination="@id/contributionFragment">
+
+    <fragment
+        android:id="@+id/reportSendingFragment"
+        android:name="com.hcmut.admin.utrafficsystem.ui.report.traffic.TrafficReportFragment"
+        android:label="fragment_report_sending"
+        tools:layout="@layout/fragment_traffic_report" >
+        <action
+            android:id="@+id/action_reportSendingFragment_to_searchPlaceFragment2"
+            app:destination="@id/searchPlaceFragment2"
+            app:enterAnim="@anim/slide_in_top"
+            app:exitAnim="@anim/slide_out_top"
+            app:popEnterAnim="@anim/slide_in_top"
+            app:popExitAnim="@anim/fade_out"/>
+        <action
+            android:id="@+id/action_reportSendingFragment_to_pickPointOnMapFragment2"
+            app:destination="@id/pickPointOnMapFragment2"
+            app:enterAnim="@anim/slide_in_top"
+            app:exitAnim="@anim/slide_out_top"
+            app:popEnterAnim="@anim/slide_in_top"
+            app:popExitAnim="@anim/slide_out_top"/>
+    </fragment>
+    <fragment
+        android:id="@+id/searchPlaceFragment2"
+        android:name="com.hcmut.admin.utrafficsystem.ui.searchplace.SearchPlaceFragment"
+        android:label="SearchPlaceFragment" />
+    <fragment
+        android:id="@+id/pickPointOnMapFragment2"
+        android:name="com.hcmut.admin.utrafficsystem.ui.searchplace.PickPointOnMapFragment"
+        android:label="PickPointOnMapFragment" />
+    <fragment
+        android:id="@+id/contributionFragment"
+        android:name="com.hcmut.admin.utrafficsystem.ui.contribution.ContributionFragment"
+        android:label="fragment_contribution"
+        tools:layout="@layout/fragment_contribution" >
+        <action
+            android:id="@+id/action_contributionFragment_to_reportSendingFragment"
+            app:destination="@id/reportSendingFragment"
+            app:enterAnim="@anim/slide_in_top"
+            app:exitAnim="@anim/slide_out_bottom"
+            app:popEnterAnim="@anim/slide_in_bottom"
+            app:popExitAnim="@anim/slide_out_top" />
+        <action
+            android:id="@+id/action_contributionFragment_to_infrastructureReportFragment"
+            app:destination="@id/infrastructureReportFragment"
+            app:enterAnim="@anim/slide_in_top"
+            app:exitAnim="@anim/slide_out_bottom"
+            app:popEnterAnim="@anim/slide_in_bottom"
+            app:popExitAnim="@anim/slide_out_top"/>
+    </fragment>
+    <fragment
+        android:id="@+id/infrastructureReportFragment"
+        android:name="com.hcmut.admin.utrafficsystem.ui.report.infrastructure.InfrastructureReportFragment"
+        android:label="fragment_infrastructure_report"
+        tools:layout="@layout/fragment_infrastructure_report" />
+</navigation>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto" android:id="@+id/view_report_tab_graph"
+    app:startDestination="@id/viewReportFragment">
+
+    <fragment
+        android:id="@+id/viewReportFragment"
+        android:name="com.hcmut.admin.utrafficsystem.ui.viewReport.ViewReportFragment"
+        android:label="ViewReportFragment" >
+        <action
+            android:id="@+id/action_viewReportFragment_to_ratingFragment2"
+            app:destination="@id/ratingFragment2"
+            app:enterAnim="@anim/fade_in"
+            app:exitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/fade_in"
+            app:popExitAnim="@anim/fade_out"/>
+    </fragment>
+    <fragment
+        android:id="@+id/ratingFragment2"
+        android:name="com.hcmut.admin.utrafficsystem.ui.reportdetail.traffic.TrafficReportDetailFragment"
+        android:label="RatingFragment" />
+</navigation>

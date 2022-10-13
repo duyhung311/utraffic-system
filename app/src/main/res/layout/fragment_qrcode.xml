@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <LinearLayout
+        android:background="@color/white"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_gravity="center"
+            android:background="@color/white"
+
+            android:gravity="center"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <TextView
+                android:layout_marginTop="10dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/dimen20sp"
+
+                android:gravity="center"
+                android:textColor="#424242"
+                android:text="Mã voucher"/>
+
+            <ImageView
+                android:layout_marginTop="10dp"
+                android:layout_width="250dp"
+                android:src="@drawable/payment_success"
+                android:id="@+id/qrImage"
+
+                android:layout_height="250dp"
+                android:foregroundGravity="center" />
+
+
+
+
+            <Button
+                android:id="@+id/qrReturn"
+                android:layout_marginTop="10dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@color/light_yellow"
+                android:gravity="center"
+                android:padding="5dp"
+                android:textColor="@color/white"
+                android:text="Quay lại"/>
+
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</layout>
+

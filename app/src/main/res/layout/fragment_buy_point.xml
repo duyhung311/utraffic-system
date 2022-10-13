@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/lightGray"
+    >
+
+    <include
+        android:id="@+id/include"
+        layout="@layout/toolbar_voucher"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <LinearLayout
+        android:id="@+id/infoTransfer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        android:background="@color/white"
+        app:layout_constraintTop_toBottomOf="@+id/include">
+
+        <EditText
+            android:paddingTop="20dp"
+            android:id="@+id/txtChoose"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:inputType="number"
+
+            android:gravity="start|center"
+            android:hint="Nhập số điểm"
+            android:paddingStart="@dimen/dimen10dp"
+            android:paddingEnd="@dimen/dimen10dp"
+            android:textColor="@color/black"
+            android:textSize="@dimen/dimen14sp"
+            android:textStyle="bold" />
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/textView8"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:background="@color/lightGray"
+        android:gravity="start|center"
+        android:paddingStart="@dimen/dimen10dp"
+        android:paddingEnd="@dimen/dimen10dp"
+        android:text="NGUỒN TIỀN"
+        android:textColor="@color/black"
+        android:textSize="@dimen/dimen14sp"
+        android:textStyle="bold"
+        app:layout_constraintTop_toBottomOf="@+id/infoTransfer"
+        tools:layout_editor_absoluteX="16dp" />
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:orientation="vertical"
+        app:layout_constraintTop_toBottomOf="@+id/textView8">
+        <RadioGroup
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+    <LinearLayout
+        android:id="@+id/layout_momo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:orientation="horizontal"
+>
+
+        <ImageView
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:src="@drawable/momo"
+
+            android:gravity="start|center"
+            android:padding="5dp"
+
+
+/>
+
+        <TextView
+            android:paddingLeft="10dp"
+
+            android:layout_width="wrap_content"
+            android:layout_height="60dp"
+            android:text="Ví MoMo"
+            android:textColor="@color/black"
+            android:textSize="@dimen/dimen14sp"
+            android:textStyle="bold" />
+        <TextView
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="60dp"/>
+
+        <RadioButton
+            android:id="@+id/buttonMOMO"
+            android:button="@drawable/custom_radio"
+            android:layout_width="wrap_content"
+            android:layout_height="60dp"
+            android:layout_marginEnd="@dimen/dimen15dp"
+            android:gravity="end|center"
+            android:checked="true"
+
+            />
+    </LinearLayout>
+        <LinearLayout
+            android:id="@+id/layout_atm"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:orientation="horizontal"
+            >
+
+            <ImageView
+
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:src="@drawable/atm"
+
+                android:gravity="start|center"
+                android:padding="5dp"
+
+
+                />
+
+            <TextView
+
+                android:layout_width="wrap_content"
+                android:paddingLeft="10dp"
+                android:layout_height="60dp"
+                android:text="Thẻ ATM"
+                android:textColor="@color/black"
+                android:textSize="@dimen/dimen14sp"
+                android:textStyle="bold" />
+            <TextView
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_height="60dp"/>
+
+            <RadioButton
+                android:id="@+id/buttonATM"
+                android:button="@drawable/custom_radio"
+                android:layout_width="wrap_content"
+                android:layout_height="60dp"
+                android:layout_marginEnd="@dimen/dimen15dp"
+                android:checked="false"
+
+                android:gravity="end|center" />
+
+        </LinearLayout>
+        </RadioGroup>
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/payButton"
+        style="@style/Widget.AppCompat.Button.Colored"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:backgroundTint="@color/colorAccent"
+        android:text="Mua điểm"
+        android:textAllCaps="false"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        tools:layout_editor_absoluteX="0dp" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

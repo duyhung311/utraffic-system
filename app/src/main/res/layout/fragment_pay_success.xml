@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+<LinearLayout
+    android:background="@color/white"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_gravity="center"
+            android:background="@color/white"
+
+            android:gravity="center"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ImageView
+
+                android:layout_width="150dp"
+                android:src="@drawable/payment_success"
+
+                android:layout_height="150dp"
+                android:foregroundGravity="center" />
+
+            <TextView
+                android:layout_marginTop="10dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+
+                android:gravity="center"
+                android:textColor="#424242"
+                android:text="@string/pay_success"/>
+
+
+            <Button
+                android:id="@+id/returnButton"
+                android:layout_marginTop="10dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@color/dark_green"
+                android:gravity="center"
+                android:padding="5dp"
+                android:textColor="@color/white"
+                android:text="Quay lại màn hình chính"/>
+
+
+        </LinearLayout>
+
+</LinearLayout>
+
+</layout>

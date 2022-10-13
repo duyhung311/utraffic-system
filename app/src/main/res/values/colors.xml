@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimaryDark">#5db5e9</color>
+    <color name="colorAccent">#5db5e9</color>
+
+    <!--color for traffic status-->
+    <color name="strong_red">#ff0000</color>
+    <color name="red">#f44941</color>
+    <color name="strong_orange">#f46a41</color>
+    <color name="orange">#f48841</color>
+    <color name="strong_yellow">#f4d341</color>
+    <color name="yellow">#f4e541</color>
+    <color name="light_yellow">#e8f441</color>
+    <color name="light_green">#b8f441</color>
+    <color name="green">#94f441</color>
+    <color name="strong_green">#61f441</color>
+    <color name="dark_green">#008000</color>
+
+    <color name="blue">#429ef4</color>
+    <color name="black">#000000</color>
+    <color name="black_transparent">#26000000</color>
+
+    <color name="gray">#e9e9ef</color>
+    <color name="color_toolbar">#5db5e9</color>
+
+    <color name="dark_primary_color">#303F9F</color>
+    <color name="accent_color">#FF5722</color>
+    <color name="card_background">#efefef</color>
+    <color name="bg_item_rating">#d3d3d3</color>
+    <color name="facebook_brand_color">#3B5998</color>
+    <color name="google_plus_brand_color">#dc4e41</color>
+    <color name="white">#ffffff</color>
+
+    <color name="transparent">#00555555</color>
+   <!-- <color name="login_test">#009c80</color>-->
+    <color name="login_button">#20B2AA</color>
+   <!-- <color name="login_test">#57bc5f</color>-->
+    <color name="login_test">#3F51B5</color>
+    <color name="login_primary">#009688</color> <!-- 500 -->
+    <color name="login_primary_dark">#00796B</color> <!-- 700 -->
+    <color name="login_primary_darker">#00695C</color> <!-- 800 -->
+    <color name="login_accent">#FFFFFF</color>
+    <color name="iron">#CCCCCC</color>
+    <color name="bg_comment_rating">#f3f3f4</color>
+    <color name="text_hint">#55000000</color>
+    <color name="gray_dark">#808080</color>
+    
+    <color name="dark">#B1B1B1</color>
+    <color name="background_message">#D1F8F8F8</color>
+    <color name="color_divider">#b3b3b3</color>
+    <color name="vDarkGray">#616161</color>
+    <color name="lightGray">#E9EEF2</color>
+    <color name="otp_editext_color">#DAE2DFDF</color>
+</resources>

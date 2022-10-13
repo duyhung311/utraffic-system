@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.partner.healthfacility.RegisterHealthFacilityFragment"
+    android:background="@color/white">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="20dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <androidx.appcompat.widget.AppCompatImageButton
+                android:id="@+id/btnBack"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:background="@color/transparent"
+                android:src="@drawable/ic_arrow_back_black_24dp" />
+
+            <TextView
+                android:id="@+id/textView11"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/btnBack"
+                android:layout_alignParentStart="true"
+                android:layout_marginTop="20dp"
+                android:text="Tên cơ sở" />
+
+            <EditText
+                android:id="@+id/edtNameHF"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/textView11"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentEnd="true"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="5dp"
+                android:background="@drawable/bg_blue_border_radius"
+                android:ems="10"
+                android:inputType="textPersonName"
+                android:padding="10dp"
+                android:text=""/>
+
+            <TextView
+                android:id="@+id/textView12"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/edtNameHF"
+                android:layout_alignParentStart="true"
+                android:layout_marginTop="20dp"
+                android:text="Địa chỉ" />
+
+            <EditText
+                android:id="@+id/edtAddressHF"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/textView12"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentEnd="true"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="5dp"
+                android:background="@drawable/bg_blue_border_radius"
+                android:ems="10"
+                android:inputType="textPersonName"
+                android:padding="10dp"
+                android:text=""/>
+
+            <TextView
+                android:id="@+id/textView13"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/edtAddressHF"
+                android:layout_alignParentStart="true"
+                android:layout_marginTop="20dp"
+                android:text="Thời gian làm việc" />
+
+            <EditText
+                android:id="@+id/edtWorkTimeHF"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/textView13"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentEnd="true"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="5dp"
+                android:background="@drawable/bg_blue_border_radius"
+                android:ems="10"
+                android:inputType="textPersonName"
+                android:padding="10dp"
+                android:text=""/>
+
+            <TextView
+                android:id="@+id/textView14"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/edtWorkTimeHF"
+                android:layout_alignParentStart="true"
+                android:layout_marginTop="20dp"
+                android:text="Chuyên khoa" />
+
+            <TextView
+                android:id="@+id/tvSpecialisationHF"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/textView14"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentEnd="true"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="5dp"
+                android:background="@drawable/bg_blue_border_radius"
+                android:ems="10"
+                android:padding="10dp"
+                android:text=""/>
+
+            <TextView
+                android:id="@+id/textView15"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/tvSpecialisationHF"
+                android:layout_alignParentStart="true"
+                android:layout_marginTop="20dp"
+                android:text="Dịch vụ" />
+
+            <EditText
+                android:id="@+id/edtServiceHF"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/textView15"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentEnd="true"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="5dp"
+                android:background="@drawable/bg_blue_border_radius"
+                android:ems="10"
+                android:inputType="textPersonName"
+                android:padding="10dp"
+                android:text=""/>
+
+            <TextView
+                android:id="@+id/textView16"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/edtServiceHF"
+                android:layout_alignParentStart="true"
+                android:layout_marginTop="20dp"
+                android:text="Số điện thoại" />
+
+            <EditText
+                android:id="@+id/edtPhoneNumberHF"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/textView16"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentEnd="true"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="5dp"
+                android:background="@drawable/bg_blue_border_radius"
+                android:ems="10"
+                android:inputType="numberDecimal"
+                android:padding="10dp"
+                android:text="" />
+
+            <TextView
+                android:id="@+id/textView17"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/edtPhoneNumberHF"
+                android:layout_alignParentStart="true"
+                android:layout_marginTop="20dp"
+                android:text="Giấy phép hoạt động" />
+
+            <ImageView
+                android:id="@+id/imvLicenseHF"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_below="@+id/textView17"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentEnd="true"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="5dp"
+                android:src="@drawable/ic_get_image" />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btnRegisterHF"
+                android:layout_width="wrap_content"
+                android:layout_height="32dp"
+                android:layout_below="@+id/imvLicenseHF"
+                android:layout_alignParentEnd="true"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="20dp"
+                android:background="@drawable/bg_button_active"
+                android:text="Đăng ký"
+                android:textColor="@color/white"
+                android:textSize="12dp" />
+
+        </RelativeLayout>
+    </ScrollView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

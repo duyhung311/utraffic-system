@@ -1,0 +1,143 @@
+{
+  "project_info": {
+    "project_number": "131064076267",
+    "firebase_url": "https://utraffic.firebaseio.com",
+    "project_id": "utraffic",
+    "storage_bucket": "utraffic.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:131064076267:android:da24d1faa1e311d8",
+        "android_client_info": {
+          "package_name": "com.example.admin.googlemapapitest"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "131064076267-47lvssk4a0359tap67d058m87pugvo3i.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAjaJZnHb8eF9qFnrJNS7nBX6QE-Kf9JVM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "131064076267-l5mfjlktr38bqu935n32ima5u7vu5b2d.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:131064076267:android:eabf704671d398f8712bae",
+        "android_client_info": {
+          "package_name": "com.hcmut.admin.utrafficsystem"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "131064076267-47lvssk4a0359tap67d058m87pugvo3i.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAjaJZnHb8eF9qFnrJNS7nBX6QE-Kf9JVM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "131064076267-l5mfjlktr38bqu935n32ima5u7vu5b2d.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:131064076267:android:53b2f909ce746d38",
+        "android_client_info": {
+          "package_name": "com.hcmut.admin.googlemapapitest"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "131064076267-lbaphlc2hga2oksf22nqu4ljja09nc5o.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.hcmut.admin.googlemapapitest",
+            "certificate_hash": "0fccd79dd0bdf133d7249fb661b627fa6f81492b"
+          }
+        },
+        {
+          "client_id": "131064076267-odh7iamsigsts5tbo9qdm9fjs7bdca03.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.hcmut.admin.googlemapapitest",
+            "certificate_hash": "d456bbab72a472c2d834b6fe65a878ddeaad83ff"
+          }
+        },
+        {
+          "client_id": "131064076267-47lvssk4a0359tap67d058m87pugvo3i.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAjaJZnHb8eF9qFnrJNS7nBX6QE-Kf9JVM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "131064076267-l5mfjlktr38bqu935n32ima5u7vu5b2d.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:131064076267:android:1ab054180b516652",
+        "android_client_info": {
+          "package_name": "vn.edu.hcmut.cse.utraffic"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "131064076267-47lvssk4a0359tap67d058m87pugvo3i.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAjaJZnHb8eF9qFnrJNS7nBX6QE-Kf9JVM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "131064076267-l5mfjlktr38bqu935n32ima5u7vu5b2d.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

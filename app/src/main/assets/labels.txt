@@ -1,0 +1,11 @@
+flipflops
+gown
+kurta
+polo
+shirt
+shoe
+suit
+summerdress
+top
+tshirt
+white_shirt

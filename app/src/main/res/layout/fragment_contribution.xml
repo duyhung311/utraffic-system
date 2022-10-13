@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.hcmut.admin.utrafficsystem.customview.NonGestureConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    tools:context=".ui.contribution.ContributionFragment">
+
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:text="Đóng góp"
+        android:textSize="18dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/txtReportTraffic"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:background="@drawable/transparent_btn_bg"
+        android:clickable="true"
+        android:drawableStart="@drawable/ic_report_traffic"
+        android:drawablePadding="20dp"
+        android:text="CẢNH BÁO TTGT"
+        android:gravity="center_vertical"
+        android:textSize="12dp"
+        android:padding="16dp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/title" />
+
+    <TextView
+        android:id="@+id/border0"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/gray"
+        app:layout_constraintTop_toBottomOf="@+id/txtReportTraffic"/>
+
+
+    <TextView
+        android:id="@+id/txtReportInfrastructure"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/transparent_btn_bg"
+        android:clickable="true"
+        android:drawableStart="@drawable/ic_report_infrastructure"
+        android:text="CẢNH BÁO CSHT"
+        android:textSize="12dp"
+        android:padding="16dp"
+        android:textStyle="bold"
+        android:drawablePadding="20dp"
+        android:gravity="center_vertical"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/border0" />
+
+    <TextView
+        android:id="@+id/border1"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/gray"
+        app:layout_constraintTop_toBottomOf="@+id/txtReportInfrastructure"/>
+
+    <TextView
+        android:id="@+id/txtFastReport"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/transparent_btn_bg"
+        android:clickable="true"
+        android:drawableStart="@drawable/ic_fast_report"
+        android:text="CẢNH BÁO NHANH"
+        android:textSize="12dp"
+        android:textStyle="bold"
+        android:drawablePadding="20dp"
+        android:padding="16dp"
+        android:gravity="center_vertical"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/border1" />
+
+    <TextView
+        android:id="@+id/border2"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/gray"
+        app:layout_constraintTop_toBottomOf="@+id/txtFastReport"/>
+
+    <TextView
+        android:id="@+id/txtCallVOH"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/transparent_btn_bg"
+        android:clickable="true"
+        android:drawableStart="@drawable/ic_call_phone_32px"
+        android:text="LIÊN HỆ BIÊN TẬP VIÊN VOH"
+        android:textSize="12dp"
+        android:textStyle="bold"
+        android:drawablePadding="20dp"
+        android:padding="16dp"
+        android:gravity="center_vertical"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/border2" />
+
+</com.hcmut.admin.utrafficsystem.customview.NonGestureConstraintLayout>

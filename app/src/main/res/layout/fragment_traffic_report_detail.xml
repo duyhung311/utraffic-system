@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.hcmut.admin.utrafficsystem.customview.NonGestureConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="20dp"
+        android:paddingBottom="10dp"
+        android:paddingEnd="16dp"
+        android:paddingStart="0dp"
+        android:background="@color/blue"
+        android:elevation="3dp"
+        android:id="@+id/header"
+        android:weightSum="9"
+        android:orientation="horizontal"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <ImageView
+            android:id="@+id/imgBack"
+            android:layout_width="32dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:padding="10dp"
+            android:layout_centerVertical="true"
+            android:src="@drawable/ic_back_white" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/txtReportViewTitle"
+            android:textColor="@color/white"
+            android:layout_weight="8"
+            android:layout_gravity="center_vertical"
+            android:padding="10dp"
+            android:text="Các báo cáo gần đây"
+            android:textSize="16dp"/>
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/tv_speed"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/header"
+        android:text="Không có dữ liệu về báo cáo tại thời điểm này" />
+
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvRating"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginBottom="4dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_speed" />
+
+
+</com.hcmut.admin.utrafficsystem.customview.NonGestureConstraintLayout>

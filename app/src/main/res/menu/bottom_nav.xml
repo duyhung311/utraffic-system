@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/colorPrimary"
+    app:bbn_badgeColor="#FFFF0000"
+    app:bbn_rippleColor="#33ffffff">
+    <item
+        android:id="@+id/homeTabId"
+        android:icon="@drawable/ic_map_tab"
+        android:title="Bản đồ" />
+    <item
+        android:id="@+id/contributeTabId"
+        android:icon="@drawable/ic_contribution_tab"
+        android:title="Đóng góp" />
+    <item
+        android:id="@+id/viewReportTabId"
+        android:icon="@drawable/ic_view_report_tab"
+        android:title="Xem Báo cáo" />
+    <item
+        android:id="@+id/accountTabId"
+        android:icon="@drawable/ic_account_box"
+        android:title="Tài khoản" />
+</menu>

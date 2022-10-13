@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="default_margin">16dp</dimen>
+    <dimen name="large_margin">32dp</dimen>
+    <dimen name="medium_margin">8dp</dimen>
+    <dimen name="small_small_margin">2dp</dimen>
+    <dimen name="small_margin">3dp</dimen>
+
+    <dimen name="activity_horizontal_margin">16dp</dimen>
+    <dimen name="activity_vertical_margin">16dp</dimen>
+    <dimen name="nav_header_vertical_spacing">16dp</dimen>
+    <dimen name="nav_header_height">180dp</dimen>
+
+    <dimen name="dimen24dp">24dp</dimen>
+    <dimen name="dimen30sp">30sp</dimen>
+    <dimen name="dimen8dp">8dp</dimen>
+    <dimen name="dimen18sp">18sp</dimen>
+    <dimen name="dimen10dp">10dp</dimen>
+    <dimen name="dimen1dp">1dp</dimen>
+    <dimen name="dimen130dp">130dp</dimen>
+    <dimen name="dimen16sp">16sp</dimen>
+    <dimen name="dimen15dp">15dp</dimen>
+    <dimen name="dimen12dp">12dp</dimen>
+    <dimen name="dimen14sp">14sp</dimen>
+    <dimen name="dimen20sp">20sp</dimen>
+    <dimen name="dimen175dp">175dp</dimen>
+    <dimen name="dimen370dp">370dp</dimen>
+    <dimen name="dimen150dp">150dp</dimen>
+    <dimen name="dimen28dp">28dp</dimen>
+    <dimen name="dimen35dp">35dp</dimen>
+    <dimen name="dimen30dp">30dp</dimen>
+    <dimen name="dimen20dp">20dp</dimen>
+    <dimen name="dimen5dp">5dp</dimen>
+    <dimen name="dimen100dp">100dp</dimen>
+    <dimen name="dimen70dp">70dp</dimen>
+    <dimen name="dimen140dp">140dp</dimen>
+    <dimen name="dimen25sp">25sp</dimen>
+    <dimen name="dimen200dp">200dp</dimen>
+    <dimen name="dimen35sp">35sp</dimen>
+    <dimen name="et_otp_width">40dp</dimen>
+    <dimen name="et_otp_height">40dp</dimen>
+    <dimen name="margin_right_otp">20dp</dimen>
+    <!--
+    Because the window insets on round devices are larger than 15dp, this padding only applies
+    to square screens.
+    -->
+    <dimen name="box_inset_layout_padding">0dp</dimen>
+
+    <!--
+    This padding applies to both square and round screens. The total padding between the buttons
+    and the window insets is box_inset_layout_padding (above variable) on square screens and
+    inner_frame_layout_padding (below variable) on round screens.
+    -->
+    <dimen name="inner_frame_layout_padding">5dp</dimen>
+</resources>

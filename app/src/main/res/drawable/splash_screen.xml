@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:drawable="@color/white" />
+
+    <item
+        android:width="222dp"
+        android:height="222dp"
+        android:drawable="@drawable/app_icon"
+        android:end="100dp"
+        android:gravity="center"
+        android:start="100dp">
+
+    </item>
+
+</layer-list>

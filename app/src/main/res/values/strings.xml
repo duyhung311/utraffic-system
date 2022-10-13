@@ -1,0 +1,139 @@
+<resources>
+    <string name="app_name">GoogleMapApiTest</string>
+    <string name="title_activity_speech_to_text">SpeechToText</string>
+    <string name="facebook_app_id">891769847915505</string>
+
+    <!--
+    Config login by fb at link: https://developers.facebook.com/docs/facebook-login/android/?sdk=fbsdk
+-->
+    <string name="fb_login_protocol_scheme">fb891769847915505</string>
+    <string name="server_client_id">1051658404318-d2prbl7drlg5tegiggo939t0tiv1jogk.apps.googleusercontent.com</string>
+    <string name="danh_gia">Đánh giá</string>
+    <string name="list_report">Danh sách báo cáo</string>
+    <string name="report_detail">Chi tiết báo cáo</string>
+    <string name="info">Thông tin cá nhân</string>
+    <string name="gg_api_key">AIzaSyBfloTm067WfYy3ZiE2BiubYjOhv4H-Jrw</string>
+    <string name="text_current_location">Vị trí hiện tại</string>
+    <string-array name="reasons_array">
+        <item>Nguyên nhân (không bắt buộc)</item>
+        <item>Tắc đường</item>
+        <item>Ngập lụt</item>
+        <item>Vật cản</item>
+        <item>Tai nạn</item>
+        <item>Công an</item>
+        <item>Đường cấm</item>
+    </string-array>
+
+    <string-array name="travel_types_array">
+        <item>Khoảng cách</item>
+        <item>Thời gian</item>
+    </string-array>
+
+    <!-- Firebase strings-->
+    <string name="msg_subscribed">Subscribed to weather topic</string>
+    <string name="msg_token_fmt" translatable="false">InstanceID Token: %s</string>
+    <string name="default_notification_channel_id" translatable="false">fcm_default_channel</string>
+    <!--
+            This is the name that users will see when interacting with this channel.
+            It should describe the category of notifications that will be sent through this channel
+         -->
+    <string name="default_notification_channel_name" translatable="true">Report</string>
+    <string name="msg_subscribe_failed">Failed to subscribe to report topic</string>
+    <string name="fcm_message">FCM Message</string>
+    <string name="login">Đăng nhập</string>
+    <string name="name">Họ Tên</string>
+    <string name="name_register">Họ Tên*</string>
+    <string name="username">Tên đăng nhập</string>
+    <string name="username_register">Tên đăng nhập*</string>
+    <string name="username_sign_up">Tên đăng nhập (Yêu cầu)</string>
+    <string name="password">Mật khẩu</string>
+    <string name="password_register">Mật khẩu*</string>
+    <string name="password_sign_up">Mật khẩu (Yêu cầu)</string>
+    <string name="confirm_password_sign_up">Xác nhận mật khẩu*</string>
+    <string name="sign_up">Đăng ký</string>
+    <string name="phone_number">Số điện thoại</string>
+    <string name="email_address">Địa chỉ email</string>
+    <string name="or">Hoặc đăng nhập bằng</string>
+    <string name="forgot_password">Quên mật khẩu</string>
+    <string name="dont_have_account">Bạn có tài khoản chưa?</string>
+    <string name="velocity">Tốc độ đã nhập (km/h): </string>
+    <string name="auto_velocity">Tốc độ tự đo (km/h): </string>
+    <string name="title_take_photo">Chọn nguồn</string>
+    <string name="text_no_report">Thời điểm này không có báo cáo gửi lên hệ thống.\nVui lòng chọn thời điểm khác."</string>
+    <string name="loading">Đang tải…</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <!--    setting preference key-->
+    <string name="swGpsCollectionRef">swGpsCollectionRef</string>
+    <string name="swAutoSleepWakeupRef">swAutoSleepWakeupRef</string>
+    <string name="swNotifyAroundRef">swNotifyAroundRef</string>
+    <string name="swNotifyMoveRef">swNotifyMoveRef</string>
+    <string name="trending">Nổi bật</string>
+    <string name="top">Đổi nhiều</string>
+    <string name="see_all">Xem thêm</string>
+    <string name="recently_viewed_items">Xem gần đây</string>
+    easy_use
+    <string name="easy_use">Sử dụng dễ dàng</string>
+    <string name="payment">Thanh toán trực tuyến</string>
+    <string name="looking_for">Tìm kiếm</string>
+    <string name="nameuser">Name</string>
+    <string name="emailuser">Email</string>
+    <string name="profile_picture">Profile</string>
+    <string name="my_voucher">Voucher của tôi</string>
+    <string name="my_account">Chuyển điểm</string>
+    <string name="my_report">Mua điểm</string>
+    <string name="my_history">Lịch sử</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="voucher_image">Voucher Image</string>
+    <string name="voucher1">Mã giảm giá 1</string>
+    <string name="point_90">90 điểm</string>
+    <string name="buy">Đổi</string>
+    <string name="detail">Chi tiết</string>
+    <string name="detail_content">Nội dung chi tiết khuyến mãi</string>
+    <string name="my_list_voucher">Dánh sách voucher</string>
+    <string name="number_voucher">Mã giao dịch:</string>
+    <string name="infor_voucher">Thông tin voucher</string>
+    <string name="status_bar">Sử dụng</string>
+    <string name="use_voucher">Sử dụng</string>
+    <string name="info_perform">Thông tin giao dịch</string>
+    <string name="pay_success">Giao dịch thành công</string>
+    <string name="recent_searches">Tìm kiếm gần đây</string>
+    <string name="clear_all">Xóa</string>
+    <string name="otp_title">Vui lòng nhập mã xác thực gồm 6 chữ số</string>
+    <string name="sent_to_84_xxx_xxx">được gửi đến số đã đăng ký</string>
+    <string name="otp_button_text">Xác thực</string>
+    <string name="resend_msg">Không nhận được OTP?</string>
+    <string name="resend_again_msg">Gửi lại</string>
+
+
+    <!--    Content for guiding page -->
+    <string name="searchWayTitle">Tìm đường </string>
+    <string name="searchWay">\n 1. Chọn mũi tên bên phải phía dưới màn hình bản đồ để sử dụng chức năng tìm đường. \n
+                            2. Nhập thông tin địa điểm bắt đầu và kết thúc từ bàn phím hoặc chọn trực tiếp trên bản đồ. \n
+                            3. Chọn tìm đường theo thời gian hoặc khoảng cách</string>
+    <string name="warningStatusTitle">Cảnh báo tình trạng giao thông</string>
+    <string name="warningStatusContent">\n 1. Chọn chức năng \"Đóng góp\" trên menu màn hình chính. \n
+                                        2. Chọn mục \"Cảnh Báo TTGT\". \n
+                                        3. Nhập địa điểm hoặc chọn vị trí cần cảnh báo trên bản đồ. \n
+                                        4. Thiết lập các thông tin cần thiết như vận tốc, nguyên nhân cùng với hình ảnh và ghi chú nếu có. \n
+                                        5. Chọn \"Tạo cảnh báo\" và \"Gửi cảnh báo\" khi hộp thoại xác nhận xuất hiện. \n
+                                        + Bên cạnh đó, bạn có thể chọn \"Cảnh báo nhanh\" để gửi nhanh tình trạng giao tại điểm đang đứng
+                                        hoặc chọn \"Liên hệ biên tập viên\" để thực hiện cuộc gọi đến tổng đài.</string>
+    <string name="reportTitle">Báo Cáo</string>
+    <string name="reportContent">\n 1. Chọn chức năng \"Xem Báo cáo\" trên menu màn hình chính. \n
+                                2. Chọn nút \"Tải lại\" đển làm mới dữ liệu. \n
+                                3. Chọn biểu tượng trên bản đồ để xem chi tiết về tình trạng giao thông tại địa điểm được báo cáo. \n
+                                4. Có thể tiến hành đánh giá độ chính xác của báo cáo. \n</string>
+    <string name="accountSettingTitle">Thiết Lập Tài Khoản</string>
+    <string name="accountSettingContent">\n 1. Chọn chức năng \"Tài Khoản\" trên menu màn hình chính. \n
+                                        2. Chọn \"Quản lý tài khoản\" để cập nhật thông tin tài khoản. \n
+                                        3. Chọn \"Quản lý Voucher\" để xem thông tin về các Voucher hiện có. \n
+                                        4. Chọn \"Cài đặt\" để thiết lập các chức năng liên quan đến ứng dụng như thu thập dữ liệu
+                                        và nhận thông báo ùn tắc giao thông. \n
+                                        5. Chọn \"Đăng xuất\" để đăng xuất tài khoản khỏi ứng dụng.</string>
+    <string name="privacyPolicyLink"><a href="https://bktraffic.com/home/mobile-app/policy">Chính sách bảo mật</a></string>
+    <string name="title_activity_disclosure">DisclosureActivity</string>
+</resources>

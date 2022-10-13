@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory android:title="Dữ liệu">
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="swGpsCollectionRef"
+            android:summary="Cho phép ứng dụng thu thập dữ liệu GPS để đánh giá tình trạng giao thông"
+            android:title="Thu thập dữ liệu GPS" />
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="swAutoSleepWakeupRef"
+            android:summary="Tự động bật/tắt thu thập dữ liệu khi người dùng di chuyển hoặc đứng yên"
+            android:title="Tự động bật/tắt thu thập dữ liệu GPS" />
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="Thông báo">
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="swNotifyAroundRef"
+            android:summary="Gửi thông báo khi xung quanh vị trí người dùng có ùn tắc giao thông"
+            android:title="Thông báo ùn tắc xung quanh người dùng" />
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="swNotifyMoveRef"
+            android:summary="Gửi thông báo khi người dùng di chuyển đến khu vực xảy ra ùn tắc"
+            android:title="Thông báo ùn tắc khi di chuyển" />
+    </PreferenceCategory>
+
+</PreferenceScreen>
