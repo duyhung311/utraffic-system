@@ -40,6 +40,7 @@ public class ContributionFragment extends Fragment {
     private TextView txtReportInfrastructure;
     private TextView txtFastReport;
     private TextView txtCallVOH;
+    private TextView txtSpeechReport;
 
     public ContributionFragment() {
         // Required empty public constructor
@@ -102,6 +103,7 @@ public class ContributionFragment extends Fragment {
         txtReportInfrastructure = view.findViewById(R.id.txtReportInfrastructure);
         txtFastReport = view.findViewById(R.id.txtFastReport);
         txtCallVOH = view.findViewById(R.id.txtCallVOH);
+        txtSpeechReport = view.findViewById(R.id.txtSpeechReport);
     }
 
     private void addEvents() {
@@ -148,6 +150,12 @@ public class ContributionFragment extends Fragment {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
+            }
+        });
+        txtSpeechReport.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View view) {
+                NavHostFragment.findNavController(ContributionFragment.this)
+                               .navigate(R.id.action_contributionFragment_to_speechReportFragment);
             }
         });
     }
