@@ -136,4 +136,5 @@
                                         5. Chọn \"Đăng xuất\" để đăng xuất tài khoản khỏi ứng dụng.</string>
     <string name="privacyPolicyLink"><a href="https://bktraffic.com/home/mobile-app/policy">Chính sách bảo mật</a></string>
     <string name="title_activity_disclosure">DisclosureActivity</string>
+    <string name="send_speech_report">GỬI</string>
 </resources>

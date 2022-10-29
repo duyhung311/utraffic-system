@@ -52,10 +52,22 @@
             app:exitAnim="@anim/slide_out_bottom"
             app:popEnterAnim="@anim/slide_in_bottom"
             app:popExitAnim="@anim/slide_out_top"/>
+        <action
+            android:id="@+id/action_contributionFragment_to_speechReportFragment"
+            app:destination="@id/speechReportFragment"
+            app:enterAnim="@anim/slide_in_top"
+            app:exitAnim="@anim/slide_out_bottom"
+            app:popEnterAnim="@anim/slide_in_bottom"
+            app:popExitAnim="@anim/slide_out_top" />
     </fragment>
     <fragment
         android:id="@+id/infrastructureReportFragment"
         android:name="com.hcmut.admin.utrafficsystem.ui.report.infrastructure.InfrastructureReportFragment"
         android:label="fragment_infrastructure_report"
         tools:layout="@layout/fragment_infrastructure_report" />
+    <fragment
+        android:id="@+id/speechReportFragment"
+        android:name="com.hcmut.admin.utrafficsystem.ui.report.speech.SpeechReportFragment"
+        android:label="fragment_speech_report"
+        tools:layout="@layout/fragment_speech_report" />
 </navigation>

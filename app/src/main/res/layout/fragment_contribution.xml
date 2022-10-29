@@ -110,4 +110,28 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/border2" />
 
+    <TextView
+        android:id="@+id/border7"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/gray"
+        app:layout_constraintTop_toBottomOf="@+id/txtCallVOH" />
+
+    <TextView
+        android:id="@+id/txtSpeechReport"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/transparent_btn_bg"
+        android:clickable="true"
+        android:drawableStart="@drawable/ic_speech_32"
+        android:drawablePadding="20dp"
+        android:gravity="center_vertical"
+        android:padding="16dp"
+        android:text="ĐÓNG GÓP BẰNG GIỌNG NÓI"
+        android:textSize="12dp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/border7" />
+
 </com.hcmut.admin.utrafficsystem.customview.NonGestureConstraintLayout>
