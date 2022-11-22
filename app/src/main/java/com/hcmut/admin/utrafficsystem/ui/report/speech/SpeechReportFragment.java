@@ -2,12 +2,15 @@ package com.hcmut.admin.utrafficsystem.ui.report.speech;
 
 import static com.facebook.FacebookSdk.getApplicationContext;
 
+import static com.facebook.FacebookSdk.getApplicationContext;
+
 import android.annotation.SuppressLint;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.media.MediaRecorder;
 import android.annotation.SuppressLint;
-import android.content.Context;
+import android.media.AudioManager;
+import android.media.MediaPlayer;
 import android.media.MediaRecorder;
 import android.os.Bundle;
 import android.os.Environment;
@@ -19,6 +22,7 @@ import android.widget.ImageButton;
 import android.widget.Toast;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -37,6 +41,8 @@ import com.google.android.gms.maps.MapView;
 
 import java.io.IOException;
 import com.google.android.gms.maps.MapView;
+
+import java.io.IOException;
 
 /**
  * A simple {@link Fragment} subclass.
