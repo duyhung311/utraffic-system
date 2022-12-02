@@ -50,17 +50,43 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/txtSpeechChooseLocation" />
 
+<!--    <EditText
+        android:id="@+id/txtSpeechFormStart"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="text"
+        android:hint="Chọn điểm bắt đầu trên bản đồ"
+        android:textSize="16sp"
+        android:padding="10dp"
+        android:layout_margin="16dp"
+        app:layout_constraintTop_toBottomOf="@id/mapView"
+        tools:layout_editor_absoluteX="0dp"
+        tools:layout_editor_absoluteY="444dp" />-->
+
+    <!--<EditText
+        android:id="@+id/txtSpeechFormEnd"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="text"
+        android:hint="Chọn điểm kết thúc trên bản đồ"
+        android:textSize="16sp"
+        android:padding="10dp"
+        android:layout_margin="16dp"
+        app:layout_constraintTop_toBottomOf="@id/txtSpeechFormStart"
+        tools:layout_editor_absoluteX="0dp"
+        tools:layout_editor_absoluteY="444dp" />-->
+
     <ImageButton
         android:id="@+id/speechRecordButton"
         android:layout_width="60dp"
         android:layout_height="60dp"
         android:padding="10dp"
-        android:layout_marginBottom="32dp"
         android:src="@drawable/ic_record"
         android:background="@drawable/bg_circle_image"
         android:scaleType="fitXY"
         android:clickable="true"
-        app:layout_constraintBottom_toTopOf="@id/btnSubmitSpeechReport"
+        android:layout_marginTop="32dp"
+        app:layout_constraintTop_toBottomOf="@id/mapView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         android:focusable="true" />
@@ -69,12 +95,12 @@
         android:id="@+id/btnSubmitSpeechReport"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="64dp"
         android:clickable="true"
         android:text="@string/send_speech_report"
         android:textAllCaps="true"
         android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginTop="32dp"
+        app:layout_constraintTop_toBottomOf="@id/speechRecordButton"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         android:focusable="true" />
