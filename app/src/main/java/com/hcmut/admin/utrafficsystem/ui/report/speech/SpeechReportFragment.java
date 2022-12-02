@@ -40,6 +40,7 @@ import com.hcmut.admin.utrafficsystem.R;
 import com.hcmut.admin.utrafficsystem.model.Atm;
 import com.hcmut.admin.utrafficsystem.repository.remote.RetrofitClient;
 import com.hcmut.admin.utrafficsystem.repository.remote.model.BaseResponse;
+import com.hcmut.admin.utrafficsystem.repository.remote.model.request.SpeechReportBody;
 import com.hcmut.admin.utrafficsystem.repository.remote.model.request.SpeechReportRequest;
 import com.hcmut.admin.utrafficsystem.repository.remote.model.response.SpeechReportResponse;
 import com.hcmut.admin.utrafficsystem.ui.map.MapActivity;
@@ -52,6 +53,7 @@ import com.google.android.gms.maps.MapView;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -86,7 +88,8 @@ public class SpeechReportFragment extends Fragment implements MapActivity.OnBack
     private Integer counter = 0;
     String outputFile;
     String dolbyInputBucketUrl;
-
+    private String serverUrl = "http://localhost:3000/api/report/speech-report";
+    private String temporarySpeechRecordId = "6386b8b0f0113e7528486509";
     public SpeechReportFragment() {
         // Required empty public constructor
     }
@@ -191,6 +194,27 @@ public class SpeechReportFragment extends Fragment implements MapActivity.OnBack
                 });
     }
 
+    private void triggerServer(File audioFile) {
+        List<Integer> listSegments = new ArrayList();
+        listSegments.add(16);
+        listSegments.add(17);
+        SpeechReportBody speechReportBody =  new SpeechReportBody();
+        speechReportBody.setSegments(listSegments);
+        speechReportBody.setSpeechRecordId(temporarySpeechRecordId);
+        speechReportBody.setRecord(audioFile);
+        RetrofitClient.getApiService().triggerServer(speechReportBody)
+                .enqueue(new Callback<SpeechReportResponse>() {
+                    @Override
+                    public void onResponse(Call<SpeechReportResponse> call, Response<SpeechReportResponse> response) {
+
+                    }
+
+                    @Override
+                    public void onFailure(Call<SpeechReportResponse> call, Throwable t) {
+                        //androidExt.showErrorDialog(getContext(), "Kết nối thất bại, vui lòng kiểm tra lại");
+                    }
+                });
+    }
     private void addEvents() {
         /*
             Record Audio
@@ -222,7 +246,10 @@ public class SpeechReportFragment extends Fragment implements MapActivity.OnBack
                 if (outputFile != null && dolbyInputBucketUrl != null) {
                     File audioFile = new File(outputFile);
                     uploadAudioFileToDolby(dolbyInputBucketUrl, audioFile);
+                    triggerServer(audioFile);
                 }
+
+
             }
         });
     }

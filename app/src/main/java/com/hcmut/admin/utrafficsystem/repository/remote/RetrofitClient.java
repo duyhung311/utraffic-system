@@ -71,8 +71,9 @@ public class RetrofitClient {
 
     public static APIService getApiService() {
         if (apiService == null) {
-            String baseURL = "https://api.bktraffic.com";
+            //String baseURL = "https://api.bktraffic.com";
             //String baseURL = "http://192.168.1.11:3000";
+            String baseURL = "http://localhost:3000";
             apiService = builder(baseURL).create(APIService.class);
         }
         return apiService;
@@ -103,5 +104,6 @@ public class RetrofitClient {
         }
         return apiSpeechReport;
     }
+
 
 }

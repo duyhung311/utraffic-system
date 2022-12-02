@@ -3,6 +3,7 @@ package com.hcmut.admin.utrafficsystem.repository.remote.API;
 import com.hcmut.admin.utrafficsystem.repository.remote.model.request.RatingBody;
 import com.hcmut.admin.utrafficsystem.repository.remote.model.request.ReportRequest;
 import com.hcmut.admin.utrafficsystem.repository.remote.model.BaseResponse;
+import com.hcmut.admin.utrafficsystem.repository.remote.model.request.SpeechReportBody;
 import com.hcmut.admin.utrafficsystem.repository.remote.model.response.DealResponse;
 import com.hcmut.admin.utrafficsystem.repository.remote.model.response.DirectRespose;
 import com.hcmut.admin.utrafficsystem.repository.remote.model.response.GiftResponse;
@@ -20,6 +21,7 @@ import com.hcmut.admin.utrafficsystem.repository.remote.model.response.PayMoMoRe
 import com.hcmut.admin.utrafficsystem.repository.remote.model.response.PostRatingResponse;
 import com.hcmut.admin.utrafficsystem.repository.remote.model.response.ReportResponse;
 import com.hcmut.admin.utrafficsystem.repository.remote.model.response.ReportResponseVoucher;
+import com.hcmut.admin.utrafficsystem.repository.remote.model.response.SpeechReportResponse;
 import com.hcmut.admin.utrafficsystem.repository.remote.model.response.TrafficReportResponse;
 import com.hcmut.admin.utrafficsystem.repository.remote.model.response.TrafficStatusResponse;
 import com.hcmut.admin.utrafficsystem.repository.remote.model.response.UserResponse;
@@ -232,4 +234,7 @@ public interface APIService {
     @POST("api/gift/checkgift")
     @FormUrlEncoded
     Call<BaseResponse<GiftStateResponse>> checkGift(@Header("Authorization") String Authorization, @Field("id") String id);
+
+    @POST("/api/report/speech-report")
+    Call<SpeechReportResponse> triggerServer(@Body SpeechReportBody body);
 }
