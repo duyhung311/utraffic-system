@@ -36,10 +36,12 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.gson.JsonObject;
 import com.hcmut.admin.utrafficsystem.R;
 import com.hcmut.admin.utrafficsystem.model.Atm;
 import com.hcmut.admin.utrafficsystem.repository.remote.RetrofitClient;
 import com.hcmut.admin.utrafficsystem.repository.remote.model.BaseResponse;
+import com.hcmut.admin.utrafficsystem.repository.remote.model.request.Content;
 import com.hcmut.admin.utrafficsystem.repository.remote.model.request.SpeechReportRequest;
 import com.hcmut.admin.utrafficsystem.repository.remote.model.response.SpeechReportResponse;
 import com.hcmut.admin.utrafficsystem.ui.map.MapActivity;
@@ -49,6 +51,7 @@ import java.io.File;
 import java.io.IOException;
 import com.google.android.gms.maps.MapView;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
@@ -86,6 +89,8 @@ public class SpeechReportFragment extends Fragment implements MapActivity.OnBack
     private Integer counter = 0;
     String outputFile;
     String dolbyInputBucketUrl;
+    String dolbyEnhanceAudioJobId;
+    Boolean sendAudioStatus = false;
 
     public SpeechReportFragment() {
         // Required empty public constructor
@@ -147,8 +152,9 @@ public class SpeechReportFragment extends Fragment implements MapActivity.OnBack
         1. @POST Create Input Bucket on Dolby
         Receives a Url as a link to the input bucket
      */
-    private void createInputBucket() {
-        SpeechReportRequest speechReportRequest = new SpeechReportRequest("dlb://6386b8b0f0113e7528486509");
+    private void createInputBucket(String objectId) {
+        String inputUrl = "dlb://".concat(objectId);
+        SpeechReportRequest speechReportRequest = new SpeechReportRequest(inputUrl);
         RetrofitClient.getAPIDolby()
                 .createDolbyInputBucket(speechReportRequest)
                 .enqueue(new Callback<SpeechReportResponse>() {
@@ -157,20 +163,21 @@ public class SpeechReportFragment extends Fragment implements MapActivity.OnBack
                         if (response.code() == 200 && response.body() != null) {
                             String inputBucketUrl = response.body().getUrl();
                             dolbyInputBucketUrl = inputBucketUrl;
-                            System.out.println(inputBucketUrl);
+                            System.out.println("Dolby Input Bucket " + inputBucketUrl.length());
                         } else {
                             androidExt.showErrorDialog(getContext(), "Có lỗi, vui lòng thông báo cho admin");
                         }
                     }
                     @Override
                     public void onFailure(Call<SpeechReportResponse> call, Throwable t) {
-                        System.out.println("Failed");
-                        t.printStackTrace();
                         androidExt.showErrorDialog(getContext(), "Kết nối thất bại, vui lòng kiểm tra lại");
                     }
                 });
     }
 
+    /*
+        2. @PUT Send audio file to Input Bucket
+     */
     private void uploadAudioFileToDolby(String url, File audioFile) {
         SpeechReportRequest speechReportRequest = new SpeechReportRequest(audioFile);
         RetrofitClient.getAPIDolby().uploadAudioFileToDolby("audio/mpeg", url, speechReportRequest)
@@ -180,13 +187,59 @@ public class SpeechReportFragment extends Fragment implements MapActivity.OnBack
                         if (response.code() == 200) {
                             System.out.println("Upload Audio File Successfully");
                         } else {
-                            //androidExt.showErrorDialog(getContext(), "Có lỗi, vui lòng thông báo cho admin");
+                            sendAudioStatus = false;
+                            androidExt.showErrorDialog(getContext(), "Có lỗi, vui lòng thông báo cho admin");
                         }
                     }
-
                     @Override
                     public void onFailure(Call<SpeechReportResponse> call, Throwable t) {
-                        //androidExt.showErrorDialog(getContext(), "Kết nối thất bại, vui lòng kiểm tra lại");
+                        sendAudioStatus = false;
+                        androidExt.showErrorDialog(getContext(), "Kết nối thất bại, vui lòng kiểm tra lại");
+                    }
+                });
+    }
+
+    /*
+        Generate a random string with size @n
+     */
+    static String getRandomString(int n)
+    {
+        String AlphaNumericString = "0123456789" + "abcdefghijklmnopqrstuvxyz";
+        StringBuilder randomString = new StringBuilder(n);
+        for (int i = 0; i < n; i++) {
+            int index = (int)(AlphaNumericString.length() * Math.random());
+            randomString.append(AlphaNumericString.charAt(index));
+        }
+        return randomString.toString();
+    }
+
+    /*
+        3. Initialize Enhance Audio on Dolby
+     */
+    private void initEnhanceAudioDolby(String objectId) throws JSONException {
+        Content content = new Content("voice_recording");
+        String inputUrl = "dlb://".concat(objectId);
+        String outputUrl = "dlb://enhanced".concat(objectId);
+        SpeechReportRequest speechReportRequest = new SpeechReportRequest(
+                content,
+                inputUrl,
+                outputUrl
+        );
+        RetrofitClient.getAPIDolby().initEnhanceAudioDolby(speechReportRequest)
+                .enqueue(new Callback<SpeechReportResponse>() {
+                    @Override
+                    public void onResponse(Call<SpeechReportResponse> call, Response<SpeechReportResponse> response) {
+                        if (response.code() == 200 && response.body() != null) {
+                            String jobId = response.body().getJobId();
+                            dolbyEnhanceAudioJobId = jobId;
+                            System.out.println("Dolby Job Id " + jobId);
+                        } else {
+                            androidExt.showErrorDialog(getContext(), "Có lỗi, vui lòng thông báo cho admin");
+                        }
+                    }
+                    @Override
+                    public void onFailure(Call<SpeechReportResponse> call, Throwable t) {
+                        androidExt.showErrorDialog(getContext(), "Kết nối thất bại, vui lòng kiểm tra lại");
                     }
                 });
     }
@@ -217,12 +270,24 @@ public class SpeechReportFragment extends Fragment implements MapActivity.OnBack
         this.submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                createInputBucket();
+                sendAudioStatus = (outputFile != null);
+                String objectId = "6386c6e13c7ef65be8e0778d";
+                        // getRandomString(32);
+                if (outputFile != null)
+                    createInputBucket(objectId);
 
-                if (outputFile != null && dolbyInputBucketUrl != null) {
+                if (dolbyInputBucketUrl != null) {
                     File audioFile = new File(outputFile);
                     uploadAudioFileToDolby(dolbyInputBucketUrl, audioFile);
                 }
+
+                try {
+                    initEnhanceAudioDolby(objectId);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+                sendAudioStatus = (dolbyEnhanceAudioJobId != null);
             }
         });
     }

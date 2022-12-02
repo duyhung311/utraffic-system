@@ -14,7 +14,7 @@ public class SpeechReportRequest {
 
     @SerializedName("content")
     @Expose
-    private JSONObject content;
+    private Content content;
 
     @SerializedName("input")
     @Expose
@@ -32,7 +32,7 @@ public class SpeechReportRequest {
         this.url = url;
     }
 
-    public SpeechReportRequest(JSONObject content, String input, String output) {
+    public SpeechReportRequest(Content content, String input, String output) {
         this.content = content;
         this.input = input;
         this.output = output;

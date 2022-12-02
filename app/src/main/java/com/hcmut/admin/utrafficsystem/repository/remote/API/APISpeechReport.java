@@ -20,7 +20,7 @@ import retrofit2.http.Url;
 public interface APISpeechReport {
 
    @Headers({"Content-Type: application/json",
-    "x-api-key: xFCkf0XXsADpSAAPvfAbfYxA2XQacHlp"})
+           "x-api-key: xFCkf0XXsADpSAAPvfAbfYxA2XQacHlp"})
     @POST("/media/input")
     Call<SpeechReportResponse> createDolbyInputBucket(@Body SpeechReportRequest speechReportRequest);
 
@@ -28,8 +28,9 @@ public interface APISpeechReport {
     Call<SpeechReportResponse> uploadAudioFileToDolby(@Header("Content-Type") String contentType,
                                                                            @Url String url,
                                                                            @Body SpeechReportRequest speechReportRequest);
-
+    @Headers({"Content-Type: application/json",
+            "x-api-key: xFCkf0XXsADpSAAPvfAbfYxA2XQacHlp"})
     @POST("/media/enhance")
-    Call<SpeechReportResponse> enhanceAudioDolby(@Body SpeechReportRequest speechReportRequest);
+    Call<SpeechReportResponse> initEnhanceAudioDolby(@Body SpeechReportRequest speechReportRequest);
 
 }
