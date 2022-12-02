@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.hcmut.admin.utrafficsystem"
     xmlns:tools="http://schemas.android.com/tools"
     >
 

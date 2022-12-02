@@ -11,9 +11,6 @@ android {
         enabled = true
     }
 
-    lintOptions {
-        checkReleaseBuilds false
-    }
 
     compileSdkVersion 30
     defaultConfig {
@@ -66,6 +63,10 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    lint {
+        checkReleaseBuilds false
+    }
+    namespace 'com.hcmut.admin.utrafficsystem'
 }
 
 dependencies {
@@ -105,9 +106,11 @@ dependencies {
     implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
 
     //retrofit
-    implementation 'com.squareup.retrofit2:retrofit:2.5.0'
-    implementation 'com.squareup.retrofit2:converter-gson:2.6.1'
-    implementation 'com.squareup.okhttp3:logging-interceptor:4.1.0'
+    implementation 'com.squareup.retrofit2:retrofit:2.9.0'
+    implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
+    implementation 'com.squareup.okhttp3:logging-interceptor:4.2.1'
+    implementation 'com.squareup.okhttp3:okhttp:4.9.2'
+    implementation 'com.squareup.okhttp3:logging-interceptor:4.9.2'
 
     //glide
     implementation 'com.github.bumptech.glide:glide:4.8.0'
