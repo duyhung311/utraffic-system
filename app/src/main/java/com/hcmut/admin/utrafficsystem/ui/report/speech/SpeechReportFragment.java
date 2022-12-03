@@ -60,6 +60,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -256,16 +259,30 @@ public class SpeechReportFragment extends Fragment implements MapActivity.OnBack
         speechReportBody.setSegments(listSegments);
         speechReportBody.setSpeechRecordId(temporarySpeechRecordId);
         speechReportBody.setRecord(audioFile);
-        RetrofitClient.getApiService().triggerServer(speechReportBody)
+        okhttp3.RequestBody requestFile = RequestBody.create(audioFile, MediaType.parse("multipart/form-data"));
+
+        List<okhttp3.RequestBody> segments = new ArrayList<>();
+        for(Integer segment : listSegments) {
+            segments.add(RequestBody.create(segment.toString(), MediaType.parse("multipart/form-data")));
+        }
+
+        okhttp3.RequestBody speechRecordId = RequestBody.create(temporarySpeechRecordId, MediaType.parse("multipart/form-data"));
+
+        MultipartBody.Part multipartBody = MultipartBody.Part.createFormData("record", audioFile.getName(), requestFile);
+        RetrofitClient.getApiService().triggerServer(
+                        segments,
+                        speechRecordId,
+                        multipartBody)
                 .enqueue(new Callback<SpeechReportResponse>() {
                     @Override
                     public void onResponse(Call<SpeechReportResponse> call, Response<SpeechReportResponse> response) {
-
+                        System.out.print(response.body());
                     }
 
                     @Override
                     public void onFailure(Call<SpeechReportResponse> call, Throwable t) {
                         //androidExt.showErrorDialog(getContext(), "Kết nối thất bại, vui lòng kiểm tra lại");
+                        t.printStackTrace();
                     }
                 });
     }
@@ -304,14 +321,15 @@ public class SpeechReportFragment extends Fragment implements MapActivity.OnBack
                 if (dolbyInputBucketUrl != null) {
                     File audioFile = new File(outputFile);
                     uploadAudioFileToDolby(dolbyInputBucketUrl, audioFile);
+                    try {
+                        initEnhanceAudioDolby(objectId);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
                     triggerServer(audioFile);
                 }
 
-                try {
-                    initEnhanceAudioDolby(objectId);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
+
 
                 sendAudioStatus = (dolbyEnhanceAudioJobId != null);
             }

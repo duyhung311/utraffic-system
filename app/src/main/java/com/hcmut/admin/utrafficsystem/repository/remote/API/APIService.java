@@ -28,6 +28,7 @@ import com.hcmut.admin.utrafficsystem.repository.remote.model.response.UserRespo
 import com.hcmut.admin.utrafficsystem.repository.remote.model.StatusResponse;
 import com.hcmut.admin.utrafficsystem.repository.remote.model.response.StatusRenderData;
 import com.hcmut.admin.utrafficsystem.repository.remote.model.response.VoucherResponse;
+import okhttp3.RequestBody;
 
 import java.util.List;
 
@@ -235,6 +236,9 @@ public interface APIService {
     @FormUrlEncoded
     Call<BaseResponse<GiftStateResponse>> checkGift(@Header("Authorization") String Authorization, @Field("id") String id);
 
+    @Multipart
     @POST("/api/report/speech-report")
-    Call<SpeechReportResponse> triggerServer(@Body SpeechReportBody body);
+    Call<SpeechReportResponse> triggerServer(@Part("segments") List<RequestBody> segments,
+                                             @Part("speech_record_id") RequestBody speechRecordId,
+                                             @Part MultipartBody.Part record);
 }
