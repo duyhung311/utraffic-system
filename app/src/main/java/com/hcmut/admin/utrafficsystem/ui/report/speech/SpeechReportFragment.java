@@ -58,6 +58,8 @@ import java.io.IOException;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import okhttp3.MediaType;
+import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -179,7 +181,8 @@ public class SpeechReportFragment extends Fragment implements MapActivity.OnBack
         2. @PUT Send audio file to Input Bucket
      */
     private void uploadAudioFileToDolby(String url, File audioFile) {
-        SpeechReportRequest speechReportRequest = new SpeechReportRequest(audioFile);
+        //SpeechReportRequest speechReportRequest = new SpeechReportRequest(audioFile);
+        RequestBody speechReportRequest = RequestBody.create(audioFile, MediaType.parse("audio/mpeg"));
         RetrofitClient.getAPIDolby().uploadAudioFileToDolby("audio/mpeg", url, speechReportRequest)
                 .enqueue(new Callback<SpeechReportResponse>() {
                     @Override
@@ -204,7 +207,7 @@ public class SpeechReportFragment extends Fragment implements MapActivity.OnBack
      */
     static String getRandomString(int n)
     {
-        String AlphaNumericString = "0123456789" + "abcdefghijklmnopqrstuvxyz";
+        String AlphaNumericString = "0123456789" + "abcdef";
         StringBuilder randomString = new StringBuilder(n);
         for (int i = 0; i < n; i++) {
             int index = (int)(AlphaNumericString.length() * Math.random());

@@ -8,6 +8,7 @@ import com.hcmut.admin.utrafficsystem.repository.remote.model.response.SpeechRep
 
 import java.util.List;
 
+import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
@@ -27,7 +28,7 @@ public interface APISpeechReport {
     @PUT
     Call<SpeechReportResponse> uploadAudioFileToDolby(@Header("Content-Type") String contentType,
                                                                            @Url String url,
-                                                                           @Body SpeechReportRequest speechReportRequest);
+                                                                           @Body RequestBody speechReportRequest);
     @Headers({"Content-Type: application/json",
             "x-api-key: xFCkf0XXsADpSAAPvfAbfYxA2XQacHlp"})
     @POST("/media/enhance")
