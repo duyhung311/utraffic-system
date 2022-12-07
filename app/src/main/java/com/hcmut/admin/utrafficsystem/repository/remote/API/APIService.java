@@ -241,4 +241,10 @@ public interface APIService {
     Call<SpeechReportResponse> triggerServer(@Part("segments") List<RequestBody> segments,
                                              @Part("speech_record_id") RequestBody speechRecordId,
                                              @Part MultipartBody.Part record);
+
+    @Multipart
+    @POST("/api/report/speech-report/mobile")
+    Call<SpeechReportResponse> callServerForEnhanceRecord(@Part("segments") List<RequestBody> segments,
+                                                         @Part("speech_record_id") RequestBody speechRecordId,
+                                                         @Part MultipartBody.Part record);
 }
