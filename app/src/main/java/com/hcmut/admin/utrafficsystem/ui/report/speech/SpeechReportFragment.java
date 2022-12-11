@@ -1,17 +1,9 @@
 package com.hcmut.admin.utrafficsystem.ui.report.speech;
 
 import static com.facebook.FacebookSdk.getApplicationContext;
-
-import static com.facebook.FacebookSdk.getApplicationContext;
 import static com.hcmut.admin.utrafficsystem.util.GiftUtil.androidExt;
 
 import android.annotation.SuppressLint;
-import android.media.AudioManager;
-import android.media.MediaPlayer;
-import android.media.MediaRecorder;
-import android.annotation.SuppressLint;
-import android.media.AudioManager;
-import android.media.MediaPlayer;
 import android.media.MediaRecorder;
 import android.os.Bundle;
 import android.os.Environment;
@@ -20,9 +12,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
-import android.widget.Toast;
-import android.widget.Button;
-import android.widget.ImageButton;
+import android.widget.SeekBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -31,41 +22,26 @@ import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
 
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.SupportMapFragment;
-import com.google.gson.JsonObject;
 import com.hcmut.admin.utrafficsystem.R;
-import com.hcmut.admin.utrafficsystem.model.Atm;
 import com.hcmut.admin.utrafficsystem.repository.remote.RetrofitClient;
-import com.hcmut.admin.utrafficsystem.repository.remote.model.BaseResponse;
 import com.hcmut.admin.utrafficsystem.repository.remote.model.request.Content;
 import com.hcmut.admin.utrafficsystem.repository.remote.model.request.SpeechReportRequest;
 import com.hcmut.admin.utrafficsystem.repository.remote.model.response.SpeechReportResponse;
 import com.hcmut.admin.utrafficsystem.ui.map.MapActivity;
-import com.google.android.gms.maps.MapView;
+
+import org.json.JSONException;
 
 import java.io.File;
 import java.io.IOException;
-import com.google.android.gms.maps.MapView;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.IOException;
-import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 import okhttp3.MediaType;
 import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
-import okhttp3.OkHttpClient;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -82,6 +58,9 @@ public class SpeechReportFragment extends Fragment implements MapActivity.OnBack
     private GoogleMap gMap;
     private ImageButton record;
     private Button submit;
+    private SeekBar seekBar;
+    private TextView seekBarTimeDisplay;
+    private ImageButton playBackAudio;
     private MediaRecorder myAudioRecorder;
     private SupportMapFragment mapFragment;
     private boolean recordButtonStatus; // true -> in recording, false -> not in recording mode
@@ -137,6 +116,10 @@ public class SpeechReportFragment extends Fragment implements MapActivity.OnBack
             ((MapActivity) view.getContext()).hideBottomNav();
             this.record = view.findViewById(R.id.speechRecordButton);
             this.submit = view.findViewById(R.id.btnSubmitSpeechReport);
+
+            this.seekBar = view.findViewById(R.id.playSpeechRecordSeekBar);
+            this.seekBarTimeDisplay = view.findViewById(R.id.playSpeechRecordTime);
+            this.playBackAudio = view.findViewById(R.id.playSpeechRecordButton);
 
             this.record.setEnabled(true);
             this.submit.setEnabled(true);
@@ -293,6 +276,11 @@ public class SpeechReportFragment extends Fragment implements MapActivity.OnBack
                 sendAudioStatus = (dolbyEnhanceAudioJobId != null);
             }
         });
+
+        /*
+            Playback audio
+         */
+
     }
 
     private void startRecord() throws IOException {
@@ -317,8 +305,13 @@ public class SpeechReportFragment extends Fragment implements MapActivity.OnBack
         System.out.println("stop recording");
         submit.setEnabled(true);
         Toast.makeText(getApplicationContext(), "Recording stopped", Toast.LENGTH_LONG/4).show();
+
+        this.seekBar.setVisibility(View.VISIBLE);
+        this.seekBarTimeDisplay.setVisibility(View.VISIBLE);
+        this.playBackAudio.setVisibility(View.VISIBLE);
         //File file = new File();
-        MediaPlayer mediaPlayer = new MediaPlayer();
+
+        /*MediaPlayer mediaPlayer = new MediaPlayer();
         try {
             mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
             mediaPlayer.setDataSource(outputFile);
@@ -327,7 +320,7 @@ public class SpeechReportFragment extends Fragment implements MapActivity.OnBack
             Toast.makeText(getApplicationContext(), "Playing Audio", Toast.LENGTH_LONG).show();
         } catch (Exception e) {
             // make something
-        }
+        }*/
     }
 
     @Override
