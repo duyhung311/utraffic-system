@@ -1,9 +1,10 @@
 package com.hcmut.admin.utrafficsystem.ui.report.speech;
 
 import static com.facebook.FacebookSdk.getApplicationContext;
-import static com.hcmut.admin.utrafficsystem.util.GiftUtil.androidExt;
 
 import android.annotation.SuppressLint;
+import android.media.AudioAttributes;
+import android.media.MediaPlayer;
 import android.media.MediaRecorder;
 import android.os.Bundle;
 import android.os.Environment;
@@ -26,47 +27,30 @@ import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.hcmut.admin.utrafficsystem.R;
-import com.hcmut.admin.utrafficsystem.repository.remote.RetrofitClient;
-import com.hcmut.admin.utrafficsystem.repository.remote.model.request.Content;
-import com.hcmut.admin.utrafficsystem.repository.remote.model.request.SpeechReportRequest;
-import com.hcmut.admin.utrafficsystem.repository.remote.model.response.SpeechReportResponse;
 import com.hcmut.admin.utrafficsystem.ui.map.MapActivity;
 
-import org.json.JSONException;
-
-import java.io.File;
 import java.io.IOException;
-
-import okhttp3.MediaType;
-import okhttp3.RequestBody;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 /**
  * A simple {@link Fragment} subclass.
  * Use the {@link SpeechReportFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class SpeechReportFragment extends Fragment implements MapActivity.OnBackPressCallback, OnMapReadyCallback {
+public class SpeechReportFragment<MainActivity> extends Fragment implements MapActivity.OnBackPressCallback, OnMapReadyCallback {
 
     // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
     private MapView mapView;
     private GoogleMap gMap;
     private ImageButton record;
     private Button submit;
     private SeekBar seekBar;
     private TextView seekBarTimeDisplay;
+    private TextView totalTimeDisplay;
     private ImageButton playBackAudio;
     private MediaRecorder myAudioRecorder;
+    private MediaPlayer myMediaPlayer;
     private SupportMapFragment mapFragment;
     private boolean recordButtonStatus; // true -> in recording, false -> not in recording mode
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
     private Integer counter = 0;
     String outputFile;
     String dolbyInputBucketUrl;
@@ -89,9 +73,6 @@ public class SpeechReportFragment extends Fragment implements MapActivity.OnBack
     public static SpeechReportFragment newInstance(String param1, String param2) {
         SpeechReportFragment fragment = new SpeechReportFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
         return fragment;
     }
 
@@ -105,7 +86,6 @@ public class SpeechReportFragment extends Fragment implements MapActivity.OnBack
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
         addControls(view, savedInstanceState);
         addEvents();
     }
@@ -119,6 +99,7 @@ public class SpeechReportFragment extends Fragment implements MapActivity.OnBack
 
             this.seekBar = view.findViewById(R.id.playSpeechRecordSeekBar);
             this.seekBarTimeDisplay = view.findViewById(R.id.playSpeechRecordTime);
+            this.totalTimeDisplay = view.findViewById(R.id.totalSpeechRecordTime);
             this.playBackAudio = view.findViewById(R.id.playSpeechRecordButton);
 
             this.record.setEnabled(true);
@@ -128,112 +109,32 @@ public class SpeechReportFragment extends Fragment implements MapActivity.OnBack
             this.mapView.onCreate(savedInstanceState);
             this.mapView.onResume();
             this.mapView.getMapAsync(this);
+
+            seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+                @Override
+                public void onStartTrackingTouch(SeekBar seekBar) {
+                }
+
+                @Override
+                public void onProgressChanged(SeekBar seekBar, int progress, boolean fromTouch) {
+                    seekBarTimeDisplay.setVisibility(View.VISIBLE);
+                    myMediaPlayer.seekTo(progress);
+                    seekBarTimeDisplay.setText(convertTime(progress));
+                }
+
+                @Override
+                public void onStopTrackingTouch(SeekBar seekBar) {
+                }
+            });
+
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    /*
-        1. @POST Create Input Bucket on Dolby
-        Receives a Url as a link to the input bucket
-     */
-    private void createInputBucket(String objectId) {
-        String inputUrl = "dlb://".concat(objectId);
-        SpeechReportRequest speechReportRequest = new SpeechReportRequest(inputUrl);
-        RetrofitClient.getAPIDolby()
-                .createDolbyInputBucket(speechReportRequest)
-                .enqueue(new Callback<SpeechReportResponse>() {
-                    @Override
-                    public void onResponse(Call<SpeechReportResponse> call, Response<SpeechReportResponse> response) {
-                        if (response.code() == 200 && response.body() != null) {
-                            String inputBucketUrl = response.body().getUrl();
-                            dolbyInputBucketUrl = inputBucketUrl;
-                            System.out.println("Dolby Input Bucket " + inputBucketUrl.length());
-                        } else {
-                            androidExt.showErrorDialog(getContext(), "Có lỗi, vui lòng thông báo cho admin");
-                        }
-                    }
-                    @Override
-                    public void onFailure(Call<SpeechReportResponse> call, Throwable t) {
-                        androidExt.showErrorDialog(getContext(), "Kết nối thất bại, vui lòng kiểm tra lại");
-                    }
-                });
-    }
-
-    /*
-        2. @PUT Send audio file to Input Bucket
-     */
-    private void uploadAudioFileToDolby(String url, File audioFile) {
-        //SpeechReportRequest speechReportRequest = new SpeechReportRequest(audioFile);
-        RequestBody speechReportRequest = RequestBody.create(audioFile, MediaType.parse("audio/mpeg"));
-        RetrofitClient.getAPIDolby().uploadAudioFileToDolby("audio/mpeg", url, speechReportRequest)
-                .enqueue(new Callback<SpeechReportResponse>() {
-                    @Override
-                    public void onResponse(Call<SpeechReportResponse> call, Response<SpeechReportResponse> response) {
-                        if (response.code() == 200) {
-                            System.out.println("Upload Audio File Successfully");
-                        } else {
-                            sendAudioStatus = false;
-                            androidExt.showErrorDialog(getContext(), "Có lỗi, vui lòng thông báo cho admin");
-                        }
-                    }
-                    @Override
-                    public void onFailure(Call<SpeechReportResponse> call, Throwable t) {
-                        sendAudioStatus = false;
-                        androidExt.showErrorDialog(getContext(), "Kết nối thất bại, vui lòng kiểm tra lại");
-                    }
-                });
-    }
-
-    /*
-        Generate a random string with size @n
-     */
-    static String getRandomString(int n)
-    {
-        String AlphaNumericString = "0123456789" + "abcdef";
-        StringBuilder randomString = new StringBuilder(n);
-        for (int i = 0; i < n; i++) {
-            int index = (int)(AlphaNumericString.length() * Math.random());
-            randomString.append(AlphaNumericString.charAt(index));
-        }
-        return randomString.toString();
-    }
-
-    /*
-        3. Initialize Enhance Audio on Dolby
-     */
-    private void initEnhanceAudioDolby(String objectId) throws JSONException {
-        Content content = new Content("voice_recording");
-        String inputUrl = "dlb://".concat(objectId);
-        String outputUrl = "dlb://enhanced".concat(objectId);
-        SpeechReportRequest speechReportRequest = new SpeechReportRequest(
-                content,
-                inputUrl,
-                outputUrl
-        );
-        RetrofitClient.getAPIDolby().initEnhanceAudioDolby(speechReportRequest)
-                .enqueue(new Callback<SpeechReportResponse>() {
-                    @Override
-                    public void onResponse(Call<SpeechReportResponse> call, Response<SpeechReportResponse> response) {
-                        if (response.code() == 200 && response.body() != null) {
-                            String jobId = response.body().getJobId();
-                            dolbyEnhanceAudioJobId = jobId;
-                            System.out.println("Dolby Job Id " + jobId);
-                        } else {
-                            androidExt.showErrorDialog(getContext(), "Có lỗi, vui lòng thông báo cho admin");
-                        }
-                    }
-                    @Override
-                    public void onFailure(Call<SpeechReportResponse> call, Throwable t) {
-                        androidExt.showErrorDialog(getContext(), "Kết nối thất bại, vui lòng kiểm tra lại");
-                    }
-                });
-    }
-
     private void addEvents() {
-        /*
-            Record Audio
-         */
+
+        // Record Audio
         this.record.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -250,37 +151,24 @@ public class SpeechReportFragment extends Fragment implements MapActivity.OnBack
                 }
             }
         });
-        /*
-            Send audio to server
-         */
+
+        // Send audio to server
         this.submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                sendAudioStatus = (outputFile != null);
-                String objectId = "6386c6e13c7ef65be8e0778d";
-                        // getRandomString(32);
-                if (outputFile != null)
-                    createInputBucket(objectId);
-
-                if (dolbyInputBucketUrl != null) {
-                    File audioFile = new File(outputFile);
-                    uploadAudioFileToDolby(dolbyInputBucketUrl, audioFile);
-                }
-
-                try {
-                    initEnhanceAudioDolby(objectId);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-
-                sendAudioStatus = (dolbyEnhanceAudioJobId != null);
             }
         });
 
-        /*
-            Playback audio
-         */
-
+        //Playback audio
+        this.playBackAudio.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(getApplicationContext(), "Playing Audio", Toast.LENGTH_LONG).show();
+                if (outputFile != null)
+                    //seekBar.setProgress(0);
+                    startPlaying();
+            }
+        });
     }
 
     private void startRecord() throws IOException {
@@ -307,20 +195,53 @@ public class SpeechReportFragment extends Fragment implements MapActivity.OnBack
         Toast.makeText(getApplicationContext(), "Recording stopped", Toast.LENGTH_LONG/4).show();
 
         this.seekBar.setVisibility(View.VISIBLE);
+        this.totalTimeDisplay.setVisibility(View.VISIBLE);
         this.seekBarTimeDisplay.setVisibility(View.VISIBLE);
         this.playBackAudio.setVisibility(View.VISIBLE);
-        //File file = new File();
 
-        /*MediaPlayer mediaPlayer = new MediaPlayer();
+        getMediaPlayer();
+        int totalTime = myMediaPlayer.getDuration();
+        this.seekBar.setMax(totalTime);
+        this.totalTimeDisplay.setText(convertTime(totalTime));
+    }
+
+    private String convertTime(int msec) {
+        return String.format("%02d", (int)Math.floor(msec/60000)) + ":" + String.format("%02d", (int)Math.ceil(msec/1000));
+    }
+
+    private void getMediaPlayer() {
+        myMediaPlayer = new MediaPlayer();
         try {
-            mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-            mediaPlayer.setDataSource(outputFile);
-            mediaPlayer.prepare();
-            mediaPlayer.start();
-            Toast.makeText(getApplicationContext(), "Playing Audio", Toast.LENGTH_LONG).show();
+            myMediaPlayer.setAudioAttributes(new AudioAttributes.Builder().setContentType(AudioAttributes.CONTENT_TYPE_MUSIC).build());
+            myMediaPlayer.setDataSource(outputFile);
+            myMediaPlayer.prepare();
+            myMediaPlayer.setLooping(false);
+            myMediaPlayer.start();
         } catch (Exception e) {
-            // make something
-        }*/
+            e.printStackTrace();
+        }
+    }
+
+    private void startPlaying() {
+        getMediaPlayer();
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                int currentPosition = 0;
+                int total = myMediaPlayer.getDuration();
+                while (myMediaPlayer != null && myMediaPlayer.isPlaying() && currentPosition < total) {
+                    try {
+                        Thread.sleep(1000);
+                        currentPosition = myMediaPlayer.getCurrentPosition();
+                    } catch (InterruptedException e) {
+                        return;
+                    } catch (Exception e) {
+                        return;
+                    }
+                    seekBar.setProgress(currentPosition);
+                }
+            }
+        }).start();
     }
 
     @Override
@@ -336,5 +257,4 @@ public class SpeechReportFragment extends Fragment implements MapActivity.OnBack
             gMap = googleMap;
         }
     }
-
 }

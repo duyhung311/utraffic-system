@@ -128,6 +128,15 @@
         app:layout_constraintStart_toStartOf="@+id/playSpeechRecordSeekBar"
         app:layout_constraintTop_toBottomOf="@+id/playSpeechRecordSeekBar" />
 
+    <TextView
+        android:id="@+id/totalSpeechRecordTime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text=""
+        android:visibility="invisible"
+        app:layout_constraintEnd_toEndOf="@+id/playSpeechRecordSeekBar"
+        app:layout_constraintTop_toBottomOf="@+id/playSpeechRecordSeekBar" />
+
     <ImageButton
         android:id="@+id/playSpeechRecordButton"
         android:layout_width="40dp"
@@ -136,6 +145,7 @@
         android:background="@drawable/bg_circle_image"
         android:src="@android:drawable/ic_media_play"
         android:visibility="invisible"
+        android:clickable="true"
         app:layout_constraintEnd_toStartOf="@id/playSpeechRecordSeekBar"
         app:layout_constraintTop_toTopOf="@id/playSpeechRecordSeekBar" />
 
