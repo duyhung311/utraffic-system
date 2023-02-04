@@ -81,14 +81,8 @@ public class SpeechReportFragment<MainActivity> extends Fragment implements MapA
     private ImageButton playBackAudio;
     private MediaRecorder myAudioRecorder;
     private MediaPlayer myMediaPlayer;
-    private SupportMapFragment mapFragment;
-    private boolean recordButtonStatus; // true -> in recording, false -> not in recording mode
-    private Integer counter = 0;
-    String dolbyInputBucketUrl;
     private boolean isRecording; // true -> in recording, false -> not in recording mode
     File outputFile;
-    String dolbyEnhanceAudioJobId;
-    Boolean sendAudioStatus = false;
     private final APIService apiService;
     private final String temporarySpeechRecordId = (new ObjectId()).toString();
 
@@ -188,6 +182,7 @@ public class SpeechReportFragment<MainActivity> extends Fragment implements MapA
         this.submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                callServerForEnhanceRecord(outputFile);
             }
         });
 
@@ -197,11 +192,9 @@ public class SpeechReportFragment<MainActivity> extends Fragment implements MapA
             public void onClick(View view) {
                 Toast.makeText(getApplicationContext(), "Playing Audio", Toast.LENGTH_LONG).show();
                 if (outputFile != null)
-                    //seekBar.setProgress(0);
                     startPlaying();
             }
         });
-        callServerForEnhanceRecord(outputFile);
     }
 
     private void callServerForEnhanceRecord(File audioFile) {
