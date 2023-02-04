@@ -6,6 +6,7 @@ import com.google.gson.annotations.SerializedName;
 import org.json.JSONObject;
 
 import java.io.File;
+import java.util.List;
 
 public class SpeechReportRequest {
     @SerializedName("url")
@@ -45,4 +46,5 @@ public class SpeechReportRequest {
     public String getUrl() {
         return this.url;
     }
+
 }

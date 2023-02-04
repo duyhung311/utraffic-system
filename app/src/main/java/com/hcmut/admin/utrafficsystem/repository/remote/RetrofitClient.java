@@ -3,21 +3,17 @@ package com.hcmut.admin.utrafficsystem.repository.remote;
 import android.os.Process;
 
 import com.hcmut.admin.utrafficsystem.business.PriorityThreadFactory;
-import com.hcmut.admin.utrafficsystem.model.Atm;
 import com.hcmut.admin.utrafficsystem.repository.remote.API.APIAtm;
 import com.hcmut.admin.utrafficsystem.repository.remote.API.APIHealthFacilities;
 import com.hcmut.admin.utrafficsystem.repository.remote.API.APIService;
-import com.hcmut.admin.utrafficsystem.repository.remote.API.APISpeechReport;
 import com.hcmut.admin.utrafficsystem.repository.remote.API.API_VOHService;
 
-import java.util.List;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
-import retrofit2.Call;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
@@ -29,7 +25,6 @@ public class RetrofitClient {
     private static APIService apiService;
     private static APIHealthFacilities apiHealthFacilities;
     private static APIAtm apiAtm;
-    private static APISpeechReport apiSpeechReport;
 
     static {
         THREAD_POOL_EXECUTOR = new ThreadPoolExecutor(
@@ -71,8 +66,9 @@ public class RetrofitClient {
 
     public static APIService getApiService() {
         if (apiService == null) {
-            String baseURL = "https://api.bktraffic.com";
-            //String baseURL = "http://192.168.1.11:3000";
+            //String baseURL = "https://api.bktraffic.com";
+            String baseURL = "http://192.168.0.178:3000";
+            //String baseURL = "http://192.168.227.25:3000";
             apiService = builder(baseURL).create(APIService.class);
         }
         return apiService;
@@ -95,13 +91,4 @@ public class RetrofitClient {
         }
         return apiAtm;
     }
-
-    public static APISpeechReport getAPIDolby(){
-        if (apiSpeechReport == null) {
-            String baseURL = "https://api.dolby.com";
-            apiSpeechReport = builder(baseURL).create(APISpeechReport.class);
-        }
-        return apiSpeechReport;
-    }
-
 }

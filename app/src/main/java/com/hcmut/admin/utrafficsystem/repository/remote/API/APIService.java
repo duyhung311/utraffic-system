@@ -1,5 +1,6 @@
 package com.hcmut.admin.utrafficsystem.repository.remote.API;
 
+import com.hcmut.admin.utrafficsystem.model.User;
 import com.hcmut.admin.utrafficsystem.repository.remote.model.request.RatingBody;
 import com.hcmut.admin.utrafficsystem.repository.remote.model.request.ReportRequest;
 import com.hcmut.admin.utrafficsystem.repository.remote.model.BaseResponse;
@@ -20,12 +21,14 @@ import com.hcmut.admin.utrafficsystem.repository.remote.model.response.PayMoMoRe
 import com.hcmut.admin.utrafficsystem.repository.remote.model.response.PostRatingResponse;
 import com.hcmut.admin.utrafficsystem.repository.remote.model.response.ReportResponse;
 import com.hcmut.admin.utrafficsystem.repository.remote.model.response.ReportResponseVoucher;
+import com.hcmut.admin.utrafficsystem.repository.remote.model.response.SpeechReportResponse;
 import com.hcmut.admin.utrafficsystem.repository.remote.model.response.TrafficReportResponse;
 import com.hcmut.admin.utrafficsystem.repository.remote.model.response.TrafficStatusResponse;
 import com.hcmut.admin.utrafficsystem.repository.remote.model.response.UserResponse;
 import com.hcmut.admin.utrafficsystem.repository.remote.model.StatusResponse;
 import com.hcmut.admin.utrafficsystem.repository.remote.model.response.StatusRenderData;
 import com.hcmut.admin.utrafficsystem.repository.remote.model.response.VoucherResponse;
+import okhttp3.RequestBody;
 
 import java.util.List;
 
@@ -232,4 +235,23 @@ public interface APIService {
     @POST("api/gift/checkgift")
     @FormUrlEncoded
     Call<BaseResponse<GiftStateResponse>> checkGift(@Header("Authorization") String Authorization, @Field("id") String id);
+
+    @Multipart
+    @POST("/api/report/speech-report")
+    Call<SpeechReportResponse> triggerServer(@Part("segments") List<RequestBody> segments,
+                                             @Part("speech_record_id") RequestBody speechRecordId,
+                                             @Part MultipartBody.Part record);
+
+    @Multipart
+    @POST("/api/report/speech-report/mobile")
+    Call<SpeechReportResponse> callServerForEnhanceRecord(@Part("segments") List<RequestBody> segments,
+                                                          @Part("speech_record_id") RequestBody speechRecordId,
+                                                          @Part("type") String type, // circle | rectangle | line
+                                                          @Part("coordinates")Double[][] coordinates,
+                                                          @Part("active_time") Integer activeTime, // active time in isecond
+                                                          @Part("radius") Double radius, // radius = [0;3000)
+                                                          @Part("option") int option, // 0 or 1
+                                                          //@Part MultipartBody.Part record,
+                                                          @Part("file") String file, // content of file is encoded to string b4 sending
+                                                          @Part("user") User user); //curent logged in userId
 }

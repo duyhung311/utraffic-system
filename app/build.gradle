@@ -11,9 +11,6 @@ android {
         enabled = true
     }
 
-    lintOptions {
-        checkReleaseBuilds false
-    }
 
     compileSdkVersion 30
     defaultConfig {
@@ -66,6 +63,10 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    lint {
+        checkReleaseBuilds false
+    }
+    namespace 'com.hcmut.admin.utrafficsystem'
 }
 
 dependencies {
@@ -161,6 +162,12 @@ dependencies {
     implementation 'com.google.code.gson:gson:2.8.7'
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'
     implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
+
+    // bson id
+    implementation 'org.mongodb:bson:4.2.3'
+    // apache
+    // https://mvnrepository.com/artifact/org.apache.commons.io/commonsIO
+    implementation 'org.apache.commons.io:commonsIO:2.5.0'
 }
 apply plugin: 'com.google.gms.google-services'
 apply plugin: 'kotlin-android'
