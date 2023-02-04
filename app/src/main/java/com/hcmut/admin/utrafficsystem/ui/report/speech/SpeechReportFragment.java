@@ -2,7 +2,6 @@ package com.hcmut.admin.utrafficsystem.ui.report.speech;
 
 import static com.facebook.FacebookSdk.getApplicationContext;
 
-import static com.hcmut.admin.utrafficsystem.util.GiftUtil.androidExt;
 
 import android.annotation.SuppressLint;
 import android.media.AudioAttributes;
@@ -85,7 +84,6 @@ public class SpeechReportFragment<MainActivity> extends Fragment implements MapA
     private SupportMapFragment mapFragment;
     private boolean recordButtonStatus; // true -> in recording, false -> not in recording mode
     private Integer counter = 0;
-    String outputFile;
     String dolbyInputBucketUrl;
     private boolean isRecording; // true -> in recording, false -> not in recording mode
     File outputFile;
@@ -203,11 +201,7 @@ public class SpeechReportFragment<MainActivity> extends Fragment implements MapA
                     startPlaying();
             }
         });
-                sendAudioStatus = (outputFile != null);
-                callServerForEnhanceRecord(outputFile);
-                sendAudioStatus = (dolbyEnhanceAudioJobId != null);
-            }
-        });
+        callServerForEnhanceRecord(outputFile);
     }
 
     private void callServerForEnhanceRecord(File audioFile) {
@@ -320,7 +314,7 @@ public class SpeechReportFragment<MainActivity> extends Fragment implements MapA
         myMediaPlayer = new MediaPlayer();
         try {
             myMediaPlayer.setAudioAttributes(new AudioAttributes.Builder().setContentType(AudioAttributes.CONTENT_TYPE_MUSIC).build());
-            myMediaPlayer.setDataSource(outputFile);
+            myMediaPlayer.setDataSource(outputFile.getPath());
             myMediaPlayer.prepare();
             myMediaPlayer.setLooping(false);
             myMediaPlayer.start();
