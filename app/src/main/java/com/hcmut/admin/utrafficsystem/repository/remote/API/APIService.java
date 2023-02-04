@@ -1,9 +1,9 @@
 package com.hcmut.admin.utrafficsystem.repository.remote.API;
 
+import com.hcmut.admin.utrafficsystem.model.User;
 import com.hcmut.admin.utrafficsystem.repository.remote.model.request.RatingBody;
 import com.hcmut.admin.utrafficsystem.repository.remote.model.request.ReportRequest;
 import com.hcmut.admin.utrafficsystem.repository.remote.model.BaseResponse;
-import com.hcmut.admin.utrafficsystem.repository.remote.model.request.SpeechReportBody;
 import com.hcmut.admin.utrafficsystem.repository.remote.model.response.DealResponse;
 import com.hcmut.admin.utrafficsystem.repository.remote.model.response.DirectRespose;
 import com.hcmut.admin.utrafficsystem.repository.remote.model.response.GiftResponse;
@@ -245,6 +245,13 @@ public interface APIService {
     @Multipart
     @POST("/api/report/speech-report/mobile")
     Call<SpeechReportResponse> callServerForEnhanceRecord(@Part("segments") List<RequestBody> segments,
-                                                         @Part("speech_record_id") RequestBody speechRecordId,
-                                                         @Part MultipartBody.Part record);
+                                                          @Part("speech_record_id") RequestBody speechRecordId,
+                                                          @Part("type") String type, // circle | rectangle | line
+                                                          @Part("coordinates")Double[][] coordinates,
+                                                          @Part("active_time") Integer activeTime, // active time in isecond
+                                                          @Part("radius") Double radius, // radius = [0;3000)
+                                                          @Part("option") int option, // 0 or 1
+                                                          //@Part MultipartBody.Part record,
+                                                          @Part("file") String file, // content of file is encoded to string b4 sending
+                                                          @Part("user") User user); //curent logged in userId
 }
