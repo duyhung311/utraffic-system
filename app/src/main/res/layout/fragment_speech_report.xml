@@ -137,16 +137,31 @@
         app:layout_constraintEnd_toEndOf="@+id/playSpeechRecordSeekBar"
         app:layout_constraintTop_toBottomOf="@+id/playSpeechRecordSeekBar" />
 
-    <ImageButton
-        android:id="@+id/playSpeechRecordButton"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
+<!--    <ImageButton-->
+<!--        android:id="@+id/playSpeechRecordButton"-->
+<!--        android:layout_width="40dp"-->
+<!--        android:layout_height="40dp"-->
+<!--        android:layout_marginEnd="10dp"-->
+<!--        android:background="@drawable/bg_circle_image"-->
+<!--        android:src="@android:drawable/ic_media_play"-->
+<!--        android:visibility="invisible"-->
+<!--        android:clickable="true"-->
+<!--        app:layout_constraintEnd_toStartOf="@id/playSpeechRecordSeekBar"-->
+<!--        app:layout_constraintTop_toTopOf="@id/playSpeechRecordSeekBar" />-->
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fabPlayingAudio"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        app:fabCustomSize="32dp"
+        android:padding="16dp"
         android:layout_marginEnd="10dp"
-        android:background="@drawable/bg_circle_image"
-        android:src="@android:drawable/ic_media_play"
+        android:layout_gravity="end|bottom"
         android:visibility="invisible"
-        android:clickable="true"
+        app:fab_colorNormal="@color/AliceBlue"
+        android:src="@android:drawable/ic_media_play"
         app:layout_constraintEnd_toStartOf="@id/playSpeechRecordSeekBar"
-        app:layout_constraintTop_toTopOf="@id/playSpeechRecordSeekBar" />
+        app:layout_constraintTop_toTopOf="@id/playSpeechRecordSeekBar"
+        android:contentDescription="Play/Pause Sound" />
 
 </com.hcmut.admin.utrafficsystem.customview.NonGestureConstraintLayout>
