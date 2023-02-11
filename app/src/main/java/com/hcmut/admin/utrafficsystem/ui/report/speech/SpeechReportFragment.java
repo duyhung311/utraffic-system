@@ -26,6 +26,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
 
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -51,6 +52,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import okhttp3.MediaType;
 import okhttp3.RequestBody;
@@ -85,7 +87,7 @@ public class SpeechReportFragment<MainActivity> extends Fragment implements MapA
 
     private LatLng currLatLng;
     private LatLng nextLatLng;
-    private LatLng bkLatLng = new LatLng(10.804280198546195,106.69206241401363);
+    private LatLng bkLatLng = new LatLng(10.887792,106.8143736);
     private MarkerOptions marker = new MarkerOptions().icon(null);
 
     public SpeechReportFragment() {
@@ -136,28 +138,31 @@ public class SpeechReportFragment<MainActivity> extends Fragment implements MapA
             seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
                 @Override
                 public void onStartTrackingTouch(SeekBar seekBar) {
-                    seekBarTimeDisplay.setVisibility(View.VISIBLE);
+                    //seekBarTimeDisplay.setVisibility(View.VISIBLE);
+                    //myMediaPlayer.pause();
                 }
 
                 @Override
                 public void onProgressChanged(SeekBar seekBar, int progress, boolean fromTouch) {
-                    seekBarTimeDisplay.setVisibility(View.VISIBLE);
-                    int x = (int) Math.ceil(progress / 1000f);
+                    //seekBarTimeDisplay.setVisibility(View.VISIBLE);
+                    int progressInSeconds = (int) Math.ceil(progress / 1000f);
 
-                    if (x > 0 && myMediaPlayer != null && !myMediaPlayer.isPlaying()) {
+                    if (progressInSeconds > 0 && Objects.nonNull(myMediaPlayer) && !myMediaPlayer.isPlaying()) {
                         clearMediaPlayer();
                         playBackAudio.setImageResource(android.R.drawable.ic_media_play);
                         seekBar.setProgress(0);
-                        //seekBarTimeDisplay.setText("0");
+                        seekBarTimeDisplay.setText(convertTime(0));
                     }
-//                    myMediaPlayer.seekTo(progress);
-//                    seekBarTimeDisplay.setText(convertTime(progress));
+                    else {
+                        seekBarTimeDisplay.setText(convertTime(progress));
+                    }
                 }
 
                 @Override
                 public void onStopTrackingTouch(SeekBar seekBar) {
-                    if (myMediaPlayer != null && myMediaPlayer.isPlaying()) {
+                    if (Objects.nonNull(myMediaPlayer) && myMediaPlayer.isPlaying()) {
                         myMediaPlayer.seekTo(seekBar.getProgress());
+                        //myMediaPlayer.start();
                     }
                 }
             });
@@ -264,16 +269,7 @@ public class SpeechReportFragment<MainActivity> extends Fragment implements MapA
     }
 
     private void startRecord() throws IOException {
-
-        this.seekBar.setVisibility(View.INVISIBLE);
-        this.totalTimeDisplay.setVisibility(View.INVISIBLE);
-        this.seekBarTimeDisplay.setVisibility(View.INVISIBLE);
-        this.playBackAudio.setVisibility(View.INVISIBLE);
-        this.seekBarTimeDisplay.setText(convertTime(0));
-        this.seekBar.setProgress(0);
-        if (myMediaPlayer != null)
-            clearMediaPlayer();
-
+        clearAudioPlaybackUI();
         this.myAudioRecorder = new MediaRecorder();
         // .wav file setting
         myAudioRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
@@ -306,7 +302,6 @@ public class SpeechReportFragment<MainActivity> extends Fragment implements MapA
         isRecording = false;
         submit.setEnabled(true);
         Toast.makeText(getApplicationContext(), "Recording stopped", Toast.LENGTH_LONG/4).show();
-
         this.seekBar.setVisibility(View.VISIBLE);
         this.playBackAudio.setVisibility(View.VISIBLE);
     }
@@ -321,27 +316,26 @@ public class SpeechReportFragment<MainActivity> extends Fragment implements MapA
 //                clearMediaPlayer();
 //            }
 
-            if (myMediaPlayer != null && myMediaPlayer.isPlaying()) {
+            if (Objects.nonNull(myMediaPlayer) && myMediaPlayer.isPlaying()) {
                 clearMediaPlayer();
                 seekBar.setProgress(0);
                 wasPlaying = true;
-//                myMediaPlayer.stop();
                 playBackAudio.setImageResource(android.R.drawable.ic_media_play);
             }
 
             if (!wasPlaying) {
 
-                if (myMediaPlayer == null) {
+                if (Objects.isNull(myMediaPlayer)) {
                     myMediaPlayer = new MediaPlayer();
                     myMediaPlayer.setDataSource(outputFile.getPath());
                     myMediaPlayer.setAudioAttributes(new AudioAttributes.Builder().setContentType(AudioAttributes.CONTENT_TYPE_SPEECH).build());
                     myMediaPlayer.setLooping(false);
                 }
 
-                playBackAudio.setImageResource(android.R.drawable.ic_media_pause);
+
                 myMediaPlayer.prepare();
                 myMediaPlayer.start();
-
+                playBackAudio.setImageResource(android.R.drawable.ic_media_pause);
                 totalTimeOfRecord = myMediaPlayer.getDuration();
                 seekBar.setMax(totalTimeOfRecord);
                 totalTimeDisplay.setText(convertTime(totalTimeOfRecord));
@@ -352,7 +346,7 @@ public class SpeechReportFragment<MainActivity> extends Fragment implements MapA
                     @Override
                     public void run() {
                         int currentPosition = myMediaPlayer.getCurrentPosition();
-                        while (myMediaPlayer != null && myMediaPlayer.isPlaying() && currentPosition < totalTimeOfRecord) {
+                        while (Objects.nonNull(myMediaPlayer) && myMediaPlayer.isPlaying() && currentPosition < totalTimeOfRecord) {
                             try {
                                 Thread.sleep(1000);
                                 currentPosition = myMediaPlayer.getCurrentPosition();
@@ -377,6 +371,18 @@ public class SpeechReportFragment<MainActivity> extends Fragment implements MapA
         return String.format("%02d", (int)Math.floor(msec/60000)) + ":" + String.format("%02d", (int)Math.ceil(msec/1000));
     }
 
+    private void clearAudioPlaybackUI() {
+        seekBar.setVisibility(View.INVISIBLE);
+        totalTimeDisplay.setVisibility(View.INVISIBLE);
+        seekBarTimeDisplay.setVisibility(View.INVISIBLE);
+        playBackAudio.setVisibility(View.INVISIBLE);
+        seekBarTimeDisplay.setText(convertTime(0));
+        seekBar.setProgress(0);
+        if (Objects.nonNull(myMediaPlayer)) {
+            clearMediaPlayer();
+        }
+    }
+
     private void clearMediaPlayer() {
         myMediaPlayer.stop();
         myMediaPlayer.release();
@@ -399,6 +405,8 @@ public class SpeechReportFragment<MainActivity> extends Fragment implements MapA
             marker.position(bkLatLng);
             gMap.addMarker(marker);
             gMap.setMaxZoomPreference(16);
+            gMap.moveCamera(CameraUpdateFactory
+                    .newLatLngZoom(bkLatLng, 16));
         }
     }
 
@@ -424,5 +432,12 @@ public class SpeechReportFragment<MainActivity> extends Fragment implements MapA
 
                     }
                 });
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        clearAudioPlaybackUI();
+        clearMediaPlayer();
     }
 }
