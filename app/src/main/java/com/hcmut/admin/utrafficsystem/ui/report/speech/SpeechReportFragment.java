@@ -83,6 +83,7 @@ public class SpeechReportFragment<MainActivity> extends Fragment implements MapA
     private MediaPlayer myMediaPlayer;
     private int totalTimeOfRecord = 0;
     private boolean isRecording; // true -> in recording, false -> not in recording mode
+    private boolean newRecord; // true -> new record that is not init by media player yet
     File outputFile;
     private final APIService apiService;
     private final String temporarySpeechRecordId = (new ObjectId()).toString();
@@ -240,6 +241,7 @@ public class SpeechReportFragment<MainActivity> extends Fragment implements MapA
 
     private void startRecord() throws IOException {
         clearAudioPlaybackComponents();
+
         this.myAudioRecorder = new MediaRecorder();
         // .wav file setting
         myAudioRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
@@ -286,6 +288,7 @@ public class SpeechReportFragment<MainActivity> extends Fragment implements MapA
         playBackAudio.setVisibility(View.VISIBLE);
         totalTimeDisplay.setVisibility(View.VISIBLE);
         seekBarTimeDisplay.setVisibility(View.VISIBLE);
+        newRecord = true;
     }
 
     private void initMusicPlayer() {
@@ -295,13 +298,13 @@ public class SpeechReportFragment<MainActivity> extends Fragment implements MapA
         }
 
         myMediaPlayer = MediaPlayer.create(getApplicationContext(), Uri.parse(outputFile.getPath()));
+        playBackAudio.setImageResource(android.R.drawable.ic_media_play);
 
         myMediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
             @Override
-            public void onPrepared(MediaPlayer mp) {
-                seekBar.setMax(mp.getDuration());
-                mp.start();
+            public void onPrepared(MediaPlayer mediaPlayer) {
                 playBackAudio.setImageResource(android.R.drawable.ic_media_pause);
+                mediaPlayer.start();
             }
         });
 
@@ -342,7 +345,7 @@ public class SpeechReportFragment<MainActivity> extends Fragment implements MapA
                         if (Objects.nonNull(myMediaPlayer) && myMediaPlayer.isPlaying()) {
                             Message message = new Message();
                             message.what = myMediaPlayer.getCurrentPosition();
-                            handler.sendMessage(message);
+                            handlerForSeekBar.sendMessage(message);
                             Thread.sleep(1000);
                         }
                     } catch (InterruptedException e) {
@@ -354,7 +357,7 @@ public class SpeechReportFragment<MainActivity> extends Fragment implements MapA
     }
 
     @SuppressLint("HandlerLeak")
-    private Handler handler = new Handler() {
+    private Handler handlerForSeekBar = new Handler() {
         @Override
         public void handleMessage(Message msg) {
             seekBar.setProgress(msg.what);
@@ -362,16 +365,17 @@ public class SpeechReportFragment<MainActivity> extends Fragment implements MapA
     };
 
     private void play() {
-        if (Objects.nonNull(myMediaPlayer) && myMediaPlayer.isPlaying()) {
+        if (newRecord) {
+            newRecord = false;
+            initMusicPlayer();
+        }
+        else if (Objects.nonNull(myMediaPlayer) && myMediaPlayer.isPlaying()) {
             myMediaPlayer.pause();
             playBackAudio.setImageResource(android.R.drawable.ic_media_play);
         }
         else if (Objects.nonNull(myMediaPlayer)) {
             myMediaPlayer.start();
             playBackAudio.setImageResource(android.R.drawable.ic_media_pause);
-        }
-        else {
-            initMusicPlayer();
         }
     }
 
