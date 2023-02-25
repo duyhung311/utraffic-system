@@ -3,13 +3,16 @@ package com.hcmut.admin.utrafficsystem.ui.report.speech;
 import static com.facebook.FacebookSdk.getApplicationContext;
 
 import android.annotation.SuppressLint;
-import android.media.AudioAttributes;
 import android.media.AudioFormat;
+import android.media.MediaMetadataRetriever;
 import android.media.MediaPlayer;
 import android.media.MediaRecorder;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
+import android.os.Message;
 import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -78,7 +81,6 @@ public class SpeechReportFragment<MainActivity> extends Fragment implements MapA
     private FloatingActionButton playBackAudio;
     private MediaRecorder myAudioRecorder;
     private MediaPlayer myMediaPlayer;
-    private boolean wasPlaying = false;
     private int totalTimeOfRecord = 0;
     private boolean isRecording; // true -> in recording, false -> not in recording mode
     File outputFile;
@@ -135,38 +137,6 @@ public class SpeechReportFragment<MainActivity> extends Fragment implements MapA
             this.mapView.onResume();
             this.mapView.getMapAsync(this);
 
-            seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-                @Override
-                public void onStartTrackingTouch(SeekBar seekBar) {
-                    //seekBarTimeDisplay.setVisibility(View.VISIBLE);
-                    //myMediaPlayer.pause();
-                }
-
-                @Override
-                public void onProgressChanged(SeekBar seekBar, int progress, boolean fromTouch) {
-                    //seekBarTimeDisplay.setVisibility(View.VISIBLE);
-                    int progressInSeconds = (int) Math.ceil(progress / 1000f);
-
-                    if (progressInSeconds > 0 && Objects.nonNull(myMediaPlayer) && !myMediaPlayer.isPlaying()) {
-                        clearMediaPlayer();
-                        playBackAudio.setImageResource(android.R.drawable.ic_media_play);
-                        seekBar.setProgress(0);
-                        seekBarTimeDisplay.setText(convertTime(0));
-                    }
-                    else {
-                        seekBarTimeDisplay.setText(convertTime(progress));
-                    }
-                }
-
-                @Override
-                public void onStopTrackingTouch(SeekBar seekBar) {
-                    if (Objects.nonNull(myMediaPlayer) && myMediaPlayer.isPlaying()) {
-                        myMediaPlayer.seekTo(seekBar.getProgress());
-                        //myMediaPlayer.start();
-                    }
-                }
-            });
-
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -204,9 +174,9 @@ public class SpeechReportFragment<MainActivity> extends Fragment implements MapA
         this.playBackAudio.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(getApplicationContext(), "Playing Audio", Toast.LENGTH_LONG).show();
-                if (outputFile != null)
-                    startPlaying();
+                if (outputFile != null) {
+                    play();
+                }
             }
         });
     }
@@ -269,7 +239,7 @@ public class SpeechReportFragment<MainActivity> extends Fragment implements MapA
     }
 
     private void startRecord() throws IOException {
-        clearAudioPlaybackUI();
+        clearAudioPlaybackComponents();
         this.myAudioRecorder = new MediaRecorder();
         // .wav file setting
         myAudioRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
@@ -302,98 +272,139 @@ public class SpeechReportFragment<MainActivity> extends Fragment implements MapA
         isRecording = false;
         submit.setEnabled(true);
         Toast.makeText(getApplicationContext(), "Recording stopped", Toast.LENGTH_LONG/4).show();
-        this.seekBar.setVisibility(View.VISIBLE);
-        this.playBackAudio.setVisibility(View.VISIBLE);
+
+        // Get duration of the audio record
+        MediaMetadataRetriever mmr = new MediaMetadataRetriever();
+        mmr.setDataSource(outputFile.getPath());
+        String recordDuration = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
+        totalTimeOfRecord = Integer.parseInt(recordDuration);
+        totalTimeDisplay.setText(convertTime(totalTimeOfRecord));
+        seekBar.setMax(totalTimeOfRecord);
+
+        // Set visibility to playback components
+        seekBar.setVisibility(View.VISIBLE);
+        playBackAudio.setVisibility(View.VISIBLE);
+        totalTimeDisplay.setVisibility(View.VISIBLE);
+        seekBarTimeDisplay.setVisibility(View.VISIBLE);
     }
 
-    private void startPlaying() {
-        try {
+    private void initMusicPlayer() {
+        if (!Objects.isNull(myMediaPlayer) && myMediaPlayer.isPlaying()) {
+            myMediaPlayer.stop();
+            myMediaPlayer.reset();
+        }
 
-//            if (myMediaPlayer != null && myMediaPlayer.getCurrentPosition() == myMediaPlayer.getDuration()) {
-//                seekBar.setProgress(0);
-//                seekBarTimeDisplay.setText(convertTime(0));
-//                wasPlaying = false;
-//                clearMediaPlayer();
-//            }
+        myMediaPlayer = MediaPlayer.create(getApplicationContext(), Uri.parse(outputFile.getPath()));
 
-            if (Objects.nonNull(myMediaPlayer) && myMediaPlayer.isPlaying()) {
-                clearMediaPlayer();
-                seekBar.setProgress(0);
-                wasPlaying = true;
-                playBackAudio.setImageResource(android.R.drawable.ic_media_play);
-            }
-
-            if (!wasPlaying) {
-
-                if (Objects.isNull(myMediaPlayer)) {
-                    myMediaPlayer = new MediaPlayer();
-                    myMediaPlayer.setDataSource(outputFile.getPath());
-                    myMediaPlayer.setAudioAttributes(new AudioAttributes.Builder().setContentType(AudioAttributes.CONTENT_TYPE_SPEECH).build());
-                    myMediaPlayer.setLooping(false);
-                }
-
-
-                myMediaPlayer.prepare();
-                myMediaPlayer.start();
+        myMediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+            @Override
+            public void onPrepared(MediaPlayer mp) {
+                seekBar.setMax(mp.getDuration());
+                mp.start();
                 playBackAudio.setImageResource(android.R.drawable.ic_media_pause);
-                totalTimeOfRecord = myMediaPlayer.getDuration();
-                seekBar.setMax(totalTimeOfRecord);
-                totalTimeDisplay.setText(convertTime(totalTimeOfRecord));
-                this.totalTimeDisplay.setVisibility(View.VISIBLE);
-                this.seekBarTimeDisplay.setVisibility(View.VISIBLE);
-
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        int currentPosition = myMediaPlayer.getCurrentPosition();
-                        while (Objects.nonNull(myMediaPlayer) && myMediaPlayer.isPlaying() && currentPosition < totalTimeOfRecord) {
-                            try {
-                                Thread.sleep(1000);
-                                currentPosition = myMediaPlayer.getCurrentPosition();
-                            } catch (InterruptedException e) {
-                                return;
-                            } catch (Exception e) {
-                                return;
-                            }
-                            seekBar.setProgress(currentPosition);
-                        }
-                        playBackAudio.setImageResource(android.R.drawable.ic_media_play);
-                    }
-                }).start();
             }
-            wasPlaying = false;
-        } catch (IOException e) {
-            e.printStackTrace();
+        });
+
+        myMediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+            @Override
+            public void onCompletion(MediaPlayer mediaPlayer) {
+                playBackAudio.setImageResource(android.R.drawable.ic_media_play);
+                seekBar.setProgress(totalTimeOfRecord);
+            }
+        });
+
+        seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                seekBarTimeDisplay.setText(convertTime(progress));
+                if (fromUser) {
+                    myMediaPlayer.seekTo(progress);
+                    seekBar.setProgress(progress);
+                }
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                while (Objects.nonNull(myMediaPlayer)) {
+                    try {
+                        if (Objects.nonNull(myMediaPlayer) && myMediaPlayer.isPlaying()) {
+                            Message message = new Message();
+                            message.what = myMediaPlayer.getCurrentPosition();
+                            handler.sendMessage(message);
+                            Thread.sleep(1000);
+                        }
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }).start();
+    }
+
+    @SuppressLint("HandlerLeak")
+    private Handler handler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            seekBar.setProgress(msg.what);
+        }
+    };
+
+    private void play() {
+        if (Objects.nonNull(myMediaPlayer) && myMediaPlayer.isPlaying()) {
+            myMediaPlayer.pause();
+            playBackAudio.setImageResource(android.R.drawable.ic_media_play);
+        }
+        else if (Objects.nonNull(myMediaPlayer)) {
+            myMediaPlayer.start();
+            playBackAudio.setImageResource(android.R.drawable.ic_media_pause);
+        }
+        else {
+            initMusicPlayer();
         }
     }
 
     private String convertTime(int msec) {
-        return String.format("%02d", (int)Math.floor(msec/60000)) + ":" + String.format("%02d", (int)Math.ceil(msec/1000));
+        return String.format("%02d", (int)Math.floor(msec/60000)) + ":"
+                + String.format("%02d", (int)Math.ceil((float)msec/1000));
     }
 
-    private void clearAudioPlaybackUI() {
+    private void clearAudioPlaybackComponents() {
         seekBar.setVisibility(View.INVISIBLE);
         totalTimeDisplay.setVisibility(View.INVISIBLE);
         seekBarTimeDisplay.setVisibility(View.INVISIBLE);
         playBackAudio.setVisibility(View.INVISIBLE);
         seekBarTimeDisplay.setText(convertTime(0));
         seekBar.setProgress(0);
-        if (Objects.nonNull(myMediaPlayer)) {
-            clearMediaPlayer();
-        }
+        if (Objects.nonNull(myMediaPlayer))
+            myMediaPlayer.reset();
     }
 
     private void clearMediaPlayer() {
-        myMediaPlayer.stop();
-        myMediaPlayer.release();
-        myMediaPlayer = null;
-        totalTimeOfRecord = 0;
+        if (Objects.nonNull(myMediaPlayer)) {
+            if (myMediaPlayer.isPlaying())
+                myMediaPlayer.stop();
+            myMediaPlayer.reset();
+            myMediaPlayer.release();
+            myMediaPlayer = null;
+            totalTimeOfRecord = 0;
+        }
     }
 
     @Override
     public void onBackPress() {
         NavHostFragment.findNavController(SpeechReportFragment.this).popBackStack();
-        clearMediaPlayer();
     }
 
     @SuppressLint("MissingPermission")
@@ -437,7 +448,7 @@ public class SpeechReportFragment<MainActivity> extends Fragment implements MapA
     @Override
     public void onDestroy() {
         super.onDestroy();
-        clearAudioPlaybackUI();
+        clearAudioPlaybackComponents();
         clearMediaPlayer();
     }
 }
