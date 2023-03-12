@@ -2,16 +2,19 @@ package com.hcmut.admin.utrafficsystem.ui.report.speech;
 
 import static com.facebook.FacebookSdk.getApplicationContext;
 
-
 import android.annotation.SuppressLint;
-import android.media.AudioAttributes;
-import android.media.MediaPlayer;
 import android.media.AudioFormat;
+import android.media.MediaMetadataRetriever;
+import android.media.MediaPlayer;
 import android.media.MediaRecorder;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
+import android.os.Message;
 import android.util.Base64;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,12 +29,13 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
 
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.hcmut.admin.utrafficsystem.R;
 import com.hcmut.admin.utrafficsystem.constant.MobileConstants;
 import com.hcmut.admin.utrafficsystem.model.User;
@@ -42,26 +46,22 @@ import com.hcmut.admin.utrafficsystem.repository.remote.model.request.SpeechRepo
 import com.hcmut.admin.utrafficsystem.repository.remote.model.response.NearSegmentResponse;
 import com.hcmut.admin.utrafficsystem.repository.remote.model.response.SpeechReportResponse;
 import com.hcmut.admin.utrafficsystem.ui.map.MapActivity;
-import com.google.android.gms.maps.MapView;
 import com.hcmut.admin.utrafficsystem.util.SharedPrefUtils;
+
+import org.apache.commons.io.FileUtils;
+import org.bson.types.ObjectId;
 
 import java.io.File;
 import java.io.IOException;
-
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
-import android.util.Log;
 import okhttp3.MediaType;
 import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-
-import org.apache.commons.io.FileUtils;
-import org.bson.types.ObjectId;
-
-import java.io.IOException;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -78,17 +78,19 @@ public class SpeechReportFragment<MainActivity> extends Fragment implements MapA
     private SeekBar seekBar;
     private TextView seekBarTimeDisplay;
     private TextView totalTimeDisplay;
-    private ImageButton playBackAudio;
+    private FloatingActionButton playBackAudio;
     private MediaRecorder myAudioRecorder;
     private MediaPlayer myMediaPlayer;
+    private int totalTimeOfRecord = 0;
     private boolean isRecording; // true -> in recording, false -> not in recording mode
+    private boolean newRecord; // true -> new record that is not init by media player yet
     File outputFile;
     private final APIService apiService;
     private final String temporarySpeechRecordId = (new ObjectId()).toString();
 
     private LatLng currLatLng;
     private LatLng nextLatLng;
-    private LatLng bkLatLng = new LatLng(10.804280198546195,106.69206241401363);
+    private LatLng bkLatLng = new LatLng(10.887792,106.8143736);
     private MarkerOptions marker = new MarkerOptions().icon(null);
 
     public SpeechReportFragment() {
@@ -126,7 +128,7 @@ public class SpeechReportFragment<MainActivity> extends Fragment implements MapA
             this.seekBar = view.findViewById(R.id.playSpeechRecordSeekBar);
             this.seekBarTimeDisplay = view.findViewById(R.id.playSpeechRecordTime);
             this.totalTimeDisplay = view.findViewById(R.id.totalSpeechRecordTime);
-            this.playBackAudio = view.findViewById(R.id.playSpeechRecordButton);
+            this.playBackAudio = view.findViewById(R.id.fabPlayingAudio);
 
             this.record.setEnabled(true);
             this.submit.setEnabled(true);
@@ -135,23 +137,6 @@ public class SpeechReportFragment<MainActivity> extends Fragment implements MapA
             this.mapView.onCreate(savedInstanceState);
             this.mapView.onResume();
             this.mapView.getMapAsync(this);
-
-            seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-                @Override
-                public void onStartTrackingTouch(SeekBar seekBar) {
-                }
-
-                @Override
-                public void onProgressChanged(SeekBar seekBar, int progress, boolean fromTouch) {
-                    seekBarTimeDisplay.setVisibility(View.VISIBLE);
-                    myMediaPlayer.seekTo(progress);
-                    seekBarTimeDisplay.setText(convertTime(progress));
-                }
-
-                @Override
-                public void onStopTrackingTouch(SeekBar seekBar) {
-                }
-            });
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -190,9 +175,9 @@ public class SpeechReportFragment<MainActivity> extends Fragment implements MapA
         this.playBackAudio.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(getApplicationContext(), "Playing Audio", Toast.LENGTH_LONG).show();
-                if (outputFile != null)
-                    startPlaying();
+                if (outputFile != null) {
+                    play();
+                }
             }
         });
     }
@@ -255,6 +240,8 @@ public class SpeechReportFragment<MainActivity> extends Fragment implements MapA
     }
 
     private void startRecord() throws IOException {
+        clearAudioPlaybackComponents();
+
         this.myAudioRecorder = new MediaRecorder();
         // .wav file setting
         myAudioRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
@@ -288,54 +275,135 @@ public class SpeechReportFragment<MainActivity> extends Fragment implements MapA
         submit.setEnabled(true);
         Toast.makeText(getApplicationContext(), "Recording stopped", Toast.LENGTH_LONG/4).show();
 
-        this.seekBar.setVisibility(View.VISIBLE);
-        this.totalTimeDisplay.setVisibility(View.VISIBLE);
-        this.seekBarTimeDisplay.setVisibility(View.VISIBLE);
-        this.playBackAudio.setVisibility(View.VISIBLE);
+        // Get duration of the audio record
+        MediaMetadataRetriever mmr = new MediaMetadataRetriever();
+        mmr.setDataSource(outputFile.getPath());
+        String recordDuration = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
+        totalTimeOfRecord = Integer.parseInt(recordDuration);
+        totalTimeDisplay.setText(convertTime(totalTimeOfRecord));
+        seekBar.setMax(totalTimeOfRecord);
 
-        getMediaPlayer();
-        int totalTime = myMediaPlayer.getDuration();
-        this.seekBar.setMax(totalTime);
-        this.totalTimeDisplay.setText(convertTime(totalTime));
+        // Set visibility to playback components
+        seekBar.setVisibility(View.VISIBLE);
+        playBackAudio.setVisibility(View.VISIBLE);
+        totalTimeDisplay.setVisibility(View.VISIBLE);
+        seekBarTimeDisplay.setVisibility(View.VISIBLE);
+        newRecord = true;
     }
 
-    private String convertTime(int msec) {
-        return String.format("%02d", (int)Math.floor(msec/60000)) + ":" + String.format("%02d", (int)Math.ceil(msec/1000));
-    }
-
-    private void getMediaPlayer() {
-        myMediaPlayer = new MediaPlayer();
-        try {
-            myMediaPlayer.setAudioAttributes(new AudioAttributes.Builder().setContentType(AudioAttributes.CONTENT_TYPE_MUSIC).build());
-            myMediaPlayer.setDataSource(outputFile.getPath());
-            myMediaPlayer.prepare();
-            myMediaPlayer.setLooping(false);
-            myMediaPlayer.start();
-        } catch (Exception e) {
-            e.printStackTrace();
+    private void initMusicPlayer() {
+        if (!Objects.isNull(myMediaPlayer) && myMediaPlayer.isPlaying()) {
+            myMediaPlayer.stop();
+            myMediaPlayer.reset();
         }
-    }
 
-    private void startPlaying() {
-        getMediaPlayer();
+        myMediaPlayer = MediaPlayer.create(getApplicationContext(), Uri.parse(outputFile.getPath()));
+        playBackAudio.setImageResource(android.R.drawable.ic_media_play);
+
+        myMediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+            @Override
+            public void onPrepared(MediaPlayer mediaPlayer) {
+                playBackAudio.setImageResource(android.R.drawable.ic_media_pause);
+                mediaPlayer.start();
+            }
+        });
+
+        myMediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+            @Override
+            public void onCompletion(MediaPlayer mediaPlayer) {
+                playBackAudio.setImageResource(android.R.drawable.ic_media_play);
+                seekBar.setProgress(totalTimeOfRecord);
+            }
+        });
+
+        seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                seekBarTimeDisplay.setText(convertTime(progress));
+                if (fromUser) {
+                    myMediaPlayer.seekTo(progress);
+                    seekBar.setProgress(progress);
+                }
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
+
         new Thread(new Runnable() {
             @Override
             public void run() {
-                int currentPosition = 0;
-                int total = myMediaPlayer.getDuration();
-                while (myMediaPlayer != null && myMediaPlayer.isPlaying() && currentPosition < total) {
+                while (Objects.nonNull(myMediaPlayer)) {
                     try {
-                        Thread.sleep(1000);
-                        currentPosition = myMediaPlayer.getCurrentPosition();
+                        if (Objects.nonNull(myMediaPlayer) && myMediaPlayer.isPlaying()) {
+                            Message message = new Message();
+                            message.what = myMediaPlayer.getCurrentPosition();
+                            handlerForSeekBar.sendMessage(message);
+                            Thread.sleep(50);
+                        }
                     } catch (InterruptedException e) {
-                        return;
-                    } catch (Exception e) {
-                        return;
+                        e.printStackTrace();
                     }
-                    seekBar.setProgress(currentPosition);
                 }
             }
         }).start();
+    }
+
+    @SuppressLint("HandlerLeak")
+    private Handler handlerForSeekBar = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            seekBar.setProgress(msg.what);
+        }
+    };
+
+    private void play() {
+        if (newRecord) {
+            newRecord = false;
+            initMusicPlayer();
+        }
+        else if (Objects.nonNull(myMediaPlayer) && myMediaPlayer.isPlaying()) {
+            myMediaPlayer.pause();
+            playBackAudio.setImageResource(android.R.drawable.ic_media_play);
+        }
+        else if (Objects.nonNull(myMediaPlayer)) {
+            myMediaPlayer.start();
+            playBackAudio.setImageResource(android.R.drawable.ic_media_pause);
+        }
+    }
+
+    private String convertTime(int msec) {
+        return String.format("%02d", (int)Math.floor(msec/60000)) + ":"
+                + String.format("%02d", (int)Math.ceil((float)msec/1000));
+    }
+
+    private void clearAudioPlaybackComponents() {
+        seekBar.setVisibility(View.INVISIBLE);
+        totalTimeDisplay.setVisibility(View.INVISIBLE);
+        seekBarTimeDisplay.setVisibility(View.INVISIBLE);
+        playBackAudio.setVisibility(View.INVISIBLE);
+        seekBarTimeDisplay.setText(convertTime(0));
+        seekBar.setProgress(0);
+        if (Objects.nonNull(myMediaPlayer))
+            myMediaPlayer.reset();
+    }
+
+    private void clearMediaPlayer() {
+        if (Objects.nonNull(myMediaPlayer)) {
+            if (myMediaPlayer.isPlaying())
+                myMediaPlayer.stop();
+            myMediaPlayer.reset();
+            myMediaPlayer.release();
+            myMediaPlayer = null;
+            totalTimeOfRecord = 0;
+        }
     }
 
     @Override
@@ -352,6 +420,8 @@ public class SpeechReportFragment<MainActivity> extends Fragment implements MapA
             marker.position(bkLatLng);
             gMap.addMarker(marker);
             gMap.setMaxZoomPreference(16);
+            gMap.moveCamera(CameraUpdateFactory
+                    .newLatLngZoom(bkLatLng, 16));
         }
     }
 
@@ -379,8 +449,10 @@ public class SpeechReportFragment<MainActivity> extends Fragment implements MapA
                 });
     }
 
-
-
-
-
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        clearAudioPlaybackComponents();
+        clearMediaPlayer();
+    }
 }
