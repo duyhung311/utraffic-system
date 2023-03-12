@@ -346,7 +346,7 @@ public class SpeechReportFragment<MainActivity> extends Fragment implements MapA
                             Message message = new Message();
                             message.what = myMediaPlayer.getCurrentPosition();
                             handlerForSeekBar.sendMessage(message);
-                            Thread.sleep(1000);
+                            Thread.sleep(50);
                         }
                     } catch (InterruptedException e) {
                         e.printStackTrace();
