@@ -1,12 +1,110 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.hcmut.admin.utrafficsystem.customview.NonGestureConstraintLayout
+<androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
+    android:orientation="vertical"
     tools:context=".ui.report.speech.SpeechReportFragment">
+
+    <!--
+        From Traffic Report
+    -->
+
+    <com.hcmut.admin.utrafficsystem.customview.NonGestureFrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/searchInputViewContainer"
+        android:elevation="3dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:background="@color/white">
+        <com.hcmut.admin.utrafficsystem.customview.SearchInputView
+            android:id="@+id/searchInputView"
+            android:elevation="6dp"
+            android:layout_margin="16dp"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"/>
+    </com.hcmut.admin.utrafficsystem.customview.NonGestureFrameLayout>
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btnToggleRender"
+        android:layout_width="wrap_content"
+        android:layout_height="32dp"
+        android:layout_marginEnd="@dimen/margin_medium"
+        android:layout_marginTop="32dp"
+        android:background="@drawable/bg_button_active"
+        android:textColor="@color/white"
+        android:text="Dữ liệu"
+        android:textSize="12dp"
+        app:elevation="2dp"
+        app:layout_constraintTop_toBottomOf="@+id/clCollectLocation"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <com.hcmut.admin.utrafficsystem.customview.NonGestureConstraintLayout
+        android:id="@+id/clCollectLocation"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:elevation="3dp"
+        android:paddingBottom="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/searchInputViewContainer">
+
+        <TextView
+            android:id="@+id/btnYourLocation"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/transparent_btn_bg"
+            android:clickable="true"
+            android:drawableStart="@drawable/ic_my_location_blue"
+            android:drawablePadding="10dp"
+            android:gravity="left|center_vertical"
+            android:paddingStart="16dp"
+            android:paddingTop="8dp"
+            android:paddingEnd="16dp"
+            android:paddingBottom="8dp"
+            android:text="Vị trí của bạn"
+            android:textSize="12dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/border1"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/gray"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/btnYourLocation" />
+
+        <TextView
+            android:id="@+id/btnChooseOnMap"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/transparent_btn_bg"
+            android:clickable="true"
+            android:drawableStart="@drawable/ic_map_tab"
+            android:drawablePadding="10dp"
+            android:gravity="left|center_vertical"
+            android:paddingStart="16dp"
+            android:paddingTop="8dp"
+            android:paddingEnd="16dp"
+            android:paddingBottom="8dp"
+            android:text="Chọn trên bản đồ"
+            android:textSize="12dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/border1" />
+    </com.hcmut.admin.utrafficsystem.customview.NonGestureConstraintLayout>
+
+    <!--
+        From Traffic Report
+    -->
 
     <TextView
         android:id="@+id/speechReportFragment"
@@ -17,139 +115,133 @@
         app:layout_constraintStart_toStartOf="parent"
         tools:layout_editor_absoluteY="0dp" />
 
-    <TextView
-        android:id="@+id/txtSpeechReportTitle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
-        android:text="Báo cáo tình trạng giao thông"
-        android:textColor="@color/blue"
-        android:textSize="18dp"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/txtSpeechChooseLocation"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:text="Chọn vị trí cảnh báo"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/txtSpeechReportTitle" />
-
     <com.google.android.gms.maps.MapView
         android:id="@+id/mapView"
-        android:layout_width="0dp"
-        android:layout_height="256dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="16dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/txtSpeechChooseLocation" />
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        tools:ignore="MissingConstraints" />
 
-<!--    <EditText
-        android:id="@+id/txtSpeechFormStart"
+    <com.hcmut.admin.utrafficsystem.customview.NonGestureConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:inputType="text"
-        android:hint="Chọn điểm bắt đầu trên bản đồ"
-        android:textSize="16sp"
-        android:padding="10dp"
-        android:layout_margin="16dp"
-        app:layout_constraintTop_toBottomOf="@id/mapView"
-        tools:layout_editor_absoluteX="0dp"
-        tools:layout_editor_absoluteY="444dp" />-->
-
-    <!--<EditText
-        android:id="@+id/txtSpeechFormEnd"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:inputType="text"
-        android:hint="Chọn điểm kết thúc trên bản đồ"
-        android:textSize="16sp"
-        android:padding="10dp"
-        android:layout_margin="16dp"
-        app:layout_constraintTop_toBottomOf="@id/txtSpeechFormStart"
-        tools:layout_editor_absoluteX="0dp"
-        tools:layout_editor_absoluteY="444dp" />-->
-
-    <ImageButton
-        android:id="@+id/speechRecordButton"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
-        android:padding="10dp"
-        android:src="@drawable/ic_record"
-        android:background="@drawable/bg_circle_image"
-        android:scaleType="fitXY"
-        android:clickable="true"
-        android:layout_marginTop="32dp"
-        app:layout_constraintTop_toBottomOf="@id/mapView"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:id="@+id/speechReportContainer"
+        android:elevation="3dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        android:focusable="true" />
-
-    <Button
-        android:id="@+id/btnSubmitSpeechReport"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="80dp"
-        android:clickable="true"
-        android:focusable="true"
-        android:text="@string/send_speech_report"
-        android:textAllCaps="true"
-        android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/speechRecordButton" />
+        android:background="@color/white">
 
-    <SeekBar
-        android:id="@+id/playSpeechRecordSeekBar"
-        android:layout_width="240dp"
-        android:layout_height="0dp"
-        android:layout_marginTop="32dp"
-        android:visibility="invisible"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/speechRecordButton" />
+        <TextView
+            android:id="@+id/txtSpeechReportTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginVertical="20dp"
+            android:text="@string/speech_report_title"
+            android:textColor="#3db2ec"
+            android:textSize="14dp"
+            android:textStyle="bold"
+            android:gravity="center"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/speechRecordButton" />
 
-    <TextView
-        android:id="@+id/playSpeechRecordTime"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
-        android:text="00:00"
-        android:visibility="invisible"
-        app:layout_constraintStart_toStartOf="@+id/playSpeechRecordSeekBar"
-        app:layout_constraintTop_toBottomOf="@+id/playSpeechRecordSeekBar" />
+<!--        <TextView-->
+<!--            android:id="@+id/txtSpeechChooseLocation"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_marginTop="40dp"-->
+<!--            android:text="Chọn vị trí cảnh báo"-->
+<!--            android:textStyle="bold"-->
+<!--            android:gravity="center"-->
+<!--            app:layout_constraintEnd_toEndOf="parent"-->
+<!--            app:layout_constraintStart_toStartOf="parent"-->
+<!--            app:layout_constraintTop_toBottomOf="@id/txtSpeechReportTitle" />-->
 
-    <TextView
-        android:id="@+id/totalSpeechRecordTime"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text=""
-        android:visibility="invisible"
-        app:layout_constraintEnd_toEndOf="@+id/playSpeechRecordSeekBar"
-        app:layout_constraintTop_toBottomOf="@+id/playSpeechRecordSeekBar" />
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fabPlayingAudio"
-        android:layout_width="32dp"
-        android:layout_height="32dp"
-        app:fabCustomSize="32dp"
-        android:padding="16dp"
-        android:layout_marginEnd="10dp"
-        android:layout_gravity="end|bottom"
-        android:visibility="invisible"
-        app:fab_colorNormal="@color/AliceBlue"
-        android:src="@android:drawable/ic_media_play"
-        app:layout_constraintEnd_toStartOf="@id/playSpeechRecordSeekBar"
-        app:layout_constraintTop_toTopOf="@id/playSpeechRecordSeekBar"
-        android:contentDescription="Play/Pause Sound" />
+        <ImageButton
+            android:id="@+id/speechRecordButton"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_marginBottom="10dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:gravity="left|center"
+            android:padding="10dp"
+            android:scaleType="fitXY"
+            android:src="@drawable/ic_record"
+            android:background="@drawable/bg_circle_image_speech"
+            app:layout_constraintBottom_toTopOf="@id/playSpeechRecordSeekBar"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
 
-</com.hcmut.admin.utrafficsystem.customview.NonGestureConstraintLayout>
+        <SeekBar
+            android:id="@+id/playSpeechRecordSeekBar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="60dp"
+            android:layout_marginRight="20dp"
+            android:visibility="invisible"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/playSpeechRecordTime" />
+
+        <TextView
+            android:id="@+id/playSpeechRecordTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginBottom="20dp"
+            android:text="00:00"
+            android:visibility="invisible"
+            app:layout_constraintStart_toStartOf="@id/playSpeechRecordSeekBar"
+            app:layout_constraintBottom_toTopOf="@id/btnSubmitSpeechReport" />
+
+        <TextView
+            android:id="@+id/totalSpeechRecordTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            android:text=""
+            android:visibility="invisible"
+            app:layout_constraintEnd_toEndOf="@id/playSpeechRecordSeekBar"
+            app:layout_constraintBottom_toTopOf="@id/btnSubmitSpeechReport" />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fabPlayingAudio"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            app:fabCustomSize="32dp"
+            android:padding="16dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginStart="20dp"
+            android:layout_gravity="end|bottom"
+            android:visibility="invisible"
+            app:fab_colorNormal="@color/AliceBlue"
+            android:src="@android:drawable/ic_media_play"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@id/playSpeechRecordSeekBar"
+            android:contentDescription="Play Pause Sound" />
+
+        <Button
+            android:id="@+id/btnSubmitSpeechReport"
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:layout_marginBottom="20dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:text="@string/send_speech_report"
+            android:textSize="14dp"
+            android:textColor="@color/white"
+            android:background="@drawable/bg_speech_submit_button"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+
+    </com.hcmut.admin.utrafficsystem.customview.NonGestureConstraintLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
