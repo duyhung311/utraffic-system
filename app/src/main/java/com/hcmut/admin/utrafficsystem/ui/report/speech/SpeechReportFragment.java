@@ -230,11 +230,11 @@ public class SpeechReportFragment<MainActivity> extends Fragment implements MapA
                         @Override
                         public void onResponse(Call<SpeechReportResponse> call, Response<SpeechReportResponse> response) {
                             Log.i(MobileConstants.INFO_TAGNAME, "Success");
-                            androidExt.showMessageNoAction(getContext(), "Thông báo", "Gửi báo cáo thành công!");
+                            // androidExt.showMessageNoAction(getContext(), "Thông báo", "Gửi báo cáo thành công!");
                         }
                         @Override
                         public void onFailure(Call<SpeechReportResponse> call, Throwable t) {
-                            androidExt.showMessageNoAction(getContext(), "Thông báo", "Không thể gửi báo cáo. Vui lòng thử lại.");
+                            // androidExt.showMessageNoAction(getContext(), "Thông báo", "Không thể gửi báo cáo. Vui lòng thử lại.");
                             Log.i(MobileConstants.INFO_TAGNAME, "Fail callServerForEnhanceRecord()");
                             t.printStackTrace();
                         }
