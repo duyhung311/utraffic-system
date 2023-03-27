@@ -162,7 +162,6 @@
 <!--            app:layout_constraintStart_toStartOf="parent"-->
 <!--            app:layout_constraintTop_toBottomOf="@id/txtSpeechReportTitle" />-->
 
-
         <ImageButton
             android:id="@+id/speechRecordButton"
             android:layout_width="60dp"
@@ -218,11 +217,13 @@
             android:layout_height="32dp"
             app:fabCustomSize="32dp"
             android:padding="16dp"
+            android:clickable="true"
+            android:focusable="true"
             android:layout_marginEnd="10dp"
             android:layout_marginStart="20dp"
             android:layout_gravity="end|bottom"
             android:visibility="invisible"
-            app:fab_colorNormal="@color/AliceBlue"
+            android:background="@drawable/bg_circle_image_speech"
             android:src="@android:drawable/ic_media_play"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@id/playSpeechRecordSeekBar"
