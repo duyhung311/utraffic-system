@@ -18,6 +18,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.SeekBar;
@@ -38,6 +40,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.hcmut.admin.utrafficsystem.R;
 import com.hcmut.admin.utrafficsystem.constant.MobileConstants;
+import com.hcmut.admin.utrafficsystem.model.AndroidExt;
 import com.hcmut.admin.utrafficsystem.model.User;
 import com.hcmut.admin.utrafficsystem.repository.remote.API.APIService;
 import com.hcmut.admin.utrafficsystem.repository.remote.RetrofitClient;
@@ -82,6 +85,7 @@ public class SpeechReportFragment<MainActivity> extends Fragment implements MapA
     private MediaRecorder myAudioRecorder;
     private MediaPlayer myMediaPlayer;
     private int totalTimeOfRecord = 0;
+    public static AndroidExt androidExt;
     private boolean isRecording; // true -> in recording, false -> not in recording mode
     private boolean newRecord; // true -> new record that is not init by media player yet
     File outputFile;
@@ -226,12 +230,13 @@ public class SpeechReportFragment<MainActivity> extends Fragment implements MapA
                         @Override
                         public void onResponse(Call<SpeechReportResponse> call, Response<SpeechReportResponse> response) {
                             Log.i(MobileConstants.INFO_TAGNAME, "Success");
+                            // androidExt.showMessageNoAction(getContext(), "Thông báo", "Gửi báo cáo thành công!");
                         }
                         @Override
                         public void onFailure(Call<SpeechReportResponse> call, Throwable t) {
+                            // androidExt.showMessageNoAction(getContext(), "Thông báo", "Không thể gửi báo cáo. Vui lòng thử lại.");
                             Log.i(MobileConstants.INFO_TAGNAME, "Fail callServerForEnhanceRecord()");
                             t.printStackTrace();
-
                         }
                     });
         } catch (IOException e) {
@@ -260,11 +265,16 @@ public class SpeechReportFragment<MainActivity> extends Fragment implements MapA
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             myAudioRecorder.setOutputFile(outputFile);
         }
+
+        // Animate recording button
+        isRecording = true;
+        Animation btnShake = AnimationUtils.loadAnimation(getActivity(),R.anim.shake); // for recording button
+        record.startAnimation(btnShake);
+
         myAudioRecorder.prepare();
         myAudioRecorder.start();
-        isRecording = true;
         this.submit.setEnabled(false);
-        Toast.makeText(getApplicationContext(), "Recording started", Toast.LENGTH_LONG/4).show();
+        Toast.makeText(getApplicationContext(), "Bắt đầu ghi âm", Toast.LENGTH_LONG/4).show();
     }
 
     private void stopRecord() {
@@ -273,7 +283,10 @@ public class SpeechReportFragment<MainActivity> extends Fragment implements MapA
         this.myAudioRecorder.release();
         isRecording = false;
         submit.setEnabled(true);
-        Toast.makeText(getApplicationContext(), "Recording stopped", Toast.LENGTH_LONG/4).show();
+        Toast.makeText(getApplicationContext(), "Kết thúc ghi âm", Toast.LENGTH_LONG/4).show();
+
+        // Stop animate recording button
+        record.clearAnimation();
 
         // Get duration of the audio record
         MediaMetadataRetriever mmr = new MediaMetadataRetriever();
@@ -380,8 +393,10 @@ public class SpeechReportFragment<MainActivity> extends Fragment implements MapA
     }
 
     private String convertTime(int msec) {
-        return String.format("%02d", (int)Math.floor(msec/60000)) + ":"
-                + String.format("%02d", (int)Math.ceil((float)msec/1000));
+        double sec = Math.ceil((float)msec / 1000);
+        int minutes = (int)Math.floor((sec%3600)/60);
+        int seconds = (int)(sec % 60);
+        return String.format("%02d", minutes)+ ":" + String.format("%02d", seconds);
     }
 
     private void clearAudioPlaybackComponents() {
