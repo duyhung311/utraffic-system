@@ -51,14 +51,11 @@ public class StartAndTerminalPointFragment<MainActivity> extends Fragment implem
     private GoogleMap map;
     private static GoogleMap backUpGMap;
     private LatLng startLatLng;
-    private LatLng endLatLng;
 
     private TextView btnOk;
     private TextView middlePoint;
     private TextView textView;
     private ImageView imgBack;
-    private boolean isChooseBoth;
-    private boolean isHaveSearchResult;
 
     public StartAndTerminalPointFragment(){
     }
@@ -179,14 +176,11 @@ public class StartAndTerminalPointFragment<MainActivity> extends Fragment implem
         } else {
             middlePoint.getLocationOnScreen(screenCoord);
         }
-        Log.i(MobileConstants.INFO_TAGNAME, middlePoint.toString());
         try {
             LatLng location = map.getProjection().fromScreenLocation(
                     new Point(screenCoord[0], screenCoord[1]));
-            Log.i(MobileConstants.INFO_TAGNAME, String.valueOf(screenCoord[0]).concat("-").concat(String.valueOf(screenCoord[1])));
 
             int type = getArguments().getInt(SearchPlaceResultHandler.SEARCH_TYPE, -1);
-            Log.i(MobileConstants.INFO_TAGNAME, String.valueOf(type));
 
             SearchPlaceResultHandler.getInstance().dispatchSearchPlaceResult(type, null, location);
             onBackPress();
