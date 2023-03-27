@@ -3,6 +3,9 @@ package com.hcmut.admin.utrafficsystem.ui.report.speech;
 import static com.facebook.FacebookSdk.getApplicationContext;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
+import android.graphics.Color;
+import android.location.Location;
 import android.media.AudioFormat;
 import android.media.MediaMetadataRetriever;
 import android.media.MediaPlayer;
@@ -31,14 +34,23 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
 
+import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.Polyline;
+import com.google.android.gms.maps.model.PolylineOptions;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.libraries.places.api.model.AutocompletePrediction;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.hcmut.admin.utrafficsystem.R;
+import com.hcmut.admin.utrafficsystem.business.MarkerCreating;
+import com.hcmut.admin.utrafficsystem.business.SearchDirectionHandler;
 import com.hcmut.admin.utrafficsystem.constant.MobileConstants;
 import com.hcmut.admin.utrafficsystem.model.AndroidExt;
 import com.hcmut.admin.utrafficsystem.model.User;
@@ -46,9 +58,16 @@ import com.hcmut.admin.utrafficsystem.repository.remote.API.APIService;
 import com.hcmut.admin.utrafficsystem.repository.remote.RetrofitClient;
 import com.hcmut.admin.utrafficsystem.repository.remote.model.BaseResponse;
 import com.hcmut.admin.utrafficsystem.repository.remote.model.request.SpeechReportBody;
+import com.hcmut.admin.utrafficsystem.repository.remote.model.response.Coord;
+import com.hcmut.admin.utrafficsystem.repository.remote.model.response.DirectRespose;
 import com.hcmut.admin.utrafficsystem.repository.remote.model.response.NearSegmentResponse;
 import com.hcmut.admin.utrafficsystem.repository.remote.model.response.SpeechReportResponse;
+import com.hcmut.admin.utrafficsystem.service.AppForegroundService;
 import com.hcmut.admin.utrafficsystem.ui.map.MapActivity;
+import com.hcmut.admin.utrafficsystem.ui.searchplace.callback.SearchPlaceResultHandler;
+import com.hcmut.admin.utrafficsystem.ui.searchplace.callback.SearchResultCallback;
+import com.hcmut.admin.utrafficsystem.util.LocationCollectionManager;
+import com.hcmut.admin.utrafficsystem.util.MapUtil;
 import com.hcmut.admin.utrafficsystem.util.SharedPrefUtils;
 
 import org.apache.commons.io.FileUtils;
@@ -68,10 +87,10 @@ import retrofit2.Response;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link SpeechReportFragment#newInstance} factory method to
+ * Use the {@link SpeechReportFragment} factory method toSearchResultCallback
  * create an instance of this fragment.
  */
-public class SpeechReportFragment<MainActivity> extends Fragment implements MapActivity.OnBackPressCallback, OnMapReadyCallback {
+public class SpeechReportFragment<MainActivity> extends Fragment implements MapActivity.OnBackPressCallback, OnMapReadyCallback, SearchResultCallback  {
 
     // TODO: Rename parameter arguments, choose names that match
     private MapView mapView;
@@ -81,31 +100,27 @@ public class SpeechReportFragment<MainActivity> extends Fragment implements MapA
     private SeekBar seekBar;
     private TextView seekBarTimeDisplay;
     private TextView totalTimeDisplay;
+    private TextView btnYourLocation;
     private FloatingActionButton playBackAudio;
     private MediaRecorder myAudioRecorder;
     private MediaPlayer myMediaPlayer;
     private int totalTimeOfRecord = 0;
     public static AndroidExt androidExt;
+    private com.hcmut.admin.utrafficsystem.customview.NonGestureConstraintLayout speechReportContainer;
     private boolean isRecording; // true -> in recording, false -> not in recording mode
     private boolean newRecord; // true -> new record that is not init by media player yet
-    File outputFile;
+    private File outputFile;
     private final APIService apiService;
     private final String temporarySpeechRecordId = (new ObjectId()).toString();
-
-    private LatLng currLatLng;
-    private LatLng nextLatLng;
-    private LatLng bkLatLng = new LatLng(10.887792,106.8143736);
-    private MarkerOptions marker = new MarkerOptions().icon(null);
-
+    private LatLng pickOnMapStartLatLng;
+    private LatLng pickOnMapEndLatLng;
+    private TextView btnChooseOnMap;
+    private List<Polyline> directPolylines = new ArrayList<>();
+    private MarkerCreating beginMarkerCreating;
+    private MarkerCreating endMarkerCreating;
+    private MarkerCreating directInfoMarker;
     public SpeechReportFragment() {
-        // Required empty public constructor
         apiService = RetrofitClient.getApiService();
-    }
-
-    public static SpeechReportFragment newInstance(String param1, String param2) {
-        SpeechReportFragment fragment = new SpeechReportFragment();
-        Bundle args = new Bundle();
-        return fragment;
     }
 
     @Override
@@ -119,7 +134,7 @@ public class SpeechReportFragment<MainActivity> extends Fragment implements MapA
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         addControls(view, savedInstanceState);
-        addEvents();
+        addEvents(view);
     }
 
     private void addControls(View view, Bundle savedInstanceState) {
@@ -128,27 +143,25 @@ public class SpeechReportFragment<MainActivity> extends Fragment implements MapA
             ((MapActivity) view.getContext()).hideBottomNav();
             this.record = view.findViewById(R.id.speechRecordButton);
             this.submit = view.findViewById(R.id.btnSubmitSpeechReport);
-
             this.seekBar = view.findViewById(R.id.playSpeechRecordSeekBar);
             this.seekBarTimeDisplay = view.findViewById(R.id.playSpeechRecordTime);
             this.totalTimeDisplay = view.findViewById(R.id.totalSpeechRecordTime);
+            this.btnYourLocation = view.findViewById(R.id.btnYourLocation);
+            this.btnChooseOnMap =  view.findViewById(R.id.btnChooseOnMap);
             this.playBackAudio = view.findViewById(R.id.fabPlayingAudio);
-
             this.record.setEnabled(true);
             this.submit.setEnabled(true);
-
             this.mapView = view.findViewById(R.id.mapView);
             this.mapView.onCreate(savedInstanceState);
             this.mapView.onResume();
-            this.mapView.getMapAsync(this);
-
+            this.mapView.getMapAsync((OnMapReadyCallback) this);
+            this.speechReportContainer =  view.findViewById(R.id.speechReportContainer);
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    private void addEvents() {
-
+    private void addEvents(View view) {
         // Record Audio
         this.record.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -171,7 +184,9 @@ public class SpeechReportFragment<MainActivity> extends Fragment implements MapA
         this.submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                callServerForEnhanceRecord(outputFile);
+                if (Objects.nonNull(pickOnMapStartLatLng) == Objects.nonNull(pickOnMapEndLatLng)) {
+                    callServerForEnhanceRecord(outputFile);
+                } // else: thong bao
             }
         });
 
@@ -182,6 +197,47 @@ public class SpeechReportFragment<MainActivity> extends Fragment implements MapA
                 if (outputFile != null) {
                     play();
                 }
+            }
+        });
+
+        btnYourLocation.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                pickOnMapEndLatLng = null;
+                pickOnMapStartLatLng = null;
+                speechReportContainer.animate().translationY(speechReportContainer.getHeight());
+                if (MapUtil.checkGPSTurnOn(getActivity(), MapActivity.androidExt)) {
+                    LocationCollectionManager.getInstance(getContext())
+                        .getCurrentLocation(new OnSuccessListener<Location>() {
+                            @Override
+                            public void onSuccess(Location location) {
+                                LatLng latlng = new LatLng(location.getLatitude(), location.getLongitude());
+                                pickOnMapStartLatLng = latlng;
+                                Bundle bundle = new Bundle();
+                                SearchPlaceResultHandler.getInstance().addSearchPlaceResultListener(SpeechReportFragment.this);
+                                bundle.putInt(SearchPlaceResultHandler.SEARCH_TYPE, SearchPlaceResultHandler.SELECTED_END_SEARCH);
+                                InterFragmentDTO dto = new InterFragmentDTO();
+                                dto.getMap().put(MobileConstants.LATLNG, latlng);
+                                bundle.putSerializable(MobileConstants.ITEM, dto);
+                                NavHostFragment.findNavController(SpeechReportFragment.this)
+                                        .navigate(R.id.action_speechReportFragment_to_pickOnMapFragmentSpeechReport, bundle);
+                            }
+                        });
+                }
+            }
+        });
+
+        btnChooseOnMap.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                pickOnMapEndLatLng = null;
+                pickOnMapStartLatLng = null;
+                speechReportContainer.animate().translationY(speechReportContainer.getHeight());
+                Bundle bundle = new Bundle();
+                SearchPlaceResultHandler.getInstance().addSearchPlaceResultListener(SpeechReportFragment.this);
+                bundle.putInt(SearchPlaceResultHandler.SEARCH_TYPE, SearchPlaceResultHandler.SELECTED_BEGIN_SEARCH);
+                NavHostFragment.findNavController(SpeechReportFragment.this)
+                        .navigate(R.id.action_speechReportFragment_to_pickOnMapFragmentSpeechReport, bundle);
             }
         });
     }
@@ -195,7 +251,6 @@ public class SpeechReportFragment<MainActivity> extends Fragment implements MapA
         speechReportBody.setSegments(listSegments);
         speechReportBody.setSpeechRecordId(temporarySpeechRecordId);
         speechReportBody.setRecord(audioFile);
-        okhttp3.RequestBody requestFile = RequestBody.create(audioFile, MediaType.parse("multipart/form-data"));
         List<okhttp3.RequestBody> segments = new ArrayList<>();
         for(Integer segment : listSegments) {
             segments.add(RequestBody.create(segment.toString(), MediaType.parse("multipart/form-data")));
@@ -295,7 +350,6 @@ public class SpeechReportFragment<MainActivity> extends Fragment implements MapA
         totalTimeOfRecord = Integer.parseInt(recordDuration);
         totalTimeDisplay.setText(convertTime(totalTimeOfRecord));
         seekBar.setMax(totalTimeOfRecord);
-
         // Set visibility to playback components
         seekBar.setVisibility(View.VISIBLE);
         playBackAudio.setVisibility(View.VISIBLE);
@@ -340,14 +394,10 @@ public class SpeechReportFragment<MainActivity> extends Fragment implements MapA
             }
 
             @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
-
-            }
+            public void onStartTrackingTouch(SeekBar seekBar) { }
 
             @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
-
-            }
+            public void onStopTrackingTouch(SeekBar seekBar) { }
         });
 
         new Thread(new Runnable() {
@@ -429,45 +479,203 @@ public class SpeechReportFragment<MainActivity> extends Fragment implements MapA
     @SuppressLint("MissingPermission")
     @Override
     public void onMapReady(GoogleMap googleMap) {
+        System.out.println("c@ll onMapReady()");
         if (googleMap != null) {
             googleMap.setMyLocationEnabled(true);
-            gMap = googleMap;
-            marker.position(bkLatLng);
-            gMap.addMarker(marker);
-            gMap.setMaxZoomPreference(16);
-            gMap.moveCamera(CameraUpdateFactory
-                    .newLatLngZoom(bkLatLng, 16));
+            LocationCollectionManager.getInstance(getContext())
+                .getCurrentLocation(new OnSuccessListener<Location>() {
+                    @Override
+                    public void onSuccess(Location location) {
+                        gMap = googleMap;
+                        LatLng currentLatLng = new LatLng(location.getLatitude(), location.getLongitude());
+                        gMap.setMaxZoomPreference(24);
+                        gMap.moveCamera(CameraUpdateFactory
+                                .newLatLngZoom(currentLatLng, 16));
+                        if (Objects.nonNull(pickOnMapStartLatLng) && Objects.nonNull(pickOnMapEndLatLng)) {
+                            performDirection(pickOnMapStartLatLng, pickOnMapEndLatLng);
+                        }
+                    }
+                });
+        }
+
+    }
+
+    @Override
+    public void onResume() {
+        System.out.println("c@ll onResume()");
+        super.onResume();
+        if (Objects.nonNull(pickOnMapStartLatLng) && Objects.isNull(pickOnMapEndLatLng)) {
+            Bundle bundle = new Bundle();
+            SearchPlaceResultHandler.getInstance().addSearchPlaceResultListener(SpeechReportFragment.this);
+            bundle.putInt(SearchPlaceResultHandler.SEARCH_TYPE, SearchPlaceResultHandler.SELECTED_END_SEARCH);
+            InterFragmentDTO dto = new InterFragmentDTO();
+            dto.getMap().put(MobileConstants.LATLNG, pickOnMapStartLatLng);
+            bundle.putSerializable(MobileConstants.ITEM, dto);
+            NavHostFragment.findNavController(SpeechReportFragment.this)
+                    .navigate(R.id.action_speechReportFragment_to_pickOnMapFragmentSpeechReport, bundle);
         }
     }
 
+    @Override
+    public void onAttach(Context context) {
+        System.out.println("c@ll onAttach()");
 
-    private void getNearestSegment(LatLng latLng) {
-        RetrofitClient.getApiService().getNearSegment(latLng.latitude, latLng.longitude)
-                .enqueue(new Callback<BaseResponse<List<NearSegmentResponse>>>() {
-                    @Override
-                    public void onResponse(Call<BaseResponse<List<NearSegmentResponse>>> call, Response<BaseResponse<List<NearSegmentResponse>>> response) {
-
-                        if (response.code() == 200 && response.body() != null && response.body().getData() != null) {
-                            List<NearSegmentResponse> nearSegmentResponses = response.body().getData();
-                            try {
-                                currLatLng = nearSegmentResponses.get(0).getStartLatLng();
-                                nextLatLng = nearSegmentResponses.get(0).getEndLatLng();
-                            } catch (Exception e) {
-                                e.printStackTrace();
+        super.onAttach(context);
+        if (context instanceof MapActivity) {
+            MapActivity mapActivity = (MapActivity) context;
+            mapActivity.addMapReadyCallback(new MapActivity.OnMapReadyListener() {
+                @Override
+                public void onMapReady(GoogleMap googleMap) {
+                    gMap = googleMap;
+                    LocationCollectionManager.getInstance(getContext())
+                        .getCurrentLocation(new OnSuccessListener<Location>() {
+                            @Override
+                            public void onSuccess(Location location) {
+                                gMap = googleMap;
+                                LatLng currentLatLng = new LatLng(location.getLatitude(), location.getLongitude());
+                                gMap.setMaxZoomPreference(24);
+                                gMap.moveCamera(CameraUpdateFactory
+                                        .newLatLngZoom(currentLatLng, 16));
                             }
-                        }
-                    }
-                    @Override
-                    public void onFailure(Call<BaseResponse<List<NearSegmentResponse>>> call, Throwable t) {
+                        });
 
-                    }
-                });
+                }
+            });
+        }
     }
+
+    private void performDirection(LatLng startPoint, LatLng endPoint) {
+        if (startPoint != null && endPoint != null) {
+            SearchDirectionHandler.direct(getContext(), startPoint, endPoint, Boolean.FALSE,
+                    new SearchDirectionHandler.DirectResultCallback() {
+                        @Override
+                        public void onSuccess(DirectRespose directRespose) {
+                            renderDirection(directRespose);
+                        }
+
+                        @Override
+                        public void onFail() {
+                            try {
+                                Toast.makeText(getContext(), "Kết nối thất bại, vui lòng kiểm tra lại!", Toast.LENGTH_SHORT).show();
+                            } catch (Exception e) {}
+                        }
+
+                        @Override
+                        public void onHaveNoData() {
+                            try {
+                                Toast.makeText(getContext(), "Đoạn đường không được hỗ trợ hoặc" +
+                                                " Không thể tìm thấy đường đến đó, vui lòng thử lại!", Toast.LENGTH_LONG)
+                                        .show();
+                            } catch (Exception e) {}
+                        }
+                    });
+        }
+        pickOnMapEndLatLng = null;
+        pickOnMapStartLatLng = null;
+    }
+
+    @SuppressLint("DefaultLocale")
+    private void renderDirection(DirectRespose directRespose) {
+        List<Coord> directs = directRespose.getCoords();
+        AppForegroundService.path_id = directRespose.getPathId();
+
+        // render direct to map
+        LatLng beginLatLng = new LatLng(directs.get(0).getLat(), directs.get(0).getLng());
+        LatLng endLatLng = new LatLng(directs.get(directs.size() - 1).getLat(), directs.get(directs.size() - 1).getLng());
+        LatLng directInfoLatLng = new LatLng(directs.get(directs.size() / 2).getLat(), directs.get(directs.size() / 2).getLng());
+        String directInfoTitle = String.format("%d phút (%.1f km)", (int) directRespose.getTime(), (directRespose.getDistance()/1000f));
+        createMarker(beginLatLng, endLatLng, directInfoLatLng, directInfoTitle);
+        removeDirect();
+        LatLng start;
+        LatLng end;
+        String color;
+        for (int i = 0; i < directs.size(); i++) {
+            try {
+                start = new LatLng(directs.get(i).getLat(), directs.get(i).getLng());
+                end = new LatLng(directs.get(i).geteLat(), directs.get(i).geteLng());
+                color = directs.get(i).getStatus().color;
+                directPolylines.add(gMap.addPolyline(
+                        new PolylineOptions().add(
+                                        start,
+                                        end
+                                ).width(10).geodesic(true)
+                                .clickable(true)
+                                .color(Color.parseColor(color))
+                ));
+            } catch (Exception e) {}
+        }
+        LatLngBounds bounds = new LatLngBounds.Builder()
+                .include(new LatLng(directs.get(0).getLat(), directs.get(0).getLng()))
+                .include(new LatLng(directs.get(directs.size() - 1).getLat(), directs.get(directs.size() - 1).getLng()))
+                .build();
+        CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, 36);
+        gMap.animateCamera(cu);
+    }
+
+    private void removeDirect() {
+        if (directPolylines != null) {
+            for (Polyline polyline : directPolylines) {
+                polyline.remove();
+            }
+            directPolylines.clear();
+        }
+    }
+
+    private void removeMarker() {
+        if (beginMarkerCreating != null) {
+            beginMarkerCreating.removeMarker();
+        }
+        if (endMarkerCreating != null) {
+            endMarkerCreating.removeMarker();
+        }
+        if (directInfoMarker != null) {
+            directInfoMarker.removeMarker();
+        }
+    }
+
+    private void createMarker(LatLng beginLatLng, LatLng endLatLng, LatLng directInfoLatLng, String directInfoTitle) {
+        removeMarker();
+        beginMarkerCreating = new MarkerCreating(beginLatLng);
+        endMarkerCreating = new MarkerCreating(endLatLng);
+        directInfoMarker = new MarkerCreating(directInfoLatLng);
+        beginMarkerCreating.createMarker(getContext(), gMap, R.drawable.ic_start_location_marker, false, false);
+        endMarkerCreating.createMarker(getContext(), gMap, R.drawable.ic_stop_location_marker, false, false);
+        directInfoMarker.createMarker(getContext(), gMap, R.drawable.ic_dot, false, false, directInfoTitle);
+    }
+
 
     @Override
     public void onDestroy() {
         super.onDestroy();
         clearAudioPlaybackComponents();
         clearMediaPlayer();
+        removeDirect();
+        removeMarker();
     }
+
+    @Override
+    public void onSearchResultReady(AutocompletePrediction result) {
+
+    }
+
+    @Override
+    public void onBeginSearchPlaceResultReady(AutocompletePrediction result) {
+
+    }
+
+    @Override
+    public void onEndSearchPlaceResultReady(AutocompletePrediction result) {
+
+    }
+
+    @Override
+    public void onSelectedBeginSearchPlaceResultReady(LatLng result) {
+        pickOnMapStartLatLng = result;
+    }
+
+    @Override
+    public void onSelectedEndSearchPlaceResultReady(LatLng result) {
+        pickOnMapEndLatLng = result;
+    }
+
 }

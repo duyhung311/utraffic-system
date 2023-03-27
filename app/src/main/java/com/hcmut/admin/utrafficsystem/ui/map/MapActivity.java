@@ -31,6 +31,7 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.libraries.places.api.Places;
 import com.hcmut.admin.utrafficsystem.MyApplication;
 import com.hcmut.admin.utrafficsystem.R;
@@ -96,6 +97,7 @@ public class MapActivity extends AppCompatActivity implements
     private androidx.fragment.app.Fragment contributionFragment;
     private androidx.fragment.app.Fragment viewReportFragment;
     private androidx.fragment.app.Fragment accountReportFragment;
+    MarkerOptions marker = new MarkerOptions().icon(null);
 
     public void setUserReportMarkerListener(ViewReportFragment.OnReportMakerClick listener) {
         reportMakerClickListener = listener;
@@ -270,6 +272,8 @@ public class MapActivity extends AppCompatActivity implements
                 return true;
             }
         });
+        marker.position(new LatLng(10.770873, 106.691716));
+        mMap.addMarker(marker);
     }
 
     private void EnableGPSAutoMatically() {
@@ -400,6 +404,10 @@ public class MapActivity extends AppCompatActivity implements
 
     public GoogleMap getGoogleMap() {
         return mMap;
+    }
+
+    public void setGoogleMap(GoogleMap map) {
+        this.mMap = map;
     }
 
     @Override

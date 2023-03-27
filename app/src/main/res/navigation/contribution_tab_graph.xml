@@ -6,6 +6,11 @@
     app:startDestination="@id/contributionFragment">
 
     <fragment
+        android:id="@+id/pickOnMapFragmentSpeechReport"
+        android:name="com.hcmut.admin.utrafficsystem.ui.report.speech.StartAndTerminalPointFragment"
+        android:label="StartAndTerminalPointFragment" />
+
+    <fragment
         android:id="@+id/reportSendingFragment"
         android:name="com.hcmut.admin.utrafficsystem.ui.report.traffic.TrafficReportFragment"
         android:label="fragment_report_sending"
@@ -69,5 +74,16 @@
         android:id="@+id/speechReportFragment"
         android:name="com.hcmut.admin.utrafficsystem.ui.report.speech.SpeechReportFragment"
         android:label="fragment_speech_report"
-        tools:layout="@layout/fragment_speech_report" />
+        tools:layout="@layout/fragment_speech_report" >
+        <action
+            android:id="@+id/action_speechReportFragment_to_pickOnMapFragmentSpeechReport"
+            app:destination="@id/pickOnMapFragmentSpeechReport"
+            app:enterAnim="@anim/slide_in_top"
+            app:exitAnim="@anim/slide_out_bottom"
+            app:popEnterAnim="@anim/slide_in_bottom"
+            app:popExitAnim="@anim/slide_out_top" />
+
+    </fragment>
+
+
 </navigation>
