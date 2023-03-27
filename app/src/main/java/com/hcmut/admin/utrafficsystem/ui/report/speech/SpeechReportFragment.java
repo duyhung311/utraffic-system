@@ -86,7 +86,7 @@ import retrofit2.Response;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link SpeechReportFragment#newInstance} factory method toSearchResultCallback
+ * Use the {@link SpeechReportFragment} factory method toSearchResultCallback
  * create an instance of this fragment.
  */
 public class SpeechReportFragment<MainActivity> extends Fragment implements MapActivity.OnBackPressCallback, OnMapReadyCallback, SearchResultCallback  {
@@ -104,36 +104,21 @@ public class SpeechReportFragment<MainActivity> extends Fragment implements MapA
     private MediaRecorder myAudioRecorder;
     private MediaPlayer myMediaPlayer;
     private int totalTimeOfRecord = 0;
-
     private com.hcmut.admin.utrafficsystem.customview.NonGestureConstraintLayout speechReportContainer;
     private boolean isRecording; // true -> in recording, false -> not in recording mode
     private boolean newRecord; // true -> new record that is not init by media player yet
-    private boolean isHaveSearchResult;
     private File outputFile;
     private final APIService apiService;
     private final String temporarySpeechRecordId = (new ObjectId()).toString();
-
     private LatLng pickOnMapStartLatLng;
     private LatLng pickOnMapEndLatLng;
-    private LatLng nearestSegmentStartLatLng;
-    private LatLng nearestSegmentEndLatLng;
-    private Marker startMarker;
-    private Marker endMarker;
-    private MarkerOptions marker = new MarkerOptions().icon(null);
     private TextView btnChooseOnMap;
-    List<LatLng> drawingLatLng;
     private List<Polyline> directPolylines = new ArrayList<>();
     private MarkerCreating beginMarkerCreating;
     private MarkerCreating endMarkerCreating;
     private MarkerCreating directInfoMarker;
     public SpeechReportFragment() {
         apiService = RetrofitClient.getApiService();
-    }
-
-    public static SpeechReportFragment newInstance(String param1, String param2) {
-        SpeechReportFragment fragment = new SpeechReportFragment();
-        Bundle args = new Bundle();
-        return fragment;
     }
 
     @Override
@@ -156,22 +141,18 @@ public class SpeechReportFragment<MainActivity> extends Fragment implements MapA
             ((MapActivity) view.getContext()).hideBottomNav();
             this.record = view.findViewById(R.id.speechRecordButton);
             this.submit = view.findViewById(R.id.btnSubmitSpeechReport);
-
             this.seekBar = view.findViewById(R.id.playSpeechRecordSeekBar);
             this.seekBarTimeDisplay = view.findViewById(R.id.playSpeechRecordTime);
             this.totalTimeDisplay = view.findViewById(R.id.totalSpeechRecordTime);
             this.btnYourLocation = view.findViewById(R.id.btnYourLocation);
             this.btnChooseOnMap =  view.findViewById(R.id.btnChooseOnMap);
             this.playBackAudio = view.findViewById(R.id.fabPlayingAudio);
-
             this.record.setEnabled(true);
             this.submit.setEnabled(true);
-
             this.mapView = view.findViewById(R.id.mapView);
             this.mapView.onCreate(savedInstanceState);
             this.mapView.onResume();
             this.mapView.getMapAsync((OnMapReadyCallback) this);
-
             this.speechReportContainer =  view.findViewById(R.id.speechReportContainer);
         } catch (Exception e) {
             e.printStackTrace();
@@ -220,10 +201,8 @@ public class SpeechReportFragment<MainActivity> extends Fragment implements MapA
         btnYourLocation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                isHaveSearchResult = false;
                 pickOnMapEndLatLng = null;
                 pickOnMapStartLatLng = null;
-                endMarker = null;
                 speechReportContainer.animate().translationY(speechReportContainer.getHeight());
                 if (MapUtil.checkGPSTurnOn(getActivity(), MapActivity.androidExt)) {
                     LocationCollectionManager.getInstance(getContext())
@@ -233,7 +212,6 @@ public class SpeechReportFragment<MainActivity> extends Fragment implements MapA
                                 LatLng latlng = new LatLng(location.getLatitude(), location.getLongitude());
                                 pickOnMapStartLatLng = latlng;
                                 Bundle bundle = new Bundle();
-                                MapActivity mapActivity = (MapActivity) view.getContext();
                                 SearchPlaceResultHandler.getInstance().addSearchPlaceResultListener(SpeechReportFragment.this);
                                 bundle.putInt(SearchPlaceResultHandler.SEARCH_TYPE, SearchPlaceResultHandler.SELECTED_END_SEARCH);
                                 InterFragmentDTO dto = new InterFragmentDTO();
@@ -250,10 +228,8 @@ public class SpeechReportFragment<MainActivity> extends Fragment implements MapA
         btnChooseOnMap.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                isHaveSearchResult = false;
                 pickOnMapEndLatLng = null;
                 pickOnMapStartLatLng = null;
-                endMarker = null;
                 speechReportContainer.animate().translationY(speechReportContainer.getHeight());
                 Bundle bundle = new Bundle();
                 SearchPlaceResultHandler.getInstance().addSearchPlaceResultListener(SpeechReportFragment.this);
@@ -273,7 +249,6 @@ public class SpeechReportFragment<MainActivity> extends Fragment implements MapA
         speechReportBody.setSegments(listSegments);
         speechReportBody.setSpeechRecordId(temporarySpeechRecordId);
         speechReportBody.setRecord(audioFile);
-        okhttp3.RequestBody requestFile = RequestBody.create(audioFile, MediaType.parse("multipart/form-data"));
         List<okhttp3.RequestBody> segments = new ArrayList<>();
         for(Integer segment : listSegments) {
             segments.add(RequestBody.create(segment.toString(), MediaType.parse("multipart/form-data")));
@@ -313,7 +288,6 @@ public class SpeechReportFragment<MainActivity> extends Fragment implements MapA
                         public void onFailure(Call<SpeechReportResponse> call, Throwable t) {
                             Log.i(MobileConstants.INFO_TAGNAME, "Fail callServerForEnhanceRecord()");
                             t.printStackTrace();
-
                         }
                     });
         } catch (IOException e) {
@@ -363,7 +337,6 @@ public class SpeechReportFragment<MainActivity> extends Fragment implements MapA
         totalTimeOfRecord = Integer.parseInt(recordDuration);
         totalTimeDisplay.setText(convertTime(totalTimeOfRecord));
         seekBar.setMax(totalTimeOfRecord);
-
         // Set visibility to playback components
         seekBar.setVisibility(View.VISIBLE);
         playBackAudio.setVisibility(View.VISIBLE);
@@ -582,7 +555,6 @@ public class SpeechReportFragment<MainActivity> extends Fragment implements MapA
                         }
                     });
         }
-        isHaveSearchResult = false;
         pickOnMapEndLatLng = null;
         pickOnMapStartLatLng = null;
     }
@@ -684,14 +656,11 @@ public class SpeechReportFragment<MainActivity> extends Fragment implements MapA
     @Override
     public void onSelectedBeginSearchPlaceResultReady(LatLng result) {
         pickOnMapStartLatLng = result;
-        isHaveSearchResult = true;
     }
 
     @Override
     public void onSelectedEndSearchPlaceResultReady(LatLng result) {
         pickOnMapEndLatLng = result;
-        isHaveSearchResult = true;
-
     }
 
 }
