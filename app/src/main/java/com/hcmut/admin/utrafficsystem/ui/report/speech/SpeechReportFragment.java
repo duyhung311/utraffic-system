@@ -31,6 +31,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
 
@@ -79,6 +80,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 import okhttp3.MediaType;
 import okhttp3.RequestBody;
@@ -117,6 +119,7 @@ public class SpeechReportFragment<MainActivity> extends Fragment implements MapA
     private LatLng pickOnMapEndLatLng;
     private TextView btnChooseOnMap;
     private List<Polyline> directPolylines = new ArrayList<>();
+    private List<Integer> listSegments = new ArrayList<>();
     private MarkerCreating beginMarkerCreating;
     private MarkerCreating endMarkerCreating;
     private MarkerCreating directInfoMarker;
@@ -245,18 +248,6 @@ public class SpeechReportFragment<MainActivity> extends Fragment implements MapA
 
     private void callServerForEnhanceRecord(File audioFile) {
         // hard code setting for api callServerForEnhanceRecord()
-        List<Integer> listSegments = new ArrayList();
-        listSegments.add(16);
-        listSegments.add(17);
-        SpeechReportBody speechReportBody =  new SpeechReportBody();
-        speechReportBody.setSegments(listSegments);
-        speechReportBody.setSpeechRecordId(temporarySpeechRecordId);
-        speechReportBody.setRecord(audioFile);
-        List<okhttp3.RequestBody> segments = new ArrayList<>();
-        for(Integer segment : listSegments) {
-            segments.add(RequestBody.create(segment.toString(), MediaType.parse("multipart/form-data")));
-        }
-        okhttp3.RequestBody speechRecordId = RequestBody.create(temporarySpeechRecordId, MediaType.parse("multipart/form-data"));
         String type = "rectangle";
         Double[][] coordinates = new Double[4][2];
         coordinates[0] = new Double[]{1.0, 2.0};
@@ -272,8 +263,8 @@ public class SpeechReportFragment<MainActivity> extends Fragment implements MapA
             String encodedAudioFile = Base64.encodeToString(file, 0);
             encodedAudioFile = encodedAudioFile.replaceAll(System.lineSeparator(), "");
             apiService.callServerForEnhanceRecord(
-                            segments,
-                            speechRecordId,
+                            listSegments,
+                            temporarySpeechRecordId,
                             type,
                             coordinates,
                             activeTime,
@@ -334,7 +325,7 @@ public class SpeechReportFragment<MainActivity> extends Fragment implements MapA
     }
 
     private void stopRecord() {
-        this.myAudioRecorder.stop();
+        //this.myAudioRecorder.stop();
         this.myAudioRecorder.reset();
         this.myAudioRecorder.release();
         isRecording = false;
@@ -549,6 +540,7 @@ public class SpeechReportFragment<MainActivity> extends Fragment implements MapA
         if (startPoint != null && endPoint != null) {
             SearchDirectionHandler.direct(getContext(), startPoint, endPoint, Boolean.FALSE,
                     new SearchDirectionHandler.DirectResultCallback() {
+                        @RequiresApi(api = Build.VERSION_CODES.N)
                         @Override
                         public void onSuccess(DirectRespose directRespose) {
                             renderDirection(directRespose);
@@ -575,9 +567,11 @@ public class SpeechReportFragment<MainActivity> extends Fragment implements MapA
         pickOnMapStartLatLng = null;
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     @SuppressLint("DefaultLocale")
     private void renderDirection(DirectRespose directRespose) {
         List<Coord> directs = directRespose.getCoords();
+        listSegments = directs.stream().map(Coord::getSegmentId).collect(Collectors.toList());
         AppForegroundService.path_id = directRespose.getPathId();
 
         // render direct to map

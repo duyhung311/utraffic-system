@@ -48,7 +48,7 @@ public class SearchDirectionHandler {
                         progressDialog.dismiss();
                         try {
                             DirectRespose directRespose = response.body().getData().get(0);
-                            if (directRespose.getCoords().size() > 1) {
+                            if (directRespose.getCoords().size() >= 1) {
                                 listener.onSuccess(directRespose);
                                 return;
                             }

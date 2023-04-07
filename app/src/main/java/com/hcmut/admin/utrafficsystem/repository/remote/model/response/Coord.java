@@ -11,8 +11,18 @@ public class Coord {
     private double eLat;
     @SerializedName("elng")
     private double eLng;
+    @SerializedName("segment_id")
+    private int segmentId;
     @SerializedName("status")
     private SegmentStatus status;
+
+    public int getSegmentId() {
+        return segmentId;
+    }
+
+    public void setSegmentId(int segmentId) {
+        this.segmentId = segmentId;
+    }
 
     public double getLat() {
         return lat;

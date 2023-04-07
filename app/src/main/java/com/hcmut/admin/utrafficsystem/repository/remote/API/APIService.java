@@ -28,6 +28,9 @@ import com.hcmut.admin.utrafficsystem.repository.remote.model.response.UserRespo
 import com.hcmut.admin.utrafficsystem.repository.remote.model.StatusResponse;
 import com.hcmut.admin.utrafficsystem.repository.remote.model.response.StatusRenderData;
 import com.hcmut.admin.utrafficsystem.repository.remote.model.response.VoucherResponse;
+
+import org.bson.types.ObjectId;
+
 import okhttp3.RequestBody;
 
 import java.util.List;
@@ -244,8 +247,8 @@ public interface APIService {
 
     @Multipart
     @POST("/api/report/speech-report/mobile")
-    Call<SpeechReportResponse> callServerForEnhanceRecord(@Part("segments") List<RequestBody> segments,
-                                                          @Part("speech_record_id") RequestBody speechRecordId,
+    Call<SpeechReportResponse> callServerForEnhanceRecord(@Part("segments") List<Integer> segments,
+                                                          @Part("speech_record_id") String speechRecordId,
                                                           @Part("type") String type, // circle | rectangle | line
                                                           @Part("coordinates")Double[][] coordinates,
                                                           @Part("active_time") Integer activeTime, // active time in isecond
