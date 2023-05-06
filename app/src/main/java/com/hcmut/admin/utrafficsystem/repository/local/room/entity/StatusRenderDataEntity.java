@@ -10,6 +10,7 @@ import com.hcmut.admin.utrafficsystem.repository.remote.model.response.StatusRen
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Entity(tableName = "status_render_data")
 public class StatusRenderDataEntity {
@@ -65,22 +66,25 @@ public class StatusRenderDataEntity {
         List<StatusRenderDataEntity> entities = new ArrayList<>();
         StatusRenderDataEntity entity;
         List<List<Double>> coord;
-        for (StatusRenderData data : datas) {
-            try {
-                coord = data.getPolyline().getCoordinates();
-                entity = new StatusRenderDataEntity();
-                entity.segment = data.getSegment();
-                entity.color = data.getColor();
-                entity.startLat = coord.get(0).get(1);
-                entity.startLng = coord.get(0).get(0);
-                entity.endLat = coord.get(1).get(1);
-                entity.endLng = coord.get(1).get(0);
-                entity.streetType = data.getStreet().type;
-                entities.add(entity);
-            } catch (Exception e) {
+        if (Objects.nonNull(datas)) {
+            for (StatusRenderData data : datas) {
+                try {
+                    coord = data.getPolyline().getCoordinates();
+                    entity = new StatusRenderDataEntity();
+                    entity.segment = data.getSegment();
+                    entity.color = data.getColor();
+                    entity.startLat = coord.get(0).get(1);
+                    entity.startLng = coord.get(0).get(0);
+                    entity.endLat = coord.get(1).get(1);
+                    entity.endLng = coord.get(1).get(0);
+                    entity.streetType = data.getStreet().type;
+                    entities.add(entity);
+                } catch (Exception e) {
+                }
             }
+            return entities;
         }
-        return entities;
+        return new ArrayList<StatusRenderDataEntity>();
     }
 
     @NonNull

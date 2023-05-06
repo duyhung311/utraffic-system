@@ -272,8 +272,6 @@ public class MapActivity extends AppCompatActivity implements
                 return true;
             }
         });
-        marker.position(new LatLng(10.770873, 106.691716));
-        mMap.addMarker(marker);
     }
 
     private void EnableGPSAutoMatically() {
