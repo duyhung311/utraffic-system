@@ -32,13 +32,13 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
+import androidx.appcompat.widget.AppCompatButton;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
 
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
@@ -56,7 +56,6 @@ import com.hcmut.admin.utrafficsystem.model.AndroidExt;
 import com.hcmut.admin.utrafficsystem.model.User;
 import com.hcmut.admin.utrafficsystem.repository.remote.API.APIService;
 import com.hcmut.admin.utrafficsystem.repository.remote.RetrofitClient;
-import com.hcmut.admin.utrafficsystem.repository.remote.model.request.SpeechReportBody;
 import com.hcmut.admin.utrafficsystem.repository.remote.model.response.Coord;
 import com.hcmut.admin.utrafficsystem.repository.remote.model.response.DirectRespose;
 import com.hcmut.admin.utrafficsystem.repository.remote.model.response.SpeechReportResponse;
@@ -78,8 +77,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-import okhttp3.MediaType;
-import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -89,39 +86,37 @@ import retrofit2.Response;
  * Use the {@link SpeechReportFragment} factory method toSearchResultCallback
  * create an instance of this fragment.
  */
-public class SpeechReportFragment<MainActivity> extends Fragment implements MapActivity.OnBackPressCallback, OnMapReadyCallback, SearchResultCallback  {
+public class SpeechReportFragment extends Fragment implements MapActivity.OnBackPressCallback, OnMapReadyCallback, SearchResultCallback  {
 
-    // TODO: Rename parameter arguments, choose names that match
-    private MapView mapView;
-    private GoogleMap gMap;
+    private File outputFile;
     private ImageButton record;
     private Button submit;
     private SeekBar seekBar;
     private TextView seekBarTimeDisplay;
     private TextView totalTimeDisplay;
-    private TextView btnYourLocation;
     private FloatingActionButton playBackAudio;
     private MediaRecorder myAudioRecorder;
     private MediaPlayer myMediaPlayer;
     private int totalTimeOfRecord = 0;
-    public static AndroidExt androidExt;
-    private com.hcmut.admin.utrafficsystem.customview.NonGestureConstraintLayout speechReportContainer;
     private boolean isRecording; // true -> in recording, false -> not in recording mode
     private boolean newRecord; // true -> new record that is not init by media player yet
-    private File outputFile;
+
+    private GoogleMap gMap;
+    public static AndroidExt androidExt;
+    private TextView btnYourLocation;
     private final APIService apiService;
-    private final String temporarySpeechRecordId = (new ObjectId()).toString();
     private LatLng pickOnMapStartLatLng;
     private LatLng pickOnMapEndLatLng;
     private TextView btnChooseOnMap;
-    private List<Polyline> directPolylines = new ArrayList<>();
-    private List<Integer> listSegments = new ArrayList<>();
     private MarkerCreating beginMarkerCreating;
     private MarkerCreating endMarkerCreating;
     private MarkerCreating directInfoMarker;
-    public SpeechReportFragment() {
-        apiService = RetrofitClient.getApiService();
-    }
+    private AppCompatButton btnToggleRender;
+    private List<Integer> listSegments = new ArrayList<>();
+    private List<Polyline> directPolylines = new ArrayList<>();
+    private final String temporarySpeechRecordId = (new ObjectId()).toString();
+    public SpeechReportFragment() { apiService = RetrofitClient.getApiService(); }
+    private com.hcmut.admin.utrafficsystem.customview.NonGestureConstraintLayout speechReportContainer;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -139,8 +134,8 @@ public class SpeechReportFragment<MainActivity> extends Fragment implements MapA
 
     private void addControls(View view, Bundle savedInstanceState) {
         try {
-            this.isRecording = false;
             ((MapActivity) view.getContext()).hideBottomNav();
+            this.isRecording = false;
             this.record = view.findViewById(R.id.speechRecordButton);
             this.submit = view.findViewById(R.id.btnSubmitSpeechReport);
             this.seekBar = view.findViewById(R.id.playSpeechRecordSeekBar);
@@ -149,12 +144,9 @@ public class SpeechReportFragment<MainActivity> extends Fragment implements MapA
             this.btnYourLocation = view.findViewById(R.id.btnYourLocation);
             this.btnChooseOnMap =  view.findViewById(R.id.btnChooseOnMap);
             this.playBackAudio = view.findViewById(R.id.fabPlayingAudio);
+            this.btnToggleRender = view.findViewById(R.id.btnToggleRender);
             this.record.setEnabled(true);
             this.submit.setEnabled(true);
-            this.mapView = view.findViewById(R.id.mapView);
-            this.mapView.onCreate(savedInstanceState);
-            this.mapView.onResume();
-            this.mapView.getMapAsync((OnMapReadyCallback) this);
             this.speechReportContainer =  view.findViewById(R.id.speechReportContainer);
         } catch (Exception e) {
             e.printStackTrace();
@@ -187,7 +179,7 @@ public class SpeechReportFragment<MainActivity> extends Fragment implements MapA
                 if (Objects.nonNull(pickOnMapStartLatLng) == Objects.nonNull(pickOnMapEndLatLng)) {
                     callServerForEnhanceRecord(outputFile);
                 } // else: thong bao
-                // reset all values after submission
+                // TODO: reset all values after submission
 
 
             }
@@ -241,6 +233,16 @@ public class SpeechReportFragment<MainActivity> extends Fragment implements MapA
                 bundle.putInt(SearchPlaceResultHandler.SEARCH_TYPE, SearchPlaceResultHandler.SELECTED_BEGIN_SEARCH);
                 NavHostFragment.findNavController(SpeechReportFragment.this)
                         .navigate(R.id.action_speechReportFragment_to_pickOnMapFragmentSpeechReport, bundle);
+            }
+        });
+
+        btnToggleRender.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                MapActivity mapActivity = (MapActivity) getContext();
+                boolean toggleValue = !mapActivity.isRenderStatus();
+                mapActivity.setTrafficEnable(toggleValue);
+                updateRenderStatusOptionBackground(toggleValue);
             }
         });
     }
@@ -488,7 +490,6 @@ public class SpeechReportFragment<MainActivity> extends Fragment implements MapA
                     }
                 });
         }
-
     }
 
     @Override
@@ -538,29 +539,29 @@ public class SpeechReportFragment<MainActivity> extends Fragment implements MapA
     private void performDirection(LatLng startPoint, LatLng endPoint) {
         if (startPoint != null && endPoint != null) {
             SearchDirectionHandler.direct(getContext(), startPoint, endPoint, Boolean.FALSE,
-                    new SearchDirectionHandler.DirectResultCallback() {
-                        @RequiresApi(api = Build.VERSION_CODES.N)
-                        @Override
-                        public void onSuccess(DirectRespose directRespose) {
-                            renderDirection(directRespose);
-                        }
+                new SearchDirectionHandler.DirectResultCallback() {
+                    @RequiresApi(api = Build.VERSION_CODES.N)
+                    @Override
+                    public void onSuccess(DirectRespose directRespose) {
+                        renderDirection(directRespose);
+                    }
 
-                        @Override
-                        public void onFail() {
-                            try {
-                                Toast.makeText(getContext(), "Kết nối thất bại, vui lòng kiểm tra lại!", Toast.LENGTH_SHORT).show();
-                            } catch (Exception e) {}
-                        }
+                    @Override
+                    public void onFail() {
+                        try {
+                            Toast.makeText(getContext(), "Kết nối thất bại, vui lòng kiểm tra lại!", Toast.LENGTH_SHORT).show();
+                        } catch (Exception e) {}
+                    }
 
-                        @Override
-                        public void onHaveNoData() {
-                            try {
-                                Toast.makeText(getContext(), "Đoạn đường không được hỗ trợ hoặc" +
-                                                " Không thể tìm thấy đường đến đó, vui lòng thử lại!", Toast.LENGTH_LONG)
-                                        .show();
-                            } catch (Exception e) {}
-                        }
-                    });
+                    @Override
+                    public void onHaveNoData() {
+                        try {
+                            Toast.makeText(getContext(), "Đoạn đường không được hỗ trợ hoặc" +
+                                            " Không thể tìm thấy đường đến đó, vui lòng thử lại!", Toast.LENGTH_LONG)
+                                    .show();
+                        } catch (Exception e) {}
+                    }
+                });
         }
         pickOnMapEndLatLng = null;
         pickOnMapStartLatLng = null;
@@ -637,6 +638,13 @@ public class SpeechReportFragment<MainActivity> extends Fragment implements MapA
         directInfoMarker.createMarker(getContext(), gMap, R.drawable.ic_dot, false, false, directInfoTitle);
     }
 
+    private void updateRenderStatusOptionBackground(boolean isEnable) {
+        if (isEnable) {
+            btnToggleRender.setBackground(Objects.requireNonNull(getContext()).getDrawable(R.drawable.bg_button_active));
+        } else {
+            btnToggleRender.setBackground(Objects.requireNonNull(getContext()).getDrawable(R.drawable.gray_bg_custom));
+        }
+    }
 
     @Override
     public void onDestroy() {
@@ -671,5 +679,4 @@ public class SpeechReportFragment<MainActivity> extends Fragment implements MapA
     public void onSelectedEndSearchPlaceResultReady(LatLng result) {
         pickOnMapEndLatLng = result;
     }
-
 }
