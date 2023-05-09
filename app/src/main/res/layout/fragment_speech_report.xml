@@ -241,4 +241,13 @@
 
     </com.hcmut.admin.utrafficsystem.customview.NonGestureConstraintLayout>
 
+    <com.google.android.gms.maps.MapView
+        android:id="@+id/mapView"
+        android:visibility="gone"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        tools:ignore="MissingConstraints"
+        tools:layout_editor_absoluteX="0dp"
+        tools:layout_editor_absoluteY="0dp" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
