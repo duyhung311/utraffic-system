@@ -77,6 +77,8 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+import okhttp3.MediaType;
+import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -86,7 +88,7 @@ import retrofit2.Response;
  * Use the {@link SpeechReportFragment} factory method toSearchResultCallback
  * create an instance of this fragment.
  */
-public class SpeechReportFragment extends Fragment implements MapActivity.OnBackPressCallback, OnMapReadyCallback, SearchResultCallback  {
+public class SpeechReportFragment<MainActivity> extends Fragment implements MapActivity.OnBackPressCallback, OnMapReadyCallback, SearchResultCallback  {
 
     private File outputFile;
     private ImageButton record;
@@ -539,12 +541,12 @@ public class SpeechReportFragment extends Fragment implements MapActivity.OnBack
     private void performDirection(LatLng startPoint, LatLng endPoint) {
         if (startPoint != null && endPoint != null) {
             SearchDirectionHandler.direct(getContext(), startPoint, endPoint, Boolean.FALSE,
-                new SearchDirectionHandler.DirectResultCallback() {
-                    @RequiresApi(api = Build.VERSION_CODES.N)
-                    @Override
-                    public void onSuccess(DirectRespose directRespose) {
-                        renderDirection(directRespose);
-                    }
+                    new SearchDirectionHandler.DirectResultCallback() {
+                        @RequiresApi(api = Build.VERSION_CODES.N)
+                        @Override
+                        public void onSuccess(DirectRespose directRespose) {
+                            renderDirection(directRespose);
+                        }
 
                     @Override
                     public void onFail() {
