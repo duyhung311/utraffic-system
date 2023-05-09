@@ -32,6 +32,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
+import androidx.appcompat.widget.AppCompatButton;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
 
@@ -49,17 +50,24 @@ import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.libraries.places.api.model.AutocompletePrediction;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import com.hcmut.admin.utrafficsystem.R;
 import com.hcmut.admin.utrafficsystem.business.MarkerCreating;
+import com.hcmut.admin.utrafficsystem.business.OsmMapRenderer;
 import com.hcmut.admin.utrafficsystem.business.SearchDirectionHandler;
 import com.hcmut.admin.utrafficsystem.constant.MobileConstants;
 import com.hcmut.admin.utrafficsystem.dto.InterFragmentDTO;
 import com.hcmut.admin.utrafficsystem.model.AndroidExt;
 import com.hcmut.admin.utrafficsystem.model.User;
+import com.hcmut.admin.utrafficsystem.model.osm.BoundingBox;
 import com.hcmut.admin.utrafficsystem.repository.remote.API.APIService;
 import com.hcmut.admin.utrafficsystem.repository.remote.RetrofitClient;
 import com.hcmut.admin.utrafficsystem.repository.remote.model.BaseResponse;
 import com.hcmut.admin.utrafficsystem.repository.remote.model.request.SpeechReportBody;
+import com.hcmut.admin.utrafficsystem.repository.remote.model.request.UpdateMapRequest;
 import com.hcmut.admin.utrafficsystem.repository.remote.model.response.Coord;
 import com.hcmut.admin.utrafficsystem.repository.remote.model.response.DirectRespose;
 import com.hcmut.admin.utrafficsystem.repository.remote.model.response.NearSegmentResponse;
@@ -123,6 +131,8 @@ public class SpeechReportFragment<MainActivity> extends Fragment implements MapA
     private MarkerCreating beginMarkerCreating;
     private MarkerCreating endMarkerCreating;
     private MarkerCreating directInfoMarker;
+    private AppCompatButton btnToggleRender;
+
     public SpeechReportFragment() {
         apiService = RetrofitClient.getApiService();
     }
@@ -153,6 +163,7 @@ public class SpeechReportFragment<MainActivity> extends Fragment implements MapA
             this.btnYourLocation = view.findViewById(R.id.btnYourLocation);
             this.btnChooseOnMap =  view.findViewById(R.id.btnChooseOnMap);
             this.playBackAudio = view.findViewById(R.id.fabPlayingAudio);
+            this.btnToggleRender = view.findViewById(R.id.btnToggleRender);
             this.record.setEnabled(true);
             this.submit.setEnabled(true);
             this.mapView = view.findViewById(R.id.mapView);
@@ -242,6 +253,19 @@ public class SpeechReportFragment<MainActivity> extends Fragment implements MapA
                 bundle.putInt(SearchPlaceResultHandler.SEARCH_TYPE, SearchPlaceResultHandler.SELECTED_BEGIN_SEARCH);
                 NavHostFragment.findNavController(SpeechReportFragment.this)
                         .navigate(R.id.action_speechReportFragment_to_pickOnMapFragmentSpeechReport, bundle);
+            }
+        });
+
+        btnToggleRender.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                BoundingBox newBound = new BoundingBox(10.79916,106.67023, 10.79489,106.67647);
+                BoundingBox oldBound = new BoundingBox(10.79833,106.67145, 10.79619,106.674571);
+                UpdateMapRequest updateMapRequest = new UpdateMapRequest(newBound, oldBound);
+
+                OsmMapRenderer box = new OsmMapRenderer();
+                box.update(updateMapRequest);
             }
         });
     }

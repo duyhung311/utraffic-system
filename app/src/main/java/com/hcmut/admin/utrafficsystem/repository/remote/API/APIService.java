@@ -1,9 +1,11 @@
 package com.hcmut.admin.utrafficsystem.repository.remote.API;
 
+import com.hcmut.admin.utrafficsystem.model.osm.BoundingBox;
 import com.hcmut.admin.utrafficsystem.model.User;
 import com.hcmut.admin.utrafficsystem.repository.remote.model.request.RatingBody;
 import com.hcmut.admin.utrafficsystem.repository.remote.model.request.ReportRequest;
 import com.hcmut.admin.utrafficsystem.repository.remote.model.BaseResponse;
+import com.hcmut.admin.utrafficsystem.repository.remote.model.request.UpdateMapRequest;
 import com.hcmut.admin.utrafficsystem.repository.remote.model.response.DealResponse;
 import com.hcmut.admin.utrafficsystem.repository.remote.model.response.DirectRespose;
 import com.hcmut.admin.utrafficsystem.repository.remote.model.response.GiftResponse;
@@ -15,6 +17,7 @@ import com.hcmut.admin.utrafficsystem.repository.remote.model.response.AppVersio
 import com.hcmut.admin.utrafficsystem.repository.remote.model.response.FeedbackResponse;
 import com.hcmut.admin.utrafficsystem.repository.remote.model.response.LoginResponse;
 import com.hcmut.admin.utrafficsystem.repository.remote.model.response.MyVoucherResponse;
+import com.hcmut.admin.utrafficsystem.repository.remote.model.response.NavigationResponse;
 import com.hcmut.admin.utrafficsystem.repository.remote.model.response.NearSegmentResponse;
 import com.hcmut.admin.utrafficsystem.repository.remote.model.response.PatchNotiResponse;
 import com.hcmut.admin.utrafficsystem.repository.remote.model.response.PayMoMoResponse;
@@ -28,8 +31,6 @@ import com.hcmut.admin.utrafficsystem.repository.remote.model.response.UserRespo
 import com.hcmut.admin.utrafficsystem.repository.remote.model.StatusResponse;
 import com.hcmut.admin.utrafficsystem.repository.remote.model.response.StatusRenderData;
 import com.hcmut.admin.utrafficsystem.repository.remote.model.response.VoucherResponse;
-
-import org.bson.types.ObjectId;
 
 import okhttp3.RequestBody;
 
@@ -257,4 +258,8 @@ public interface APIService {
                                                           //@Part MultipartBody.Part record,
                                                           @Part("file") String file, // content of file is encoded to string b4 sending
                                                           @Part("user") User user); //curent logged in userId
+
+
+    @POST("api/segment/bbox")
+    Call<BaseResponse<NavigationResponse>> getNodeAndUpdateWayFromBound(@Body UpdateMapRequest updateMapRequest);
 }

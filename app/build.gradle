@@ -67,6 +67,10 @@ android {
         checkReleaseBuilds false
     }
     namespace 'com.hcmut.admin.utrafficsystem'
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_9
+        targetCompatibility JavaVersion.VERSION_1_9
+    }
 }
 
 dependencies {
