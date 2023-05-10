@@ -33,6 +33,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.widget.AppCompatButton;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
 
@@ -110,19 +111,21 @@ public class SpeechReportFragment<MainActivity> extends Fragment implements MapA
 
     private GoogleMap gMap;
     private MapView mapView;
-    public static AndroidExt androidExt;
+    private AppCompatButton btnToggleRender;
     private TextView btnYourLocation;
-    private final APIService apiService;
+    private TextView btnChooseOnMap;
     private LatLng pickOnMapStartLatLng;
     private LatLng pickOnMapEndLatLng;
-    private TextView btnChooseOnMap;
+
     private MarkerCreating beginMarkerCreating;
     private MarkerCreating endMarkerCreating;
     private MarkerCreating directInfoMarker;
-    private AppCompatButton btnToggleRender;
     private List<Integer> listSegments = new ArrayList<>();
     private List<Polyline> directPolylines = new ArrayList<>();
-    private final String temporarySpeechRecordId = (new ObjectId()).toString();
+    private String temporarySpeechRecordId = (new ObjectId()).toString();
+
+    public static AndroidExt androidExt;
+    private final APIService apiService;
     public SpeechReportFragment() { apiService = RetrofitClient.getApiService(); }
     private com.hcmut.admin.utrafficsystem.customview.NonGestureConstraintLayout speechReportContainer;
 
@@ -161,6 +164,8 @@ public class SpeechReportFragment<MainActivity> extends Fragment implements MapA
             this.mapView.onResume();
             this.mapView.getMapAsync((OnMapReadyCallback) this);
             this.speechReportContainer =  view.findViewById(R.id.speechReportContainer);
+            this.submit.setEnabled(false);
+            this.submit.setBackground(ContextCompat.getDrawable(getActivity(), R.drawable.gray_bg_custom));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -191,10 +196,12 @@ public class SpeechReportFragment<MainActivity> extends Fragment implements MapA
             public void onClick(View view) {
                 if (Objects.nonNull(pickOnMapStartLatLng) == Objects.nonNull(pickOnMapEndLatLng)) {
                     callServerForEnhanceRecord(outputFile);
-                } // else: thong bao
-                // TODO: reset all values after submission
-
-
+                    System.out.println("Submit");
+                    clearSpeechRpeort();
+                }
+                else {
+                    Toast.makeText(getApplicationContext(), "Gửi báo cáo thất bại, vui lòng xem lại!", Toast.LENGTH_LONG).show();
+                }
             }
         });
 
@@ -315,16 +322,20 @@ public class SpeechReportFragment<MainActivity> extends Fragment implements MapA
                         @Override
                         public void onResponse(Call<SpeechReportResponse> call, Response<SpeechReportResponse> response) {
                             Log.i(MobileConstants.INFO_TAGNAME, "Success");
+                            Toast.makeText(getApplicationContext(), "Gửi báo cáo thành công!", Toast.LENGTH_LONG).show();
                             // androidExt.showMessageNoAction(getContext(), "Thông báo", "Gửi báo cáo thành công!");
                         }
                         @Override
                         public void onFailure(Call<SpeechReportResponse> call, Throwable t) {
                             // androidExt.showMessageNoAction(getContext(), "Thông báo", "Không thể gửi báo cáo. Vui lòng thử lại.");
+                            Toast.makeText(getApplicationContext(), "Không thể gửi báo cáo. Vui lòng thử lại.", Toast.LENGTH_LONG).show();
                             Log.i(MobileConstants.INFO_TAGNAME, "Fail callServerForEnhanceRecord()");
                             t.printStackTrace();
                         }
                     });
         } catch (IOException e) {
+            e.printStackTrace();
+        } catch (NullPointerException e) {
             e.printStackTrace();
         }
     }
@@ -386,6 +397,10 @@ public class SpeechReportFragment<MainActivity> extends Fragment implements MapA
         totalTimeDisplay.setVisibility(View.VISIBLE);
         seekBarTimeDisplay.setVisibility(View.VISIBLE);
         newRecord = true;
+
+        // Enable submit button
+        submit.setEnabled(true);
+        submit.setBackground(ContextCompat.getDrawable(getActivity(), R.drawable.bg_speech_submit_button));
     }
 
     private void initMusicPlayer() {
@@ -715,14 +730,23 @@ public class SpeechReportFragment<MainActivity> extends Fragment implements MapA
     public void clearReport() {
         searchInputView.handleBackAndClearView(false);
     }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
+    
+    private void clearSpeechRpeort() {
         clearAudioPlaybackComponents();
         clearMediaPlayer();
         removeDirect();
         removeMarker();
+        listSegments = new ArrayList<>();
+        temporarySpeechRecordId = (new ObjectId()).toString();
+        outputFile = null;
+        submit.setEnabled(false);
+        submit.setBackground(ContextCompat.getDrawable(getActivity(), R.drawable.gray_bg_custom));
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        clearSpeechRpeort();
     }
 
     @Override
