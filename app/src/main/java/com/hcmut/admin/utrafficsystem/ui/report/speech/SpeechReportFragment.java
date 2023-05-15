@@ -563,6 +563,7 @@ public class SpeechReportFragment<MainActivity> extends Fragment implements MapA
                         }
                     });
         }
+        this.mapView.setVisibility(View.GONE);
         pickOnMapEndLatLng = null;
         pickOnMapStartLatLng = null;
     }
