@@ -15,6 +15,8 @@ public class Coord {
     private int segmentId;
     @SerializedName("status")
     private SegmentStatus status;
+    @SerializedName("street")
+    private SegmentStreet street;
 
     public int getSegmentId() {
         return segmentId;
@@ -64,8 +66,23 @@ public class Coord {
         this.status = status;
     }
 
+    public SegmentStreet getStreet() {
+        return street;
+    }
+
+    public void setStreet(SegmentStreet street) {
+        this.street = street;
+    }
+
     public static class SegmentStatus {
         @SerializedName("color")
         public String color;
+    }
+
+    public static class SegmentStreet {
+        @SerializedName("name")
+        public String name;
+        @SerializedName("type")
+        public String type;
     }
 }

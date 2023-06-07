@@ -34,7 +34,7 @@ import com.hcmut.admin.utrafficsystem.business.SearchDirectionHandler;
 import com.hcmut.admin.utrafficsystem.model.AndroidExt;
 import com.hcmut.admin.utrafficsystem.model.Atm;
 import com.hcmut.admin.utrafficsystem.repository.remote.RetrofitClient;
-import com.hcmut.admin.utrafficsystem.repository.remote.model.response.DirectRespose;
+import com.hcmut.admin.utrafficsystem.repository.remote.model.response.DirectResponse;
 import com.hcmut.admin.utrafficsystem.ui.direction.DirectionFragment;
 import com.hcmut.admin.utrafficsystem.ui.map.MapActivity;
 import com.hcmut.admin.utrafficsystem.util.LocationCollectionManager;
@@ -482,15 +482,15 @@ public class HomeAtmFragment extends Fragment implements AtmAdapter.AtmAdapterOn
                     isDirectionByTime,
                     new SearchDirectionHandler.DirectResultCallback() {
                         @Override
-                        public void onSuccess(DirectRespose directRespose) {
+                        public void onSuccess(DirectResponse directResponse) {
                             if(isDirectionByTime){
-                                if (minCost > directRespose.getTime()) {
-                                    minCost = directRespose.getTime();
+                                if (minCost > directResponse.getTime()) {
+                                    minCost = directResponse.getTime();
                                     nearestAtm = atm;
                                 }
                             }else{
-                                if (minCost > directRespose.getDistance()) {
-                                    minCost = (double)directRespose.getDistance();
+                                if (minCost > directResponse.getDistance()) {
+                                    minCost = (double) directResponse.getDistance();
                                     nearestAtm = atm;
                                 }
                             }

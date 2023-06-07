@@ -20,7 +20,7 @@
         app:layout_constraintEnd_toEndOf="parent" />
 
     <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/btnToggleRender2"
+        android:id="@+id/btnStartTbt"
         android:layout_width="wrap_content"
         android:layout_height="32dp"
         android:layout_marginTop="76dp"

@@ -18,21 +18,22 @@ public class LocationServiceAlarmUtil {
         // create intent to start broadcast
         Intent notificationIntent = new Intent(context, LocationWakefulReceiver.class);
         notificationIntent.putExtra(WAKEUP_ID, WAKEUP_LOCATION_SERVICE_ID);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, WAKEUP_LOCATION_SERVICE_ID, notificationIntent, PendingIntent.FLAG_CANCEL_CURRENT);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, WAKEUP_LOCATION_SERVICE_ID, notificationIntent, PendingIntent.FLAG_CANCEL_CURRENT | PendingIntent.FLAG_IMMUTABLE);
 
         long futureInMillis = SystemClock.elapsedRealtime() + WAKEUP_DELAY_MILLIS;
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         alarmManager.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, futureInMillis, pendingIntent);
     }
 
-    public static void cancelLocationAlarm (Context context) {
+    public static void cancelLocationAlarm(Context context) {
         // create intent to start broadcast
         Intent notificationIntent = new Intent(context, LocationWakefulReceiver.class);
         notificationIntent.putExtra(WAKEUP_ID, WAKEUP_LOCATION_SERVICE_ID);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, WAKEUP_LOCATION_SERVICE_ID, notificationIntent, PendingIntent.FLAG_CANCEL_CURRENT);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, WAKEUP_LOCATION_SERVICE_ID, notificationIntent, PendingIntent.FLAG_CANCEL_CURRENT | PendingIntent.FLAG_IMMUTABLE);
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         try {
             alarmManager.cancel(pendingIntent);
-        } catch (Exception e) {}
+        } catch (Exception e) {
+        }
     }
 }

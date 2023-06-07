@@ -5,9 +5,11 @@ import android.content.Context;
 import android.location.Address;
 import android.util.Log;
 
+import androidx.annotation.NonNull;
+
 import com.google.android.gms.maps.model.LatLng;
 import com.hcmut.admin.utrafficsystem.repository.remote.model.BaseResponse;
-import com.hcmut.admin.utrafficsystem.repository.remote.model.response.DirectRespose;
+import com.hcmut.admin.utrafficsystem.repository.remote.model.response.DirectResponse;
 import com.hcmut.admin.utrafficsystem.repository.remote.RetrofitClient;
 import com.hcmut.admin.utrafficsystem.util.MapUtil;
 
@@ -41,22 +43,23 @@ public class SearchDirectionHandler {
         final ProgressDialog progressDialog = ProgressDialog.show(context, "", "Đang tìm đường..!", true);
 
         RetrofitClient.getApiService().getFindDirect(startPoint.latitude, startPoint.longitude, endPoint.latitude, endPoint.longitude, type)
-                .enqueue(new Callback<BaseResponse<List<DirectRespose>>>() {
+                .enqueue(new Callback<>() {
                     @Override
-                    public void onResponse(Call<BaseResponse<List<DirectRespose>>> call, Response<BaseResponse<List<DirectRespose>>> response) {
-                        Log.e("fad", response.toString());
+                    public void onResponse(@NonNull Call<BaseResponse<List<DirectResponse>>> call, @NonNull Response<BaseResponse<List<DirectResponse>>> response) {
                         progressDialog.dismiss();
                         try {
-                            DirectRespose directRespose = response.body().getData().get(0);
-                            if (directRespose.getCoords().size() >= 1) {
-                                listener.onSuccess(directRespose);
+                            DirectResponse directResponse = response.body().getData().get(0);
+                            if (directResponse.getCoords().size() >= 1) {
+                                listener.onSuccess(directResponse);
                                 return;
                             }
-                        } catch (Exception e) {}
+                        } catch (Exception ignored) {
+                        }
                         listener.onHaveNoData();
                     }
+
                     @Override
-                    public void onFailure(Call<BaseResponse<List<DirectRespose>>> call, Throwable t) {
+                    public void onFailure(Call<BaseResponse<List<DirectResponse>>> call, Throwable t) {
                         progressDialog.dismiss();
                         listener.onFail();
                     }
@@ -64,7 +67,7 @@ public class SearchDirectionHandler {
     }
 
     public interface DirectResultCallback {
-        void onSuccess(DirectRespose directRespose);
+        void onSuccess(DirectResponse directResponse);
         void onHaveNoData();
         void onFail();
     }

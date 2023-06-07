@@ -2,6 +2,7 @@ package com.hcmut.admin.utrafficsystem.ui.direction;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -13,6 +14,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.content.res.AppCompatResources;
 import androidx.appcompat.widget.AppCompatButton;
 import androidx.appcompat.widget.AppCompatImageButton;
 import androidx.fragment.app.Fragment;
@@ -30,8 +32,9 @@ import com.hcmut.admin.utrafficsystem.R;
 import com.hcmut.admin.utrafficsystem.business.MarkerCreating;
 import com.hcmut.admin.utrafficsystem.business.SearchDirectionHandler;
 import com.hcmut.admin.utrafficsystem.repository.remote.model.response.Coord;
-import com.hcmut.admin.utrafficsystem.repository.remote.model.response.DirectRespose;
+import com.hcmut.admin.utrafficsystem.repository.remote.model.response.DirectResponse;
 import com.hcmut.admin.utrafficsystem.service.AppForegroundService;
+import com.hcmut.admin.utrafficsystem.ui.tbt.TbtActivity;
 import com.hcmut.admin.utrafficsystem.ui.map.MapActivity;
 import com.hcmut.admin.utrafficsystem.ui.searchplace.SearchPlaceFragment;
 import com.hcmut.admin.utrafficsystem.ui.searchplace.callback.SearchPlaceResultHandler;
@@ -39,7 +42,6 @@ import com.hcmut.admin.utrafficsystem.ui.searchplace.callback.SearchResultCallba
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -64,6 +66,7 @@ public class DirectionFragment extends Fragment
     public static final String CURRENT_LATLNG = "current_latlng";
 
     private AppCompatButton btnToggleRender;
+    private AppCompatButton btnStartTbt;
     private AutoCompleteTextView txtBeginAddress;
     private AutoCompleteTextView txtEndAddress;
     private AppCompatImageButton btnBack;
@@ -165,8 +168,8 @@ public class DirectionFragment extends Fragment
                     isTimeDirectionSelected,
                     new SearchDirectionHandler.DirectResultCallback() {
                         @Override
-                        public void onSuccess(DirectRespose directRespose) {
-                            renderDirection(directRespose);
+                        public void onSuccess(DirectResponse directResponse) {
+                            renderDirection(directResponse);
                         }
 
                         @Override
@@ -229,6 +232,7 @@ public class DirectionFragment extends Fragment
         btnDistance = view.findViewById(R.id.btnDistance);
         btnTime = view.findViewById(R.id.btnTime);
         btnToggleRender = view.findViewById(R.id.btnToggleRender);
+        btnStartTbt = view.findViewById(R.id.btnStartTbt);
 
         if(getArguments()!=null){
             txtBeginAddress.setText(getArguments().getString(CURRENT_ADDRESS));
@@ -242,60 +246,46 @@ public class DirectionFragment extends Fragment
     }
 
     private void addEvents() {
-        txtBeginAddress.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View view, boolean b) {
-                if (b) {
-                    navigateToSearchFragment(SearchPlaceResultHandler.BEGIN_SEARCH);
-                }
+        txtBeginAddress.setOnFocusChangeListener((view, b) -> {
+            if (b) {
+                navigateToSearchFragment(SearchPlaceResultHandler.BEGIN_SEARCH);
             }
         });
-        txtEndAddress.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View view, boolean b) {
-                if (b) {
-                    navigateToSearchFragment(SearchPlaceResultHandler.END_SEARCH);
-                }
+        txtEndAddress.setOnFocusChangeListener((view, b) -> {
+            if (b) {
+                navigateToSearchFragment(SearchPlaceResultHandler.END_SEARCH);
             }
         });
-        btnBack.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                AppForegroundService.path_id = null;
-                removeMarker();
-                removeDirect();
-                NavHostFragment.findNavController(DirectionFragment.this).popBackStack();
-            }
+        btnBack.setOnClickListener(view -> {
+            AppForegroundService.path_id = null;
+            removeMarker();
+            removeDirect();
+            NavHostFragment.findNavController(DirectionFragment.this).popBackStack();
         });
-        btnDistance.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                onDistanceButtonClick();
-            }
-        });
-        btnTime.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                onTimeButtonClick();
-            }
+        btnDistance.setOnClickListener(view -> onDistanceButtonClick());
+        btnTime.setOnClickListener(view -> onTimeButtonClick());
+
+        btnToggleRender.setOnClickListener(v -> {
+            MapActivity mapActivity = (MapActivity) getContext();
+            boolean toggleValue = !mapActivity.isRenderStatus();
+            mapActivity.setTrafficEnable(toggleValue);
+            updateRenderStatusOptionBackground(toggleValue);
         });
 
-        btnToggleRender.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                MapActivity mapActivity = (MapActivity) getContext();
-                boolean toggleValue = !mapActivity.isRenderStatus();
-                mapActivity.setTrafficEnable(toggleValue);
-                updateRenderStatusOptionBackground(toggleValue);
-            }
+        btnStartTbt.setOnClickListener(v -> {
+            Intent intent = new Intent(getActivity(), TbtActivity.class);
+            intent.putExtra("startPoint", startPoint);
+            intent.putExtra("endPoint", endPoint);
+            intent.putExtra("isTimeDirectionSelected", isTimeDirectionSelected);
+            startActivity(intent);
         });
     }
 
     private void updateRenderStatusOptionBackground(boolean isEnable) {
         if (isEnable) {
-            btnToggleRender.setBackground(Objects.requireNonNull(getContext()).getDrawable(R.drawable.bg_button_active));
+            btnToggleRender.setBackground(AppCompatResources.getDrawable(requireContext(), R.drawable.bg_button_active));
         } else {
-            btnToggleRender.setBackground(Objects.requireNonNull(getContext()).getDrawable(R.drawable.gray_bg_custom));
+            btnToggleRender.setBackground(AppCompatResources.getDrawable(requireContext(), R.drawable.gray_bg_custom));
         }
     }
 
@@ -319,14 +309,14 @@ public class DirectionFragment extends Fragment
         Context context = getContext();
         if (context != null) {
             if (isTimeDirectionSelected) {
-                btnTime.setBackground(context.getDrawable(R.drawable.bg_button_selected));
+                btnTime.setBackground(AppCompatResources.getDrawable(requireContext(), R.drawable.bg_button_active));
                 btnTime.setTextColor(Color.BLUE);
-                btnDistance.setBackground(context.getDrawable(R.drawable.bg_default_button));
+                btnDistance.setBackground(AppCompatResources.getDrawable(requireContext(), R.drawable.gray_bg_custom));
                 btnDistance.setTextColor(Color.BLACK);
             } else {
-                btnDistance.setBackground(context.getDrawable(R.drawable.bg_button_selected));
+                btnDistance.setBackground(AppCompatResources.getDrawable(requireContext(), R.drawable.bg_button_active));
                 btnDistance.setTextColor(Color.BLUE);
-                btnTime.setBackground(context.getDrawable(R.drawable.bg_default_button));
+                btnTime.setBackground(AppCompatResources.getDrawable(requireContext(), R.drawable.gray_bg_custom));
                 btnTime.setTextColor(Color.BLACK);
             }
         }
@@ -353,15 +343,15 @@ public class DirectionFragment extends Fragment
     }
 
     @SuppressLint("DefaultLocale")
-    private void renderDirection(DirectRespose directRespose) {
-        List<Coord> directs = directRespose.getCoords();
-        AppForegroundService.path_id = directRespose.getPathId();
+    private void renderDirection(DirectResponse directResponse) {
+        List<Coord> directs = directResponse.getCoords();
+        AppForegroundService.path_id = directResponse.getPathId();
 
         // render direct to map
         LatLng beginLatLng = new LatLng(directs.get(0).getLat(), directs.get(0).getLng());
         LatLng endLatLng = new LatLng(directs.get(directs.size() - 1).getLat(), directs.get(directs.size() - 1).getLng());
         LatLng directInfoLatLng = new LatLng(directs.get(directs.size() / 2).getLat(), directs.get(directs.size() / 2).getLng());
-        String directInfoTitle = String.format("%d phút (%.1f km)", (int) directRespose.getTime(), (directRespose.getDistance()/1000f));
+        String directInfoTitle = String.format("%d phút (%.1f km)", (int) directResponse.getTime(), (directResponse.getDistance()/1000f));
         createMarker(beginLatLng, endLatLng, directInfoLatLng, directInfoTitle);
         removeDirect();
         LatLng start;

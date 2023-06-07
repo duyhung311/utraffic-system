@@ -6,6 +6,7 @@ import com.hcmut.admin.utrafficsystem.business.PriorityThreadFactory;
 import com.hcmut.admin.utrafficsystem.repository.remote.API.APIAtm;
 import com.hcmut.admin.utrafficsystem.repository.remote.API.APIHealthFacilities;
 import com.hcmut.admin.utrafficsystem.repository.remote.API.APIService;
+import com.hcmut.admin.utrafficsystem.repository.remote.API.APITurnByTurn;
 import com.hcmut.admin.utrafficsystem.repository.remote.API.API_VOHService;
 
 import java.util.concurrent.LinkedBlockingQueue;
@@ -25,6 +26,7 @@ public class RetrofitClient {
     private static APIService apiService;
     private static APIHealthFacilities apiHealthFacilities;
     private static APIAtm apiAtm;
+    private static APITurnByTurn apiTurnByTurn;
 
     static {
         THREAD_POOL_EXECUTOR = new ThreadPoolExecutor(
@@ -57,8 +59,8 @@ public class RetrofitClient {
 
     public static API_VOHService getAPIVOHService() {
         if (APIVOHService == null) {
-            String base_URL = "https://bktraffic.com:3000";
-            //String base_URL = "http://192.168.1.11:3000";
+//            String base_URL = "https://bktraffic.com:3000";
+            String base_URL = "http://192.168.1.106:3000";
             APIVOHService = builder(base_URL).create(API_VOHService.class);
         }
         return APIVOHService;
@@ -67,8 +69,7 @@ public class RetrofitClient {
     public static APIService getApiService() {
         if (apiService == null) {
             //String baseURL = "https://api.bktraffic.com";
-            String baseURL = "http://192.168.0.178:3000";
-            //String baseURL = "http://192.168.1.73:3000";
+            String baseURL = "http://192.168.1.106:3000";
             apiService = builder(baseURL).create(APIService.class);
         }
         return apiService;
@@ -76,8 +77,8 @@ public class RetrofitClient {
 
     public static APIHealthFacilities getAPIHealthFacilities(){
         if (apiHealthFacilities == null) {
-            String baseURL = "https://api.bktraffic.com";
-            //String baseURL = "http://192.168.1.11:3000";
+//            String baseURL = "https://api.bktraffic.com";
+            String baseURL = "http://192.168.1.106:3000";
             apiHealthFacilities = builder(baseURL).create(APIHealthFacilities.class);
         }
         return apiHealthFacilities;
@@ -85,10 +86,19 @@ public class RetrofitClient {
 
     public static APIAtm getAPIAtm(){
         if (apiAtm == null) {
-            String baseURL = "https://api.bktraffic.com";
-            //String baseURL = "http://192.168.1.11:3000";
+//            String baseURL = "https://api.bktraffic.com";
+            String baseURL = "http://192.168.1.106:3000";
             apiAtm = builder(baseURL).create(APIAtm.class);
         }
         return apiAtm;
+    }
+
+    public static APITurnByTurn getApiTurnByTurn() {
+        if (apiTurnByTurn == null) {
+//            String baseURL = "https://api.bktraffic.com";
+            String baseURL = "http://192.168.1.106:3000";
+            apiTurnByTurn = builder(baseURL).create(APITurnByTurn.class);
+        }
+        return apiTurnByTurn;
     }
 }

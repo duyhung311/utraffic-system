@@ -4,7 +4,7 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
-public class DirectRespose {
+public class DirectResponse {
     @SerializedName("_id")
     private String pathId;
     @SerializedName("distance")

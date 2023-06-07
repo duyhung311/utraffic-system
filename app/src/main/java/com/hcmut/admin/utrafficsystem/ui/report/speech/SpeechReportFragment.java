@@ -42,8 +42,6 @@ import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
-import com.google.android.gms.maps.model.Marker;
-import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -58,11 +56,8 @@ import com.hcmut.admin.utrafficsystem.model.AndroidExt;
 import com.hcmut.admin.utrafficsystem.model.User;
 import com.hcmut.admin.utrafficsystem.repository.remote.API.APIService;
 import com.hcmut.admin.utrafficsystem.repository.remote.RetrofitClient;
-import com.hcmut.admin.utrafficsystem.repository.remote.model.BaseResponse;
-import com.hcmut.admin.utrafficsystem.repository.remote.model.request.SpeechReportBody;
 import com.hcmut.admin.utrafficsystem.repository.remote.model.response.Coord;
-import com.hcmut.admin.utrafficsystem.repository.remote.model.response.DirectRespose;
-import com.hcmut.admin.utrafficsystem.repository.remote.model.response.NearSegmentResponse;
+import com.hcmut.admin.utrafficsystem.repository.remote.model.response.DirectResponse;
 import com.hcmut.admin.utrafficsystem.repository.remote.model.response.SpeechReportResponse;
 import com.hcmut.admin.utrafficsystem.service.AppForegroundService;
 import com.hcmut.admin.utrafficsystem.ui.map.MapActivity;
@@ -82,8 +77,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-import okhttp3.MediaType;
-import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -542,8 +535,8 @@ public class SpeechReportFragment<MainActivity> extends Fragment implements MapA
                     new SearchDirectionHandler.DirectResultCallback() {
                         @RequiresApi(api = Build.VERSION_CODES.N)
                         @Override
-                        public void onSuccess(DirectRespose directRespose) {
-                            renderDirection(directRespose);
+                        public void onSuccess(DirectResponse directResponse) {
+                            renderDirection(directResponse);
                         }
 
                         @Override
@@ -570,16 +563,16 @@ public class SpeechReportFragment<MainActivity> extends Fragment implements MapA
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     @SuppressLint("DefaultLocale")
-    private void renderDirection(DirectRespose directRespose) {
-        List<Coord> directs = directRespose.getCoords();
+    private void renderDirection(DirectResponse directResponse) {
+        List<Coord> directs = directResponse.getCoords();
         listSegments = directs.stream().map(Coord::getSegmentId).collect(Collectors.toList());
-        AppForegroundService.path_id = directRespose.getPathId();
+        AppForegroundService.path_id = directResponse.getPathId();
 
         // render direct to map
         LatLng beginLatLng = new LatLng(directs.get(0).getLat(), directs.get(0).getLng());
         LatLng endLatLng = new LatLng(directs.get(directs.size() - 1).getLat(), directs.get(directs.size() - 1).getLng());
         LatLng directInfoLatLng = new LatLng(directs.get(directs.size() / 2).getLat(), directs.get(directs.size() / 2).getLng());
-        String directInfoTitle = String.format("%d phút (%.1f km)", (int) directRespose.getTime(), (directRespose.getDistance()/1000f));
+        String directInfoTitle = String.format("%d phút (%.1f km)", (int) directResponse.getTime(), (directResponse.getDistance()/1000f));
         createMarker(beginLatLng, endLatLng, directInfoLatLng, directInfoTitle);
         removeDirect();
         LatLng start;

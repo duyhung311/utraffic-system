@@ -26,8 +26,10 @@ public class TrafficNotificationFactory {
 
     private static TrafficNotificationFactory serviceNotification;
     private Context context;
+
     private TrafficNotificationFactory(Context context) {
-        this.context = context.getApplicationContext(); }
+        this.context = context.getApplicationContext();
+    }
 
     public static TrafficNotificationFactory getInstance(Context context) {
         if (serviceNotification == null) {
@@ -75,7 +77,7 @@ public class TrafficNotificationFactory {
                 context.getApplicationContext(),
                 AppForegroundService.SERVICE_STOP_REQUEST_CODE,
                 stopServiceIntent,
-                PendingIntent.FLAG_CANCEL_CURRENT);
+                PendingIntent.FLAG_CANCEL_CURRENT | PendingIntent.FLAG_IMMUTABLE);
         mBuilder.addAction(R.drawable.ic_arrow_back, STOP_ACTION_TITLE, cancelPendingIntent);
 
         return mBuilder.build();
@@ -92,7 +94,7 @@ public class TrafficNotificationFactory {
         // pandingIntent for touch notification
         Intent intent = new Intent(context, activity);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-        PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent,0);
+        PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_IMMUTABLE);
 
         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context.getApplicationContext(), CHANNEL_ID)
                 .setSmallIcon(R.drawable.common_google_signin_btn_icon_dark_normal)
@@ -107,14 +109,14 @@ public class TrafficNotificationFactory {
         return mBuilder.build();
     }
 
-    public Notification getNotificationMessage (Context context, Class activity, String title, String contentText) {
+    public Notification getNotificationMessage(Context context, Class activity, String title, String contentText) {
         //sound
         Uri defaultSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
 
         // pandingIntent for touch notification
         Intent intent = new Intent(context, activity);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-        PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent,0);
+        PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_IMMUTABLE);
 
         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context.getApplicationContext(), CHANNEL_ID)
                 .setSmallIcon(R.drawable.common_google_signin_btn_icon_dark_normal)
@@ -129,7 +131,7 @@ public class TrafficNotificationFactory {
         return mBuilder.build();
     }
 
-    public Notification getStopLocationServiceNotification (Context context, Class activity) {
+    public Notification getStopLocationServiceNotification(Context context, Class<?> activity) {
         String title = "Dữ liệu GPS đang được thu thập";
         String contentText = "Chạm để tùy chọn thiết lập thu thập dữ liệu";
 
@@ -139,7 +141,7 @@ public class TrafficNotificationFactory {
         // pandingIntent for touch notification
         Intent intent = new Intent(context, activity);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-        PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent,0);
+        PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_IMMUTABLE);
 
         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context.getApplicationContext(), CHANNEL_ID)
                 .setSmallIcon(R.drawable.common_google_signin_btn_icon_dark_normal)
@@ -166,7 +168,7 @@ public class TrafficNotificationFactory {
         return mBuilder.build();
     }
 
-    public void sendNotification (Notification notification, int notificationId) {
+    public void sendNotification(Notification notification, int notificationId) {
         NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         if (notificationManager != null) {
             notificationManager.notify(notificationId, notification);

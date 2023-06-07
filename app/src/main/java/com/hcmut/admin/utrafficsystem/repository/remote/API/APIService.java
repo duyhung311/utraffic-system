@@ -5,7 +5,7 @@ import com.hcmut.admin.utrafficsystem.repository.remote.model.request.RatingBody
 import com.hcmut.admin.utrafficsystem.repository.remote.model.request.ReportRequest;
 import com.hcmut.admin.utrafficsystem.repository.remote.model.BaseResponse;
 import com.hcmut.admin.utrafficsystem.repository.remote.model.response.DealResponse;
-import com.hcmut.admin.utrafficsystem.repository.remote.model.response.DirectRespose;
+import com.hcmut.admin.utrafficsystem.repository.remote.model.response.DirectResponse;
 import com.hcmut.admin.utrafficsystem.repository.remote.model.response.GiftResponse;
 import com.hcmut.admin.utrafficsystem.repository.remote.model.response.GiftStateResponse;
 import com.hcmut.admin.utrafficsystem.repository.remote.model.response.InfoPaymentResponse;
@@ -28,8 +28,6 @@ import com.hcmut.admin.utrafficsystem.repository.remote.model.response.UserRespo
 import com.hcmut.admin.utrafficsystem.repository.remote.model.StatusResponse;
 import com.hcmut.admin.utrafficsystem.repository.remote.model.response.StatusRenderData;
 import com.hcmut.admin.utrafficsystem.repository.remote.model.response.VoucherResponse;
-
-import org.bson.types.ObjectId;
 
 import okhttp3.RequestBody;
 
@@ -161,11 +159,11 @@ public interface APIService {
                                                                 @Nullable @Field("path_id") String pathId);
 
     @GET("api/segment/direct")
-    Call<BaseResponse<List<DirectRespose>>> getFindDirect(@Query("slat") double slat,
-                                                          @Query("slng") double slng,
-                                                          @Query("elat") double elat,
-                                                          @Query("elng") double elng,
-                                                          @Query("type") String type);
+    Call<BaseResponse<List<DirectResponse>>> getFindDirect(@Query("slat") double slat,
+                                                           @Query("slng") double slng,
+                                                           @Query("elat") double elat,
+                                                           @Query("elng") double elng,
+                                                           @Query("type") String type);
 
     @Multipart
     @POST("api/file/upload")
