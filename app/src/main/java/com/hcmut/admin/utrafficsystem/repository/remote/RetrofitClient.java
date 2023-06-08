@@ -77,8 +77,8 @@ public class RetrofitClient {
 
     public static APIHealthFacilities getAPIHealthFacilities(){
         if (apiHealthFacilities == null) {
-//            String baseURL = "https://api.bktraffic.com";
-            String baseURL = "http://192.168.1.106:3000";
+            String baseURL = "https://api.bktraffic.com";
+//            String baseURL = "http://192.168.1.106:3000";
             apiHealthFacilities = builder(baseURL).create(APIHealthFacilities.class);
         }
         return apiHealthFacilities;
@@ -95,8 +95,8 @@ public class RetrofitClient {
 
     public static APITurnByTurn getApiTurnByTurn() {
         if (apiTurnByTurn == null) {
-//            String baseURL = "https://api.bktraffic.com";
-            String baseURL = "http://192.168.1.106:3000";
+            String baseURL = "https://api.bktraffic.com";
+//           String baseURL = "http://192.168.1.106:3000";
             apiTurnByTurn = builder(baseURL).create(APITurnByTurn.class);
         }
         return apiTurnByTurn;
