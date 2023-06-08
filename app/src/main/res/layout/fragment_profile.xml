@@ -169,4 +169,25 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/infoContainer" />
 
+    <TextView
+        android:id="@+id/txtDeleteAccount"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:elevation="3dp"
+        android:text="Xóa vĩnh viễn tài khoản"
+        android:textSize="16dp"
+        android:clickable="true"
+        android:drawableStart="@drawable/ic_clear"
+        android:drawablePadding="12dp"
+        android:padding="8dp"
+        android:drawableTint="@color/white"
+        android:textColor="@color/white"
+        android:background="@android:color/holo_red_light"
+        android:layout_marginTop="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/txtEditProfile" />
+
 </com.hcmut.admin.utrafficsystem.customview.NonGestureConstraintLayout>

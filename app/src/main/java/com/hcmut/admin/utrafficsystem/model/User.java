@@ -12,6 +12,7 @@ import com.hcmut.admin.utrafficsystem.repository.remote.model.BaseResponse;
 import com.hcmut.admin.utrafficsystem.repository.remote.model.response.UserResponse;
 import com.hcmut.admin.utrafficsystem.repository.remote.RetrofitClient;
 import com.hcmut.admin.utrafficsystem.ui.profile.EditProfileFragment;
+import com.hcmut.admin.utrafficsystem.ui.profile.ProfileFragment;
 import com.hcmut.admin.utrafficsystem.ui.signin.SignInActivity;
 import com.hcmut.admin.utrafficsystem.ui.map.MapActivity;
 import com.hcmut.admin.utrafficsystem.util.SharedPrefUtils;
@@ -179,5 +180,31 @@ public class User {
                 // A null listener allows the button to dismiss the dialog and take no further action.
                 .setNegativeButton("Hủy bỏ", null)
                 .show();
+    }
+
+    public void deleteAccount(final Activity activity, final ProfileFragment fragment, String username) {
+        if (activity == null) return;
+
+        final ProgressDialog progressDialog = ProgressDialog.show(activity, "", "Đang thực hiện xoá tài khoản...", true);
+        RetrofitClient.getApiService().deleteUser(accessToken, username).enqueue(new Callback<BaseResponse<UserResponse>>() {
+            @Override
+            public void onResponse(Call<BaseResponse<UserResponse>> call, Response<BaseResponse<UserResponse>> response) {
+                progressDialog.dismiss();
+                if (response.body() != null && response.body().getCode() == 200) {
+                    UserResponse userResponse = response.body().getData();
+                    // TODO: handle delete account
+                    MapActivity.androidExt.showSuccess(activity, "Xoá tài khoản thành công");
+                    MapActivity.currentUser.logout((MapActivity) activity);
+                } else {
+                    MapActivity.androidExt.showErrorDialog(activity, "Không thể thực hiện xoá tài khoản, vui lòng thử lại");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<BaseResponse<UserResponse>> call, Throwable t) {
+                progressDialog.dismiss();
+                MapActivity.androidExt.showErrorDialog(activity, "Không thể thực hiện xoá tài khoản, vui lòng thử lại");
+            }
+        });
     }
 }

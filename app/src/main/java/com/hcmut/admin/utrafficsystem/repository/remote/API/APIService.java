@@ -111,6 +111,11 @@ public interface APIService {
                                                     @Field("avatar") String avatar,
                                                     @Field("phone") String phone);
 
+    @POST("api/user/delete-user")
+    @FormUrlEncoded
+    Call<BaseResponse<UserResponse>> deleteUser(@Header("Authorization") String Authorization,
+                                                @Field("username") String username);
+
     @POST("api/auth/login-with-facebook")
     @FormUrlEncoded
     Call<BaseResponse<LoginResponse>> loginWithFacebook(@Field("facebook_id") String facebookId,

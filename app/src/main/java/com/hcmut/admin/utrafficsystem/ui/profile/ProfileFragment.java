@@ -1,11 +1,14 @@
 package com.hcmut.admin.utrafficsystem.ui.profile;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -31,6 +34,7 @@ public class ProfileFragment extends Fragment implements MapActivity.OnBackPress
     private static final String ARG_PARAM2 = "param2";
 
     private TextView txtEditProfile;
+    private TextView txtDeleteAccount;
     private TextView txtName;
     private TextView txtEmail;
     private TextView txtPhone;
@@ -103,6 +107,7 @@ public class ProfileFragment extends Fragment implements MapActivity.OnBackPress
         }
 
         txtEditProfile = view.findViewById(R.id.txtEditProfile);
+        txtDeleteAccount = view.findViewById(R.id.txtDeleteAccount);
         txtName = view.findViewById(R.id.txtName);
         txtEmail = view.findViewById(R.id.txtEmail);
         txtPhone = view.findViewById(R.id.txtPhone);
@@ -119,6 +124,26 @@ public class ProfileFragment extends Fragment implements MapActivity.OnBackPress
                         .navigate(R.id.action_profileFragment_to_editProfileFragment);
             }
         });
+        txtDeleteAccount.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // TODO: DELETE ACCOUNT
+                new AlertDialog.Builder(view.getContext())
+                        .setIcon(android.R.drawable.ic_dialog_alert)
+                        .setTitle("XOÁ TÀI KHOẢN").setMessage("Bạn có chắc chắn muốn xoá tài khoản?")
+                        .setPositiveButton("Tôi muốn xoá tài khoản", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                MapActivity.currentUser.deleteAccount(
+                                        getActivity(),
+                                        ProfileFragment.this,
+                                        MapActivity.currentUser.getUserName());
+                                Toast.makeText(view.getContext(), "Activity closed",Toast.LENGTH_SHORT).show();
+                            }
+                        }).setNegativeButton("Không", null).show();
+            }
+        });
+
         imgBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
