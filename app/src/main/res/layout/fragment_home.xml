@@ -79,7 +79,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:maxImageSize="32dp" />
 
-    <com.hcmut.admin.utrafficsystem.customview.SearchInputView
+    <com.hcmut.admin.utraffictest.customview.SearchInputView
         android:id="@+id/searchInputView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

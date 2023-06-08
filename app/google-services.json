@@ -39,7 +39,7 @@
       "client_info": {
         "mobilesdk_app_id": "1:131064076267:android:eabf704671d398f8712bae",
         "android_client_info": {
-          "package_name": "com.hcmut.admin.utrafficsystem"
+          "package_name": "com.hcmut.admin.utraffictest"
         }
       },
       "oauth_client": [

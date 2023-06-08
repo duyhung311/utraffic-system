@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/accountFragment"
-        android:name="com.hcmut.admin.utrafficsystem.ui.account.AccountFragment"
+        android:name="com.hcmut.admin.utraffictest.ui.account.AccountFragment"
         android:label="fragment_setting"
         tools:layout="@layout/fragment_account" >
         <action
@@ -55,7 +55,7 @@
     </fragment>
     <fragment
         android:id="@+id/profileFragment"
-        android:name="com.hcmut.admin.utrafficsystem.ui.profile.ProfileFragment"
+        android:name="com.hcmut.admin.utraffictest.ui.profile.ProfileFragment"
         android:label="ProfileFragment" >
         <action
             android:id="@+id/action_profileFragment_to_editProfileFragment"
@@ -67,17 +67,17 @@
     </fragment>
     <fragment
         android:id="@+id/editProfileFragment"
-        android:name="com.hcmut.admin.utrafficsystem.ui.profile.EditProfileFragment"
+        android:name="com.hcmut.admin.utraffictest.ui.profile.EditProfileFragment"
         android:label="fragment_edit_profile"
         tools:layout="@layout/fragment_edit_profile" />
     <fragment
         android:id="@+id/settingFragment"
-        android:name="com.hcmut.admin.utrafficsystem.ui.setting.SettingFragment"
+        android:name="com.hcmut.admin.utraffictest.ui.setting.SettingFragment"
         android:label="fragment_setting"
         tools:layout="@layout/fragment_setting" />
     <fragment
         android:id="@+id/voucherFragment"
-        android:name="com.hcmut.admin.utrafficsystem.ui.voucher.VoucherFragment"
+        android:name="com.hcmut.admin.utraffictest.ui.voucher.VoucherFragment"
         android:label="VoucherFragment"
         tools:layout="@layout/fragment_voucher">
         <action
@@ -146,7 +146,7 @@
     </fragment>
     <fragment
         android:id="@+id/detailVoucherFragment"
-        android:name="com.hcmut.admin.utrafficsystem.ui.voucher.DetailVoucherFragment"
+        android:name="com.hcmut.admin.utraffictest.ui.voucher.DetailVoucherFragment"
         android:label="DetailVoucherFragment">
         <action
             android:id="@+id/action_detailVoucherFragment_to_PayVoucherFragment"
@@ -158,7 +158,7 @@
     </fragment>
     <fragment
         android:id="@+id/allVoucherFragment"
-        android:name="com.hcmut.admin.utrafficsystem.ui.voucher.AllVoucherFragment"
+        android:name="com.hcmut.admin.utraffictest.ui.voucher.AllVoucherFragment"
         android:label="AllVoucherFragment"
         >
         <action
@@ -171,7 +171,7 @@
     </fragment>
     <fragment
         android:id="@+id/myVoucherFragment"
-        android:name="com.hcmut.admin.utrafficsystem.ui.voucher.myvoucher.MyVoucherFragment"
+        android:name="com.hcmut.admin.utraffictest.ui.voucher.myvoucher.MyVoucherFragment"
         android:label="MyVoucherFragment"
         >
         <action
@@ -185,7 +185,7 @@
     </fragment>
     <fragment
         android:id="@+id/detailMyVoucherFragment"
-        android:name="com.hcmut.admin.utrafficsystem.ui.voucher.myvoucher.DetailMyVoucherFragment"
+        android:name="com.hcmut.admin.utraffictest.ui.voucher.myvoucher.DetailMyVoucherFragment"
         android:label="DetailMyVoucherFragment"
         >
         <action
@@ -198,7 +198,7 @@
     </fragment>
     <fragment
         android:id="@+id/PayVoucherFragment"
-        android:name="com.hcmut.admin.utrafficsystem.ui.voucher.PayVoucherFragment"
+        android:name="com.hcmut.admin.utraffictest.ui.voucher.PayVoucherFragment"
         android:label="PayVoucherFragment"
         >
         <action
@@ -211,12 +211,12 @@
     </fragment>
     <fragment
         android:id="@+id/PaySuccessVoucherFragment"
-        android:name="com.hcmut.admin.utrafficsystem.ui.voucher.PaySuccessVoucherFragment"
+        android:name="com.hcmut.admin.utraffictest.ui.voucher.PaySuccessVoucherFragment"
         android:label="PaySuccessVoucherFragment"
         />
     <fragment
         android:id="@+id/searchFragment"
-        android:name="com.hcmut.admin.utrafficsystem.ui.voucher.SearchFragment"
+        android:name="com.hcmut.admin.utraffictest.ui.voucher.SearchFragment"
         android:label="SearchFragment"
         >
         <action
@@ -229,7 +229,7 @@
     </fragment>
     <fragment
         android:id="@+id/resultFragment"
-        android:name="com.hcmut.admin.utrafficsystem.ui.voucher.ResultFragment"
+        android:name="com.hcmut.admin.utraffictest.ui.voucher.ResultFragment"
         android:label="ResultFragment"
         >
         <action
@@ -242,12 +242,12 @@
     </fragment>
     <fragment
         android:id="@+id/QRVoucherFragment"
-        android:name="com.hcmut.admin.utrafficsystem.ui.voucher.myvoucher.QRVoucherFragment"
+        android:name="com.hcmut.admin.utraffictest.ui.voucher.myvoucher.QRVoucherFragment"
         android:label="QRVoucherFragment"
         />
     <fragment
         android:id="@+id/chooseTransferFragment"
-        android:name="com.hcmut.admin.utrafficsystem.ui.voucher.transferpoint.ChooseTransferFragment"
+        android:name="com.hcmut.admin.utraffictest.ui.voucher.transferpoint.ChooseTransferFragment"
         android:label="ChooseTransferFragment"
         >
         <action
@@ -260,7 +260,7 @@
     </fragment>
     <fragment
         android:id="@+id/transferPointFragment"
-        android:name="com.hcmut.admin.utrafficsystem.ui.voucher.transferpoint.TransferPointFragment"
+        android:name="com.hcmut.admin.utraffictest.ui.voucher.transferpoint.TransferPointFragment"
         android:label="TransferPointFragment"
         >
         <action
@@ -273,7 +273,7 @@
     </fragment>
     <fragment
         android:id="@+id/transferOTPFragment"
-        android:name="com.hcmut.admin.utrafficsystem.ui.voucher.transferpoint.TransferOTPFragment"
+        android:name="com.hcmut.admin.utraffictest.ui.voucher.transferpoint.TransferOTPFragment"
         android:label="TransferOTPFragment"
         >
         <action
@@ -286,7 +286,7 @@
     </fragment>
     <fragment
         android:id="@+id/buyPointFragment"
-        android:name="com.hcmut.admin.utrafficsystem.ui.voucher.buypoint.BuyPointFragment"
+        android:name="com.hcmut.admin.utraffictest.ui.voucher.buypoint.BuyPointFragment"
         android:label="BuyPointFragment"
         >
         <action
@@ -299,7 +299,7 @@
     </fragment>
     <fragment
         android:id="@+id/historyFragment"
-        android:name="com.hcmut.admin.utrafficsystem.ui.voucher.history.HistoryFragment"
+        android:name="com.hcmut.admin.utraffictest.ui.voucher.history.HistoryFragment"
         android:label="HistoryFragment"
         >
         <action
@@ -312,22 +312,22 @@
     </fragment>
     <fragment
         android:id="@+id/reportFragment"
-        android:name="com.hcmut.admin.utrafficsystem.ui.voucher.report.ReportFragment"
+        android:name="com.hcmut.admin.utraffictest.ui.voucher.report.ReportFragment"
         android:label="ReportFragment"
         />
     <fragment
         android:id="@+id/scanFragment"
-        android:name="com.hcmut.admin.utrafficsystem.ui.voucher.scanqrcode.ScanQRCode"
+        android:name="com.hcmut.admin.utraffictest.ui.voucher.scanqrcode.ScanQRCode"
         android:label="scanFragment"
         />
     <fragment
         android:id="@+id/detailDealFragment"
-        android:name="com.hcmut.admin.utrafficsystem.ui.voucher.history.DetailDealFragment"
+        android:name="com.hcmut.admin.utraffictest.ui.voucher.history.DetailDealFragment"
         android:label="detailDealFragment"
         />
     <fragment
         android:id="@+id/guidingFragment"
-        android:name="com.hcmut.admin.utrafficsystem.ui.guide.GuidingFragment"
+        android:name="com.hcmut.admin.utraffictest.ui.guide.GuidingFragment"
         android:label="GuidingFragment" >
         <action
             android:id="@+id/action_guidingFragment_to_guidingContentFragment"
@@ -339,16 +339,16 @@
     </fragment>
     <fragment
         android:id="@+id/guidingContentFragment"
-        android:name="com.hcmut.admin.utrafficsystem.ui.guide.GuidingContentFragment"
+        android:name="com.hcmut.admin.utraffictest.ui.guide.GuidingContentFragment"
         android:label="GuidingContentFragment" />
     <fragment
         android:id="@+id/userFeedback"
-        android:name="com.hcmut.admin.utrafficsystem.ui.userfeedback.UserFeedbackFragment"
+        android:name="com.hcmut.admin.utraffictest.ui.userfeedback.UserFeedbackFragment"
         android:label="fragment_user_feedback"
         tools:layout="@layout/fragment_user_feedback" />
     <fragment
         android:id="@+id/partnerFragment"
-        android:name="com.hcmut.admin.utrafficsystem.ui.partner.PartnerFragment"
+        android:name="com.hcmut.admin.utraffictest.ui.partner.PartnerFragment"
         android:label="fragment_partner">
         <action
             android:id="@+id/action_partnerFragment_to_healthFacilityPartnerFragment"
@@ -360,7 +360,7 @@
     </fragment>
     <fragment
         android:id="@+id/healthFacilityPartnerFragment"
-        android:name="com.hcmut.admin.utrafficsystem.ui.partner.healthfacility.HealthFacilityPartnerFragment"
+        android:name="com.hcmut.admin.utraffictest.ui.partner.healthfacility.HealthFacilityPartnerFragment"
         android:label="fragment_health_facility_partner">
         <action
             android:id="@+id/action_healthFacilityPartnerFragment_to_registerHealthFacilityFragment"
@@ -379,10 +379,10 @@
     </fragment>
     <fragment
         android:id="@+id/registerHealthFacilityFragment"
-        android:name="com.hcmut.admin.utrafficsystem.ui.partner.healthfacility.RegisterHealthFacilityFragment"
+        android:name="com.hcmut.admin.utraffictest.ui.partner.healthfacility.RegisterHealthFacilityFragment"
         android:label="fragment_register_health_facility"/>
     <fragment
         android:id="@+id/myHealthFacilitiesFragment"
-        android:name="com.hcmut.admin.utrafficsystem.ui.partner.healthfacility.MyHealthFaciliesFragment"
+        android:name="com.hcmut.admin.utraffictest.ui.partner.healthfacility.MyHealthFaciliesFragment"
         android:label="fragment_my_health_facilities"/>
 </navigation>

@@ -5,7 +5,7 @@
 
     <fragment
         android:id="@+id/viewReportFragment"
-        android:name="com.hcmut.admin.utrafficsystem.ui.viewReport.ViewReportFragment"
+        android:name="com.hcmut.admin.utraffictest.ui.viewReport.ViewReportFragment"
         android:label="ViewReportFragment" >
         <action
             android:id="@+id/action_viewReportFragment_to_ratingFragment2"
@@ -17,6 +17,6 @@
     </fragment>
     <fragment
         android:id="@+id/ratingFragment2"
-        android:name="com.hcmut.admin.utrafficsystem.ui.reportdetail.traffic.TrafficReportDetailFragment"
+        android:name="com.hcmut.admin.utraffictest.ui.reportdetail.traffic.TrafficReportDetailFragment"
         android:label="RatingFragment" />
 </navigation>

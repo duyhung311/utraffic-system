@@ -4,15 +4,15 @@
     "type": "APK",
     "kind": "Directory"
   },
-  "applicationId": "com.hcmut.admin.utrafficsystem",
+  "applicationId": "com.hcmut.admin.utraffictest",
   "variantName": "prodRelease",
   "elements": [
     {
       "type": "SINGLE",
       "filters": [],
       "attributes": [],
-      "versionCode": 25,
-      "versionName": "2.0.9",
+      "versionCode": 26,
+      "versionName": "3.0.1",
       "outputFile": "app-prod-release.apk"
     }
   ],

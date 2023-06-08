@@ -1,9 +1,9 @@
 apply plugin: 'com.android.application'
 
 ext {
-    vName = "2.0.9"
-    packageName = 'com.hcmut.admin.utrafficsystem'
-    appicationName = 'Utraffic'
+    vName = "3.0.1"
+    packageName = 'com.hcmut.admin.utraffictest'
+    appicationName = 'testTraffic'
 }
 
 android {
@@ -15,10 +15,10 @@ android {
     compileSdkVersion 33
     defaultConfig {
         multiDexEnabled true
-        applicationId "com.hcmut.admin.utrafficsystem"
+        applicationId "com.hcmut.admin.utraffictest"
         minSdkVersion 23
         targetSdkVersion 33
-        versionCode 25
+        versionCode 26
         versionName vName
         testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
     }
@@ -30,6 +30,12 @@ android {
                     storePassword "18001255"
                     keyAlias "traffic_key"
                     keyPassword "18001255"
+                }
+                release {
+                    storeFile file('../keystore/private_key_1.pepk')
+                    storePassword "bktraffic"
+                    keyAlias "key_prod_1"
+                    keyPassword "bktraffic"
                 }
             }
 
@@ -66,7 +72,7 @@ android {
     lint {
         checkReleaseBuilds false
     }
-    namespace 'com.hcmut.admin.utrafficsystem'
+    namespace 'com.hcmut.admin.utraffictest'
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_9
         targetCompatibility JavaVersion.VERSION_1_9
@@ -174,6 +180,8 @@ dependencies {
     implementation 'org.osgeo:proj4j:0.1.0'
     implementation 'org.locationtech.jts:jts-core:1.18.2'
     implementation 'org.orbisgis:poly2tri-core:0.1.2'
+
+    implementation 'javax.annotation:javax.annotation-api:1.3.2'
 }
 apply plugin: 'com.google.gms.google-services'
 apply plugin: 'kotlin-android'

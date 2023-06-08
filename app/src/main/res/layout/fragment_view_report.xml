@@ -20,7 +20,7 @@
         app:layout_constraintTop_toBottomOf="@+id/header"
         app:layout_constraintEnd_toEndOf="parent" />
 
-    <com.hcmut.admin.utrafficsystem.customview.NonGestureConstraintLayout
+    <com.hcmut.admin.utraffictest.customview.NonGestureConstraintLayout
         android:id="@+id/header"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -84,9 +84,9 @@
             android:orientation="vertical"
             app:layout_constraintGuide_begin="58dp" />
 
-    </com.hcmut.admin.utrafficsystem.customview.NonGestureConstraintLayout>
+    </com.hcmut.admin.utraffictest.customview.NonGestureConstraintLayout>
 
-    <com.hcmut.admin.utrafficsystem.customview.NonGestureConstraintLayout
+    <com.hcmut.admin.utraffictest.customview.NonGestureConstraintLayout
         android:id="@+id/clReview"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -147,6 +147,6 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@id/tv_speed"
             app:layout_constraintVertical_bias="0.0" />
-    </com.hcmut.admin.utrafficsystem.customview.NonGestureConstraintLayout>
+    </com.hcmut.admin.utraffictest.customview.NonGestureConstraintLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

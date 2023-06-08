@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.hcmut.admin.utrafficsystem.customview.NonGestureConstraintLayout
+<com.hcmut.admin.utraffictest.customview.NonGestureConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -132,4 +132,4 @@
         android:orientation="vertical"
         app:layout_constraintGuide_begin="131dp" />
 
-</com.hcmut.admin.utrafficsystem.customview.NonGestureConstraintLayout>
+</com.hcmut.admin.utraffictest.customview.NonGestureConstraintLayout>

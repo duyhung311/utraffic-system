@@ -7,12 +7,12 @@
 
     <fragment
         android:id="@+id/pickOnMapFragmentSpeechReport"
-        android:name="com.hcmut.admin.utrafficsystem.ui.report.speech.StartAndTerminalPointFragment"
+        android:name="com.hcmut.admin.utraffictest.ui.report.speech.StartAndTerminalPointFragment"
         android:label="StartAndTerminalPointFragment" />
 
     <fragment
         android:id="@+id/reportSendingFragment"
-        android:name="com.hcmut.admin.utrafficsystem.ui.report.traffic.TrafficReportFragment"
+        android:name="com.hcmut.admin.utraffictest.ui.report.traffic.TrafficReportFragment"
         android:label="fragment_report_sending"
         tools:layout="@layout/fragment_traffic_report" >
         <action
@@ -32,15 +32,15 @@
     </fragment>
     <fragment
         android:id="@+id/searchPlaceFragment2"
-        android:name="com.hcmut.admin.utrafficsystem.ui.searchplace.SearchPlaceFragment"
+        android:name="com.hcmut.admin.utraffictest.ui.searchplace.SearchPlaceFragment"
         android:label="SearchPlaceFragment" />
     <fragment
         android:id="@+id/pickPointOnMapFragment2"
-        android:name="com.hcmut.admin.utrafficsystem.ui.searchplace.PickPointOnMapFragment"
+        android:name="com.hcmut.admin.utraffictest.ui.searchplace.PickPointOnMapFragment"
         android:label="PickPointOnMapFragment" />
     <fragment
         android:id="@+id/contributionFragment"
-        android:name="com.hcmut.admin.utrafficsystem.ui.contribution.ContributionFragment"
+        android:name="com.hcmut.admin.utraffictest.ui.contribution.ContributionFragment"
         android:label="fragment_contribution"
         tools:layout="@layout/fragment_contribution" >
         <action
@@ -67,12 +67,12 @@
     </fragment>
     <fragment
         android:id="@+id/infrastructureReportFragment"
-        android:name="com.hcmut.admin.utrafficsystem.ui.report.infrastructure.InfrastructureReportFragment"
+        android:name="com.hcmut.admin.utraffictest.ui.report.infrastructure.InfrastructureReportFragment"
         android:label="fragment_infrastructure_report"
         tools:layout="@layout/fragment_infrastructure_report" />
     <fragment
         android:id="@+id/speechReportFragment"
-        android:name="com.hcmut.admin.utrafficsystem.ui.report.speech.SpeechReportFragment"
+        android:name="com.hcmut.admin.utraffictest.ui.report.speech.SpeechReportFragment"
         android:label="fragment_speech_report"
         tools:layout="@layout/fragment_speech_report" >
         <action

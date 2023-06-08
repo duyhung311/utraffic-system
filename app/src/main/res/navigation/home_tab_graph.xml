@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/mapFeatureFragment"
-        android:name="com.hcmut.admin.utrafficsystem.ui.home.HomeFragment"
+        android:name="com.hcmut.admin.utraffictest.ui.home.HomeFragment"
         android:label="fragment_map_feature"
         tools:layout="@layout/fragment_home" >
         <action
@@ -55,7 +55,7 @@
     </fragment>
     <fragment
         android:id="@+id/searchPlaceFragment"
-        android:name="com.hcmut.admin.utrafficsystem.ui.searchplace.SearchPlaceFragment"
+        android:name="com.hcmut.admin.utraffictest.ui.searchplace.SearchPlaceFragment"
         android:label="SearchPlaceFragment"
         tools:layout="@layout/fragment_search_place">
         <action
@@ -68,7 +68,7 @@
     </fragment>
     <fragment
         android:id="@+id/directionFragment"
-        android:name="com.hcmut.admin.utrafficsystem.ui.direction.DirectionFragment"
+        android:name="com.hcmut.admin.utraffictest.ui.direction.DirectionFragment"
         android:label="DirectionFragment"
         tools:layout="@layout/fragment_direction">
         <action
@@ -82,11 +82,11 @@
 
     <fragment
         android:id="@+id/pickPointOnMapFragment"
-        android:name="com.hcmut.admin.utrafficsystem.ui.searchplace.PickPointOnMapFragment"
+        android:name="com.hcmut.admin.utraffictest.ui.searchplace.PickPointOnMapFragment"
         android:label="PickPointOnMapFragment" />
     <fragment
         android:id="@+id/findHealthFacilityFragment"
-        android:name="com.hcmut.admin.utrafficsystem.ui.healthfacility.find.FindHealthFacilityFragment"
+        android:name="com.hcmut.admin.utraffictest.ui.healthfacility.find.FindHealthFacilityFragment"
         android:label="FindHealthFacilityFragment"
         tools:layout="@layout/fragment_find_health_facility">
         <action
@@ -107,13 +107,13 @@
 
     <fragment
         android:id="@+id/userFeedback"
-        android:name="com.hcmut.admin.utrafficsystem.ui.userfeedback.UserFeedbackFragment"
+        android:name="com.hcmut.admin.utraffictest.ui.userfeedback.UserFeedbackFragment"
         android:label="fragment_user_feedback"
         tools:layout="@layout/fragment_user_feedback" />
 
     <fragment
         android:id="@+id/homeAtmFragment"
-        android:name="com.hcmut.admin.utrafficsystem.ui.atm.HomeAtmFragment"
+        android:name="com.hcmut.admin.utraffictest.ui.atm.HomeAtmFragment"
         android:label="HomeAtmFragment"
         tools:layout="@layout/fragment_find_atm">
         <action
@@ -141,7 +141,7 @@
 
     <fragment
         android:id="@+id/healthFacilityInforFragment"
-        android:name="com.hcmut.admin.utrafficsystem.ui.healthfacility.find.HealthFacilityInforFragment"
+        android:name="com.hcmut.admin.utraffictest.ui.healthfacility.find.HealthFacilityInforFragment"
         android:label="HealthFacilityInforFragment"
         tools:layout="@layout/fragment_health_facility_infor">
         <action
@@ -163,7 +163,7 @@
 
     <fragment
         android:id="@+id/searchHFFragment"
-        android:name="com.hcmut.admin.utrafficsystem.ui.healthfacility.search.SearchHealthFacilitiesFragment"
+        android:name="com.hcmut.admin.utraffictest.ui.healthfacility.search.SearchHealthFacilitiesFragment"
         android:label="SearchHFFragment"
         tools:layout="@layout/fragment_search_hf">
         <action
@@ -177,7 +177,7 @@
 
     <fragment
         android:id="@+id/resultHFFragment"
-        android:name="com.hcmut.admin.utrafficsystem.ui.healthfacility.search.ResultHealthFacilitiesFragment"
+        android:name="com.hcmut.admin.utraffictest.ui.healthfacility.search.ResultHealthFacilitiesFragment"
         android:label="ResultFragment"
         tools:layout="@layout/fragment_result_search_hf">
         <action
@@ -198,7 +198,7 @@
 
     <fragment
         android:id="@+id/searchAtmFragment"
-        android:name="com.hcmut.admin.utrafficsystem.ui.atm.search.SearchAtmFragment"
+        android:name="com.hcmut.admin.utraffictest.ui.atm.search.SearchAtmFragment"
         android:label="SearchAtmFragment"
         tools:layout="@layout/fragment_search_atm"
         >
@@ -213,7 +213,7 @@
 
     <fragment
         android:id="@+id/resultAtmFragment"
-        android:name="com.hcmut.admin.utrafficsystem.ui.atm.search.ResultAtmFragment"
+        android:name="com.hcmut.admin.utraffictest.ui.atm.search.ResultAtmFragment"
         android:label="ResultFragment"
         tools:layout="@layout/fragment_result_search_atm">
         <action
@@ -234,7 +234,7 @@
 
     <fragment
         android:id="@+id/atmInforFragment"
-        android:name="com.hcmut.admin.utrafficsystem.ui.atm.AtmInforFragment"
+        android:name="com.hcmut.admin.utraffictest.ui.atm.AtmInforFragment"
         android:label="HealthFacilityInforFragment"
         tools:layout="@layout/fragment_atm_infor">
         <action

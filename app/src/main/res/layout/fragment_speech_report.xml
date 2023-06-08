@@ -12,7 +12,7 @@
         From Traffic Report
     -->
 
-    <com.hcmut.admin.utrafficsystem.customview.NonGestureFrameLayout
+    <com.hcmut.admin.utraffictest.customview.NonGestureFrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/searchInputViewContainer"
@@ -21,13 +21,13 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:background="@color/white">
-        <com.hcmut.admin.utrafficsystem.customview.SearchInputView
+        <com.hcmut.admin.utraffictest.customview.SearchInputView
             android:id="@+id/searchInputView"
             android:elevation="6dp"
             android:layout_margin="16dp"
             android:layout_height="wrap_content"
             android:layout_width="match_parent"/>
-    </com.hcmut.admin.utrafficsystem.customview.NonGestureFrameLayout>
+    </com.hcmut.admin.utraffictest.customview.NonGestureFrameLayout>
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btnToggleRender"
@@ -43,7 +43,7 @@
         app:layout_constraintTop_toBottomOf="@+id/clCollectLocation"
         app:layout_constraintEnd_toEndOf="parent" />
 
-    <com.hcmut.admin.utrafficsystem.customview.NonGestureConstraintLayout
+    <com.hcmut.admin.utraffictest.customview.NonGestureConstraintLayout
         android:id="@+id/clCollectLocation"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -102,7 +102,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/border1" />
-    </com.hcmut.admin.utrafficsystem.customview.NonGestureConstraintLayout>
+    </com.hcmut.admin.utraffictest.customview.NonGestureConstraintLayout>
 
     <!--
         From Traffic Report
@@ -117,7 +117,7 @@
         app:layout_constraintStart_toStartOf="parent"
         tools:layout_editor_absoluteY="0dp" />
 
-    <com.hcmut.admin.utrafficsystem.customview.NonGestureConstraintLayout
+    <com.hcmut.admin.utraffictest.customview.NonGestureConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/speechReportContainer"
@@ -239,7 +239,7 @@
             app:layout_constraintStart_toStartOf="parent" />
 
 
-    </com.hcmut.admin.utrafficsystem.customview.NonGestureConstraintLayout>
+    </com.hcmut.admin.utraffictest.customview.NonGestureConstraintLayout>
 
     <com.google.android.gms.maps.MapView
         android:id="@+id/mapView"
