@@ -96,7 +96,7 @@ public class RetrofitClient {
     public static APITurnByTurn getApiTurnByTurn() {
         if (apiTurnByTurn == null) {
 //            String baseURL = "https://api.bktraffic.com";
-            String baseURL = "https://ap-southeast-1.aws.data.mongodb-api.com/app/data-rqmxw/endpoint/fetchlayer";
+            String baseURL = "https://ap-southeast-1.aws.data.mongodb-api.com/";
 //            String baseURL = "http://192.168.0.178:3000";
             apiTurnByTurn = builder(baseURL).create(APITurnByTurn.class);
         }
