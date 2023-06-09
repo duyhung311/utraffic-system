@@ -1,10 +1,14 @@
 package com.hcmut.admin.utrafficsystem.ui.direction;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.Point;
+import android.location.Location;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,21 +31,29 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.libraries.places.api.model.AutocompletePrediction;
 import com.hcmut.admin.utrafficsystem.R;
 import com.hcmut.admin.utrafficsystem.business.MarkerCreating;
 import com.hcmut.admin.utrafficsystem.business.SearchDirectionHandler;
+import com.hcmut.admin.utrafficsystem.constant.MobileConstants;
+import com.hcmut.admin.utrafficsystem.dto.InterFragmentDTO;
 import com.hcmut.admin.utrafficsystem.repository.remote.model.response.Coord;
 import com.hcmut.admin.utrafficsystem.repository.remote.model.response.DirectResponse;
 import com.hcmut.admin.utrafficsystem.service.AppForegroundService;
+import com.hcmut.admin.utrafficsystem.ui.report.speech.SpeechReportFragment;
+import com.hcmut.admin.utrafficsystem.ui.searchplace.PickPointOnMapFragment;
 import com.hcmut.admin.utrafficsystem.ui.tbt.TbtActivity;
 import com.hcmut.admin.utrafficsystem.ui.map.MapActivity;
 import com.hcmut.admin.utrafficsystem.ui.searchplace.SearchPlaceFragment;
 import com.hcmut.admin.utrafficsystem.ui.searchplace.callback.SearchPlaceResultHandler;
 import com.hcmut.admin.utrafficsystem.ui.searchplace.callback.SearchResultCallback;
+import com.hcmut.admin.utrafficsystem.util.LocationCollectionManager;
+import com.hcmut.admin.utrafficsystem.util.MapUtil;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -80,6 +92,7 @@ public class DirectionFragment extends Fragment
     private LatLng endSelectedPoint;
     private boolean isHaveSearchResult = false;
     private LatLng startPoint = null;
+    private LatLng mStartPoint = null;
     private LatLng endPoint = null;
 
     private MarkerCreating beginMarkerCreating;
@@ -87,6 +100,7 @@ public class DirectionFragment extends Fragment
     private MarkerCreating directInfoMarker;    // for time and distance show
     private GoogleMap map;
     private List<Polyline> directPolylines = new ArrayList<>();
+    private boolean isCurrentLocation = false;
 
     public DirectionFragment() {
         // Required empty public constructor
@@ -108,6 +122,21 @@ public class DirectionFragment extends Fragment
         args.putString(ARG_PARAM2, param2);
         fragment.setArguments(args);
         return fragment;
+    }
+
+    public void handleGetPointOnMap() {
+        if (MapUtil.checkGPSTurnOn(getActivity(), MapActivity.androidExt)) {
+            LocationCollectionManager.getInstance(getContext())
+                .getCurrentLocation(new OnSuccessListener<Location>() {
+                    @Override
+                    public void onSuccess(Location location) {
+                        startPoint = new LatLng(location.getLatitude(), location.getLongitude());
+                        mStartPoint = startPoint;
+                        txtBeginAddress.setText("Vị trí hiện tại");
+                        txtBeginAddress.setTextColor(Color.BLUE);
+                    }
+                });
+        }
     }
 
     @Override
@@ -151,11 +180,16 @@ public class DirectionFragment extends Fragment
         if (beginSelectedPoint != null) {
             txtBeginAddress.setText("Ghim vị trí");
             startPoint = beginSelectedPoint;
+            isCurrentLocation(mStartPoint, startPoint);
         }
         if (endSelectedPoint != null) {
             txtEndAddress.setText("Ghim vị trí");
             endPoint = endSelectedPoint;
         }
+        if (Objects.nonNull(endPoint)) {
+            btnStartTbt.setEnabled(true);
+        }
+
         performDirection(startPoint, endPoint);
     }
 
@@ -233,7 +267,7 @@ public class DirectionFragment extends Fragment
         btnTime = view.findViewById(R.id.btnTime);
         btnToggleRender = view.findViewById(R.id.btnToggleRender);
         btnStartTbt = view.findViewById(R.id.btnStartTbt);
-
+        btnStartTbt.setEnabled(false);
         if(getArguments()!=null){
             txtBeginAddress.setText(getArguments().getString(CURRENT_ADDRESS));
             txtEndAddress.setText(getArguments().getString(DESTINATION_ADDRESS));
@@ -243,6 +277,7 @@ public class DirectionFragment extends Fragment
         }
 
         addEvents();
+        handleGetPointOnMap();
     }
 
     private void addEvents() {
@@ -256,12 +291,7 @@ public class DirectionFragment extends Fragment
                 navigateToSearchFragment(SearchPlaceResultHandler.END_SEARCH);
             }
         });
-        btnBack.setOnClickListener(view -> {
-            AppForegroundService.path_id = null;
-            removeMarker();
-            removeDirect();
-            NavHostFragment.findNavController(DirectionFragment.this).popBackStack();
-        });
+        btnBack.setOnClickListener(view -> onBackPress());
         btnDistance.setOnClickListener(view -> onDistanceButtonClick());
         btnTime.setOnClickListener(view -> onTimeButtonClick());
 
@@ -273,11 +303,13 @@ public class DirectionFragment extends Fragment
         });
 
         btnStartTbt.setOnClickListener(v -> {
-            Intent intent = new Intent(getActivity(), TbtActivity.class);
-            intent.putExtra("startPoint", startPoint);
-            intent.putExtra("endPoint", endPoint);
-            intent.putExtra("isTimeDirectionSelected", isTimeDirectionSelected);
-            startActivity(intent);
+            if  (Objects.nonNull(endPoint)) {
+                Intent intent = new Intent(getActivity(), TbtActivity.class);
+                intent.putExtra("startPoint", startPoint);
+                intent.putExtra("endPoint", endPoint);
+                intent.putExtra("isTimeDirectionSelected", isTimeDirectionSelected);
+                startActivity(intent);
+            }
         });
     }
 
@@ -287,6 +319,31 @@ public class DirectionFragment extends Fragment
         } else {
             btnToggleRender.setBackground(AppCompatResources.getDrawable(requireContext(), R.drawable.gray_bg_custom));
         }
+    }
+
+    private void isCurrentLocation(LatLng mStartPoint, LatLng startPoint) {
+        double myLatitude = mStartPoint.latitude; // Replace with your current latitude
+        double myLongitude = mStartPoint.longitude; // Replace with your current longitude
+        double targetLatitude = startPoint.latitude;; // Replace with the target latitude to check
+        double targetLongitude = mStartPoint.longitude; // Replace with the target longitude to check
+        double deviation = 0.0001; // Desired deviation in degrees (adjust according to your needs)
+
+        float[] results = new float[1];
+        Location.distanceBetween(myLatitude, myLongitude, targetLatitude, targetLongitude, results);
+        float distance = results[0];
+
+        if (distance <= deviation) {
+            // The target location is within the desired deviation from your current location
+            // Perform your desired actions here
+            isCurrentLocation = true;
+            txtBeginAddress.setText("Vị trí hiện tại");
+            txtBeginAddress.setTextColor(Color.BLUE);
+        } else {
+            // The target location is outside the desired deviation from your current location
+            // Perform other actions if needed
+            txtBeginAddress.setText("Ghim vị trí");
+        }
+
     }
 
     private void onTimeButtonClick() {
@@ -432,6 +489,9 @@ public class DirectionFragment extends Fragment
 
     @Override
     public void onBackPress() {
+        AppForegroundService.path_id = null;
+        removeMarker();
+        removeDirect();
         NavHostFragment.findNavController(DirectionFragment.this).popBackStack();
     }
 }

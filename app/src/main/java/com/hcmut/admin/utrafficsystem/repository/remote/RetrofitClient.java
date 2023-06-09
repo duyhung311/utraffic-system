@@ -68,8 +68,8 @@ public class RetrofitClient {
 
     public static APIService getApiService() {
         if (apiService == null) {
-            //String baseURL = "https://api.bktraffic.com";
-            String baseURL = "http://192.168.1.106:3000";
+            String baseURL = "https://api.bktraffic.com";
+            //String baseURL = "http://192.168.1.106:3000";
             apiService = builder(baseURL).create(APIService.class);
         }
         return apiService;
@@ -96,7 +96,8 @@ public class RetrofitClient {
     public static APITurnByTurn getApiTurnByTurn() {
         if (apiTurnByTurn == null) {
 //            String baseURL = "https://api.bktraffic.com";
-            String baseURL = "http://192.168.1.106:3000";
+            String baseURL = "https://ap-southeast-1.aws.data.mongodb-api.com/app/data-rqmxw/endpoint/fetchlayer";
+//            String baseURL = "http://192.168.0.178:3000";
             apiTurnByTurn = builder(baseURL).create(APITurnByTurn.class);
         }
         return apiTurnByTurn;
