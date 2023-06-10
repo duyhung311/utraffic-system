@@ -59,8 +59,8 @@ public class RetrofitClient {
 
     public static API_VOHService getAPIVOHService() {
         if (APIVOHService == null) {
-//            String base_URL = "https://bktraffic.com:3000";
-            String base_URL = "http://192.168.1.106:3000";
+            String base_URL = "https://bktraffic.com:3000";
+//            String base_URL = "http://192.168.1.106:3000";
             APIVOHService = builder(base_URL).create(API_VOHService.class);
         }
         return APIVOHService;
@@ -77,8 +77,8 @@ public class RetrofitClient {
 
     public static APIHealthFacilities getAPIHealthFacilities(){
         if (apiHealthFacilities == null) {
-//            String baseURL = "https://api.bktraffic.com";
-            String baseURL = "http://192.168.1.106:3000";
+            String baseURL = "https://api.bktraffic.com";
+            //String baseURL = "http://192.168.1.106:3000";
             apiHealthFacilities = builder(baseURL).create(APIHealthFacilities.class);
         }
         return apiHealthFacilities;
@@ -86,8 +86,8 @@ public class RetrofitClient {
 
     public static APIAtm getAPIAtm(){
         if (apiAtm == null) {
-//            String baseURL = "https://api.bktraffic.com";
-            String baseURL = "http://192.168.1.106:3000";
+            String baseURL = "https://api.bktraffic.com";
+//            String baseURL = "http://192.168.1.106:3000";
             apiAtm = builder(baseURL).create(APIAtm.class);
         }
         return apiAtm;

@@ -256,6 +256,7 @@ public class SearchPlaceFragment extends Fragment implements
 
     @Override
     public void onSelectedEndSearchPlaceResultReady(LatLng result) {
-
+        selectedLatLngOnScreen = result;
+        isHaveResult = true;
     }
 }
