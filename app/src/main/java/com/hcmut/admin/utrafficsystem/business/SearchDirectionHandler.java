@@ -54,8 +54,11 @@ public class SearchDirectionHandler {
                                 return;
                             }
                         } catch (Exception ignored) {
+                            System.out.println("Sth happened");
+                            ignored.printStackTrace();
+                            listener.onHaveNoData();
                         }
-                        listener.onHaveNoData();
+
                     }
 
                     @Override

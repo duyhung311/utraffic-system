@@ -82,6 +82,9 @@
             app:exitAnim="@anim/slide_out_bottom"
             app:popEnterAnim="@anim/slide_in_bottom"
             app:popExitAnim="@anim/slide_out_top" />
+        <action
+            android:id="@+id/action_speechReportFragment_to_searchPlaceFragment2"
+            app:destination="@id/searchPlaceFragment2" />
 
     </fragment>
 
