@@ -192,7 +192,11 @@ public class SearchPlaceFragment extends Fragment implements
                 MapActivity.hideKeyboard(getActivity());
                 SearchPlaceResultHandler.getInstance().addSearchPlaceResultListener(SearchPlaceFragment.this);
                 Bundle bundle = new Bundle();
-                bundle.putInt(SearchPlaceResultHandler.SEARCH_TYPE, SearchPlaceResultHandler.SELECTED_BEGIN_SEARCH);
+                if (searchType == SearchPlaceResultHandler.END_SEARCH) {
+                    bundle.putInt(SearchPlaceResultHandler.SEARCH_TYPE, SearchPlaceResultHandler.SELECTED_END_SEARCH);
+                } else {
+                    bundle.putInt(SearchPlaceResultHandler.SEARCH_TYPE, SearchPlaceResultHandler.SELECTED_BEGIN_SEARCH);
+                }
                 NavHostFragment.findNavController(SearchPlaceFragment.this)
                         .navigate(R.id.action_searchPlaceFragment_to_pickPointOnMapFragment, bundle);
             }
@@ -206,8 +210,15 @@ public class SearchPlaceFragment extends Fragment implements
                                 @Override
                                 public void onSuccess(Location location) {
                                     LatLng latlng = new LatLng(location.getLatitude(), location.getLongitude());
-                                    SearchPlaceResultHandler.getInstance()
-                                            .dispatchSearchPlaceResult(searchType , null, latlng);
+                                    if (searchType == SearchPlaceResultHandler.END_SEARCH) {
+                                        SearchPlaceResultHandler.getInstance()
+                                                .dispatchSearchPlaceResult(SearchPlaceResultHandler.SELECTED_END_SEARCH , null, latlng);
+                                    } else {
+                                        SearchPlaceResultHandler.getInstance()
+                                                .dispatchSearchPlaceResult(SearchPlaceResultHandler.SELECTED_BEGIN_SEARCH , null, latlng);
+
+                                    }
+
                                     NavHostFragment.findNavController(SearchPlaceFragment.this).popBackStack();
                                 }
                             });
