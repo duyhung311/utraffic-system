@@ -7,7 +7,7 @@ import com.hcmut.admin.utrafficsystem.util.MessageDialog
 import com.hcmut.admin.utrafficsystem.util.MessageGiftDialog
 
 class AndroidExt {
-    fun comfirm(context: Context,
+    fun confirm(context: Context,
                 title: String? = "",
                 description: String? = "",
                 onYesListener: ClickDialogListener.Yes

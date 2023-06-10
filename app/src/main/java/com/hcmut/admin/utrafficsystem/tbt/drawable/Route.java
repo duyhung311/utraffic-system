@@ -35,6 +35,7 @@ import retrofit2.Response;
 public class Route {
     private static final String TAG = Route.class.getSimpleName();
     private static final float BUFFER_DISTANCE_TO_ACTUAL_SIZE_RATIO = 0.75f;
+    private static final float BUFFER_DISTANCE_TO_FINISH = 5;
     private final Config config;
     private final Location destination;
     private final boolean isTimeDirectionSelected;
@@ -46,6 +47,8 @@ public class Route {
     private boolean isRequestingRoute = false;
     private BiConsumer<Float, Float> onRouteChanged = (disInMeter, timeInMin) -> {
     };
+    private Runnable onFinish = () -> {
+    };
 
     public Route(Config config, Location destination, boolean isTimeDirectionSelected) {
         this.config = config;
@@ -55,6 +58,51 @@ public class Route {
 
     public void setOnRouteChanged(BiConsumer<Float, Float> onRouteChanged) {
         this.onRouteChanged = onRouteChanged;
+    }
+
+    public void setOnFinish(Runnable onFinish) {
+        this.onFinish = onFinish;
+    }
+
+    private void checkFinish(Location currentLocation) {
+        Location start = new Location("") {{
+            setLatitude(route.get(route.size() - 2).getLat());
+            setLongitude(route.get(route.size() - 2).getLng());
+        }};
+        Location end = new Location("") {{
+            setLatitude(route.get(route.size() - 2).geteLat());
+            setLongitude(route.get(route.size() - 2).geteLng());
+        }};
+        double[] closestLastSeg = Navigation.calculateClosestPoint(currentLocation, start, end);
+
+        start = new Location("") {{
+            setLatitude(route.get(route.size() - 1).getLat());
+            setLongitude(route.get(route.size() - 1).getLng());
+        }};
+        end = new Location("") {{
+            setLatitude(route.get(route.size() - 1).geteLat());
+            setLongitude(route.get(route.size() - 1).geteLng());
+        }};
+
+        double[] closestToDest = Navigation.calculateClosestPoint(currentLocation, start, end);
+
+        Location closestLastSegLocation = new Location("") {{
+            setLatitude(closestLastSeg[0]);
+            setLongitude(closestLastSeg[1]);
+        }};
+
+        Location closestToDestLocation = new Location("") {{
+            setLatitude(closestToDest[0]);
+            setLongitude(closestToDest[1]);
+        }};
+
+        float distanceToLastSeg = currentLocation.distanceTo(closestLastSegLocation);
+        float distanceToFinish = currentLocation.distanceTo(closestToDestLocation);
+        float distanceToDest = currentLocation.distanceTo(destination);
+
+        if ((distanceToLastSeg <= BUFFER_DISTANCE_TO_FINISH) && (distanceToFinish <= BUFFER_DISTANCE_TO_FINISH || distanceToDest <= BUFFER_DISTANCE_TO_FINISH)) {
+            onFinish.run();
+        }
     }
 
     public Location setCurLocation(Location currentLocation) {
@@ -71,12 +119,12 @@ public class Route {
         Float distance = Float.isNaN(result.second) ? null : (1 - result.second) * routeDistance;
         Float time = Float.isNaN(result.second) ? null : (1 - result.second) * routeTime;
         onRouteChanged.accept(distance, time);
+        checkFinish(currentLocation);
         lock.unlock();
         return curPoint;
     }
 
     private void requestRoute(Location source, Location destination) {
-        Log.d(TAG, "Requesting route" + source + " -> " + destination);
         isRequestingRoute = true;
         APIService apiService = RetrofitClient.getApiService();
         String type = isTimeDirectionSelected ? "time" : "distance";
@@ -97,7 +145,7 @@ public class Route {
 
             @Override
             public void onFailure(@NonNull Call<BaseResponse<List<DirectResponse>>> call, @NonNull Throwable t) {
-                Log.e(TAG, "onFailure: ", t);
+                Log.e(TAG, "Fetching route failed: ", t);
                 isRequestingRoute = false;
             }
         });
