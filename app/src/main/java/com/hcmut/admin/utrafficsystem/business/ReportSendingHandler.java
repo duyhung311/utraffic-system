@@ -107,7 +107,7 @@ public class ReportSendingHandler {
 
     public void onArrowMarkerClicked(Context context, final GoogleMap map, Marker marker) {
         if (Objects.requireNonNull(marker.getTag()).equals(MarkerListener.REPORT_ARROW)) {
-            MapActivity.androidExt.comfirm(context,
+            MapActivity.androidExt.confirm(context,
                     "Tùy chọn",
                     "Bạn có muốn thay đổi hướng đi?",
                     new ClickDialogListener.Yes() {

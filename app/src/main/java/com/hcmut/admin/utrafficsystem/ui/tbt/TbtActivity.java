@@ -30,6 +30,7 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.Priority;
 import com.google.android.gms.maps.model.LatLng;
 import com.hcmut.admin.utrafficsystem.R;
+import com.hcmut.admin.utrafficsystem.model.AndroidExt;
 import com.hcmut.admin.utrafficsystem.tbt.TbtRenderer;
 import com.hcmut.admin.utrafficsystem.tbt.utils.MultisampleConfigChooser;
 
@@ -44,10 +45,7 @@ import java.util.TimerTask;
 public class TbtActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
     private FusedLocationProviderClient fusedLocationClient;
-
-    /**
-     * Hold a reference to our mGLSurfaceView
-     */
+    private static final AndroidExt ANDROID_EXT = new AndroidExt();
     private GLSurfaceView mGLSurfaceView;
 
     @SuppressLint("ClickableViewAccessibility")
@@ -109,7 +107,6 @@ public class TbtActivity extends AppCompatActivity {
 
             String distanceStr = String.format(locale, "%.1f km", disInMeter / 1000);
             distanceText.setText(distanceStr);
-            // get current time
             int roundTime = Math.round(timeInMin);
             Calendar calendar = Calendar.getInstance();
             calendar.add(Calendar.MINUTE, roundTime);
@@ -117,6 +114,12 @@ public class TbtActivity extends AppCompatActivity {
 
             String timeStr = String.format(locale, "%d phút - %s", roundTime, estTime);
             timeText.setText(timeStr);
+        }));
+
+        tbtRenderer.setOnFinish(() -> runOnUiThread(() -> {
+            distanceText.setText("Đã đến nơi");
+            timeText.setText("Đã đến nơi");
+            ANDROID_EXT.showNotifyDialog(this, "Đã đến nơi", this::finish);
         }));
 
         mGLSurfaceView.setOnTouchListener((v, event) -> {
@@ -174,23 +177,11 @@ public class TbtActivity extends AppCompatActivity {
             @Override
             public void onLocationResult(@NonNull LocationResult locationResult) {
                 Location location = locationResult.getLocations().get(0);
-                tbtRenderer.onLocationChange(location);
+                tbtRenderer.changeLocation(location);
             }
         };
 
         fusedLocationClient.requestLocationUpdates(locationRequest, locationCallback, Looper.getMainLooper());
-
-//        final int[] locationIndex = {0};
-//        new Timer().schedule(new TimerTask() {
-//            @Override
-//            public void run() {
-////                if (locationIndex[0] > 0) return;
-//                // cycle through locations
-//                Location location = NavTest.locations.get(locationIndex[0]);
-//                locationIndex[0] = (locationIndex[0] + 1) % NavTest.locations.size();
-//                tbtRenderer.onLocationChange(location);
-//            }
-//        }, 5000, 2000);
     }
 
     @Override

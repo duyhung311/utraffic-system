@@ -99,6 +99,10 @@ public class TbtRenderer implements GLSurfaceView.Renderer {
         mapView.setOnRouteChanged(onRouteChanged);
     }
 
+    public void setOnFinish(Runnable onFinish) {
+        mapView.setOnFinish(onFinish);
+    }
+
     private void initOpenGL() {
         int width = config.context.getResources().getDisplayMetrics().widthPixels;
         int height = config.context.getResources().getDisplayMetrics().heightPixels;
@@ -220,7 +224,7 @@ public class TbtRenderer implements GLSurfaceView.Renderer {
         return new Vector(dest, origin);
     }
 
-    public void onLocationChange(Location location) {
+    public void changeLocation(Location location) {
         Location adjLocation = mapView.setCurLocation(location);
         float rotation = adjLocation.hasBearing() ? adjLocation.getBearing() : getRotation();
         Vector translation = moveTo(adjLocation.getLongitude(), adjLocation.getLatitude());

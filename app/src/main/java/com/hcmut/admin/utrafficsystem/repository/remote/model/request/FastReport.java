@@ -74,7 +74,7 @@ public class FastReport {
                                             "Không thể lấy được địa chỉ người dùng, Vui lòng kiểm tra lại đường truyền!");
                                     return;
                                 }
-                                androidExt.comfirm(
+                                androidExt.confirm(
                                         activity,
                                         "Thực hiện cảnh báo nhanh",
                                         address,
