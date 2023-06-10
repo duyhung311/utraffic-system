@@ -376,7 +376,7 @@ public class TrafficReportFragment extends Fragment implements
             @Override
             public void onClick(View view) {
 
-                MapActivity.androidExt.comfirm(context,
+                MapActivity.androidExt.confirm(context,
                         "Thông báo",
                         "Bạn có muốn gửi báo cáo này?",
                         new ClickDialogListener.Yes() {

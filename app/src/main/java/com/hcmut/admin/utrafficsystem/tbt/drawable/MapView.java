@@ -72,6 +72,10 @@ public class MapView {
         route.setOnRouteChanged(onRouteChanged);
     }
 
+    public void setOnFinish(Runnable onFinish) {
+        route.setOnFinish(onFinish);
+    }
+
     public void setLayers(List<Layer> layers) {
         layersOrder = layers;
         for (Layer layer : layers) {
