@@ -39,8 +39,8 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
-import java.util.Timer;
-import java.util.TimerTask;
+import java.util.Objects;
+
 
 public class TbtActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
@@ -66,7 +66,6 @@ public class TbtActivity extends AppCompatActivity {
         LatLng startPoint = intent.getParcelableExtra("startPoint");
         LatLng endPoint = intent.getParcelableExtra("endPoint");
         boolean isTimeDirectionSelected = intent.getBooleanExtra("isTimeDirectionSelected", false);
-
 
         Location source = new Location("") {{
             setLatitude(startPoint.latitude);
@@ -183,7 +182,6 @@ public class TbtActivity extends AppCompatActivity {
 
         fusedLocationClient.requestLocationUpdates(locationRequest, locationCallback, Looper.getMainLooper());
     }
-
     @Override
     protected void onResume() {
         // The activity must call the GL surface view's onResume() on activity

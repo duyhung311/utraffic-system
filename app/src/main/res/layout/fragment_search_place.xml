@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.hcmut.admin.utrafficsystem.customview.NonGestureConstraintLayout
+<com.hcmut.admin.utrafficsystem.customview.NonGestureConstraintLayout xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
@@ -11,6 +11,7 @@
         android:id="@+id/btnChooseMapPoint"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="56dp"
         android:background="@drawable/transparent_btn_bg"
         android:clickable="true"
         android:drawableStart="@drawable/ic_map_tab"
@@ -22,15 +23,36 @@
         android:paddingBottom="8dp"
         android:text="Chọn một điểm trên bản đồ"
         android:textSize="12dp"
-        android:layout_marginTop="16dp"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/cv_toolbar" />
+
+    <TextView
+        android:id="@+id/btnChooseCurrentLocation"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/transparent_btn_bg"
+        android:clickable="true"
+        android:drawableStart="@drawable/ic_my_location_blue"
+        android:drawablePadding="10dp"
+        android:gravity="left|center_vertical"
+        android:paddingStart="16dp"
+        android:paddingTop="8dp"
+        android:paddingEnd="16dp"
+        android:paddingBottom="8dp"
+        android:text="Vị trí của bạn"
+        android:textSize="12dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/cv_toolbar" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rcSearchPlaceResult"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
+        android:layout_width="357dp"
+        android:layout_height="505dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
@@ -38,7 +60,8 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btnChooseMapPoint" />
+        app:layout_constraintTop_toBottomOf="@+id/btnChooseMapPoint"
+        app:layout_constraintVertical_bias="0.0" />
 
     <androidx.cardview.widget.CardView
         android:id="@+id/cv_toolbar"

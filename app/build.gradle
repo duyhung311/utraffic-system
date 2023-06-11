@@ -6,11 +6,16 @@ ext {
     appicationName = 'Utraffic'
 }
 
+
+
 android {
     dataBinding {
         enabled = true
     }
 
+    aaptOptions {
+        additionalParameters =["--warn-manifest-validation"]
+    }
 
     compileSdkVersion 33
     defaultConfig {

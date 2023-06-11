@@ -149,13 +149,13 @@ public class PickPointOnMapFragment extends Fragment implements MapActivity.OnBa
 
     private void updateRenderStatusOptionBackground(boolean isEnable) {
         if (isEnable) {
-            btnToggleRender.setBackground(Objects.requireNonNull(getContext()).getDrawable(R.drawable.bg_button_active));
+            btnToggleRender.setBackground(requireContext().getDrawable(R.drawable.bg_button_active));
         } else {
-            btnToggleRender.setBackground(Objects.requireNonNull(getContext()).getDrawable(R.drawable.gray_bg_custom));
+            btnToggleRender.setBackground(requireContext().getDrawable(R.drawable.gray_bg_custom));
         }
     }
 
-    private void handleGetPointOnMap() {
+    public void handleGetPointOnMap() {
         int [] screenCoord = new int[2];
         Activity activity = getActivity();
         if (activity != null) {

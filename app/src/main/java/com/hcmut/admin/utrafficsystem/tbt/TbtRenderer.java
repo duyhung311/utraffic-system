@@ -226,6 +226,8 @@ public class TbtRenderer implements GLSurfaceView.Renderer {
 
     public void changeLocation(Location location) {
         Location adjLocation = mapView.setCurLocation(location);
+        if (adjLocation == null)
+            return;
         float rotation = adjLocation.hasBearing() ? adjLocation.getBearing() : getRotation();
         Vector translation = moveTo(adjLocation.getLongitude(), adjLocation.getLatitude());
 

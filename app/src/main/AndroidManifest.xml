@@ -25,6 +25,7 @@
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
 
     <application
+
         android:name="com.hcmut.admin.utrafficsystem.MyApplication"
         android:allowBackup="true"
         android:icon="@drawable/app_icon"
@@ -35,7 +36,7 @@
         android:usesCleartextTraffic="true"
         tools:replace="android:label,android:theme">
 
-
+        <profileable android:shell="true"/>
         <activity
             android:name="com.hcmut.admin.utrafficsystem.ui.SplashActivity"
             android:exported="true"

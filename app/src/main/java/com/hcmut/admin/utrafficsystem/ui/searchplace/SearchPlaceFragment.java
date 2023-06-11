@@ -1,5 +1,6 @@
 package com.hcmut.admin.utrafficsystem.ui.searchplace;
 
+import android.location.Location;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,14 +18,20 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.libraries.places.api.Places;
 import com.google.android.libraries.places.api.model.AutocompletePrediction;
 import com.hcmut.admin.utrafficsystem.R;
+import com.hcmut.admin.utrafficsystem.constant.MobileConstants;
+import com.hcmut.admin.utrafficsystem.dto.InterFragmentDTO;
+import com.hcmut.admin.utrafficsystem.ui.report.speech.SpeechReportFragment;
 import com.hcmut.admin.utrafficsystem.ui.searchplace.result.PlaceAutoCompleteAdapter;
 import com.hcmut.admin.utrafficsystem.ui.map.MapActivity;
 import com.hcmut.admin.utrafficsystem.ui.searchplace.callback.SearchPlaceResultHandler;
 import com.hcmut.admin.utrafficsystem.ui.searchplace.callback.SearchResultCallback;
 import com.hcmut.admin.utrafficsystem.ui.searchplace.result.SearchPlaceAdapter;
+import com.hcmut.admin.utrafficsystem.util.LocationCollectionManager;
+import com.hcmut.admin.utrafficsystem.util.MapUtil;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -40,6 +47,7 @@ public class SearchPlaceFragment extends Fragment implements
     private static final String ARG_PARAM2 = "param2";
 
     public static final String CHOOSE_MAP_POINT = "CHOOSE_MAP_POINT";
+    public static final String SEARCH_TYPE = "SEARCH_TYPE";
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -51,9 +59,12 @@ public class SearchPlaceFragment extends Fragment implements
     private SearchPlaceAdapter searchPlaceAdapter;
     private ImageView imgBack;
     private TextView btnChooseMapPoint;
+    private TextView btnChooseCurrentLocation;
 
     private LatLng selectedLatLngOnScreen;
     private boolean isHaveResult = false;
+
+    private int searchType;
 
     public SearchPlaceFragment() {
         // Required empty public constructor
@@ -124,8 +135,10 @@ public class SearchPlaceFragment extends Fragment implements
 
         imgBack = view.findViewById(R.id.imgBack);
         btnChooseMapPoint = view.findViewById(R.id.btnChooseMapPoint);
+        btnChooseCurrentLocation = view.findViewById(R.id.btnChooseCurrentLocation);
         Bundle bundle = getArguments();
         if (bundle != null) {
+            searchType = bundle.getInt(SearchPlaceResultHandler.SEARCH_TYPE);
             boolean isShowChooseMapPoint = bundle.getBoolean(CHOOSE_MAP_POINT, false);
             btnChooseMapPoint.setVisibility(isShowChooseMapPoint ? View.VISIBLE : View.GONE);
         }
@@ -179,11 +192,40 @@ public class SearchPlaceFragment extends Fragment implements
                 MapActivity.hideKeyboard(getActivity());
                 SearchPlaceResultHandler.getInstance().addSearchPlaceResultListener(SearchPlaceFragment.this);
                 Bundle bundle = new Bundle();
-                bundle.putInt(SearchPlaceResultHandler.SEARCH_TYPE, SearchPlaceResultHandler.SELECTED_BEGIN_SEARCH);
+                if (searchType == SearchPlaceResultHandler.END_SEARCH) {
+                    bundle.putInt(SearchPlaceResultHandler.SEARCH_TYPE, SearchPlaceResultHandler.SELECTED_END_SEARCH);
+                } else {
+                    bundle.putInt(SearchPlaceResultHandler.SEARCH_TYPE, SearchPlaceResultHandler.SELECTED_BEGIN_SEARCH);
+                }
                 NavHostFragment.findNavController(SearchPlaceFragment.this)
                         .navigate(R.id.action_searchPlaceFragment_to_pickPointOnMapFragment, bundle);
             }
         });
+        btnChooseCurrentLocation.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (MapUtil.checkGPSTurnOn(getActivity(), MapActivity.androidExt)) {
+                    LocationCollectionManager.getInstance(getContext())
+                            .getCurrentLocation(new OnSuccessListener<Location>() {
+                                @Override
+                                public void onSuccess(Location location) {
+                                    LatLng latlng = new LatLng(location.getLatitude(), location.getLongitude());
+                                    if (searchType == SearchPlaceResultHandler.END_SEARCH) {
+                                        SearchPlaceResultHandler.getInstance()
+                                                .dispatchSearchPlaceResult(SearchPlaceResultHandler.SELECTED_END_SEARCH , null, latlng);
+                                    } else {
+                                        SearchPlaceResultHandler.getInstance()
+                                                .dispatchSearchPlaceResult(SearchPlaceResultHandler.SELECTED_BEGIN_SEARCH , null, latlng);
+
+                                    }
+
+                                    NavHostFragment.findNavController(SearchPlaceFragment.this).popBackStack();
+                                }
+                            });
+                }
+            }
+        });
+
     }
 
     @Override
@@ -214,6 +256,7 @@ public class SearchPlaceFragment extends Fragment implements
 
     @Override
     public void onSelectedEndSearchPlaceResultReady(LatLng result) {
-
+        selectedLatLngOnScreen = result;
+        isHaveResult = true;
     }
 }
